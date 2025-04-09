@@ -34,6 +34,7 @@ export class TransformSchemaFactory implements SchemaFactory<TransformSchema, Tr
         attachment: product.attachment || null,
         SKUCode: product.SKUCode || '',
         vat: product.vat || '0',
+        quatationId: product.quatationId || null,
       })) || [],
       totalPrice: entity.totalPrice || 0,
       transformRequest: Boolean(entity.transformRequest),
@@ -85,6 +86,7 @@ export class TransformSchemaFactory implements SchemaFactory<TransformSchema, Tr
         attachment: product.attachment || null,
         SKUCode: product.SKUCode || '',
         vat: product.vat || '0',
+        quatationId: product.quatationId
       })) || [],
       Number(schema.totalPrice) || 0,
       Boolean(schema.transformRequest),

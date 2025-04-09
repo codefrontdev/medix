@@ -95,7 +95,7 @@ export class Tender extends AggregateRoot {
       title,
       minValue,
       value,
-      endDate,
+      endDate, 
       deliverDate,
       type,
       status,

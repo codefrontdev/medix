@@ -60,6 +60,10 @@ export class MediasUploadHandler
           insertedMedia.type,
           insertedMedia.isProtected,
           insertedMedia.fullUrl,
+          insertedMedia.userId, // Add userId
+          insertedMedia.companyId, // Add companyId
+          insertedMedia.source, // Add source
+          insertedMedia.sourceType // Add sourceType
         )
 
     return AppResult

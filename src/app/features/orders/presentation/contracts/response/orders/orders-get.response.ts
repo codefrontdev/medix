@@ -1,6 +1,6 @@
 import { Company } from "src/app/features/companies/domain/entities/company";
 import { Invoice } from "src/app/features/orders/domain/entities/invoice";
-import { Tender } from "src/app/features/tenders/domain/entities/tender";
+import { TendersGetResult } from "src/app/features/tenders/application/results/tenders/tenders-get.result";
 
 export class Product {
   constructor(
@@ -37,17 +37,17 @@ export class OrdersGetResponse {
     public readonly attachmentRequired: boolean = false,
     public readonly attachmentDeliverDays?: number,
     public readonly contactInfo?: string,
-    public readonly tenderId: string = '',
-    public readonly companyId: string = '',
-    public readonly userId: string = '',
+    public readonly tenderId: string = "",
+    public readonly companyId: string = "",
+    public readonly userId: string = "",
     public readonly products: Product[] = [], // Add products property
     public readonly Sendedproducts: Product[] = [], // Add products property
     public readonly OrderNr: number = 0,
-    public readonly DeliveryMethod: string = '',
-    public readonly paymentMethod: string = '',
+    public readonly DeliveryMethod: string = "",
+    public readonly paymentMethod: string = "",
     public readonly invoices: Invoice[] = [],
-    public readonly Tender: Tender = null,
-    public readonly company: Company = null,
+    public readonly Tender: TendersGetResult = null,
+    public readonly company: Company = null
   ) {}
 
   public static create(
@@ -69,17 +69,17 @@ export class OrdersGetResponse {
     attachmentRequired: boolean = false,
     attachmentDeliverDays: number = null,
     contactInfo: string = null,
-    tenderId: string = '',
-    companyId: string = '',
-    userId: string = '',
+    tenderId: string = "",
+    companyId: string = "",
+    userId: string = "",
     products: Product[] = [], // Add products parameter
     Sendedproducts: Product[] = [], // Add products parameter
     OrderNr: number = 0,
-    DeliveryMethod: string = '',
-    paymentMethod: string = '',
+    DeliveryMethod: string = "",
+    paymentMethod: string = "",
     invoices: Invoice[] = [],
-    Tender: Tender = null,
-    company: Company = null,
+    Tender: TendersGetResult = null,
+    company: Company = null
   ): OrdersGetResponse {
     return new OrdersGetResponse(
       id,
