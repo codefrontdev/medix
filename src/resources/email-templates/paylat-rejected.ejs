@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تم رفض طلب Paylat الخاص بك</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .header {
+      background-color: #d9534f;
+      padding: 15px;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 8px 8px 0 0;
+    }
+    .content {
+      padding: 20px;
+      text-align: right;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: gray;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      color: white;
+      background-color: #d9534f;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .button:hover {
+      background-color: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      تم رفض طلب Paylat الخاص بك
+    </div>
+
+    <div class="content">
+      <p>مرحبًا <strong><%= name %></strong>,</p>
+      <p>نأسف لإبلاغك بأن طلب Paylat الخاص بك لم تتم الموافقة عليه.</p>
+
+      <p><strong>سبب الرفض:</strong></p>
+      <p style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px;">
+        <%= reason %>
+      </p>
+
+      <p>إذا كنت بحاجة إلى مزيد من المعلومات، لا تتردد في التواصل معنا.</p>
+
+      <p><a href="mailto:support@example.com" class="button">اتصل بالدعم</a></p>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 شركتنا | جميع الحقوق محفوظة</p>
+    </div>
+  </div>
+</body>
+</html>

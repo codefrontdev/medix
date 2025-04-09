@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تمت الموافقة على طلب Paylat الخاص بك</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .header {
+      background-color: #28a745;
+      padding: 15px;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 8px 8px 0 0;
+    }
+    .content {
+      padding: 20px;
+      text-align: right;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: gray;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      color: white;
+      background-color: #28a745;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      تمت الموافقة على طلب Paylat الخاص بك
+    </div>
+
+    <div class="content">
+      <p>مرحبًا <strong><%= name %></strong>,</p>
+      <p>يسعدنا إبلاغك بأن طلب Paylat الخاص بك قد تمت الموافقة عليه بنجاح!</p>
+
+      <p><strong>الشركة:</strong> <%= company %></p>
+
+      <p>يرجى المتابعة وفقًا للخطوات المتفق عليها أو التواصل معنا لمزيد من التفاصيل.</p>
+
+      <p><a href="mailto:support@example.com" class="button">اتصل بالدعم</a></p>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 شركتنا | جميع الحقوق محفوظة</p>
+    </div>
+  </div>
+</body>
+</html>
