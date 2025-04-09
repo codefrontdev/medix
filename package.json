@@ -8,8 +8,6 @@
   "scripts": {
     
   "build": "nest build",
-  "start:render": "node dist/main.js",
-  "render-build": "npm run build",
     "build": "nest build --webpack --webpackPath webpack.config.js",
     "build:debug": "NODE_ENV=development nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
