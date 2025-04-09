@@ -6,11 +6,6 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-<<<<<<< HEAD
-=======
-    
-  "build": "nest build",
->>>>>>> 1e3d511f5580d0d122720abf512240ae1c9a05e3
     "build": "nest build --webpack --webpackPath webpack.config.js",
     "build:debug": "NODE_ENV=development nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
