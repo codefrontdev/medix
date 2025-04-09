@@ -6,11 +6,10 @@
       "use": "@vercel/node"
     }
   ],
-  "outputDirectory": "dist",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "dist/main.js"
+      "src": "/(.*)",
+      "dest": "/dist/main.js"
     }
   ],
   "headers": [
