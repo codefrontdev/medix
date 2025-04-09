@@ -48,7 +48,7 @@ export class ItemFactory implements EntityFactory<Item> {
       )
     );
     }
-    console.log(processedAttachments)
+    
     if (isInsert) {
       const entity = Item.create(
         createObjectIdAsString(id), // Generate a unique ID

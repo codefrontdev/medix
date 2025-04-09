@@ -54,8 +54,7 @@ export class ItemsController {
     @Req() req: any,
   ): Promise<AppResponse<ItemsGetResponse>> {
     const { userId } = req.user;
-    console.log(body,"body")
-    console.log(files,"files")
+    
     try {
       let imagePath = null;
       if (files?.image && files.image[0]) {
@@ -88,7 +87,7 @@ export class ItemsController {
          let taggs1 = taggs.split(",")
         taggs = JSON.stringify(taggs1)
       }
-      console.log(taggs)
+        
       */
       // Prepare and execute command
       const command = new ItemsUpsertCommand(
@@ -168,7 +167,7 @@ export class ItemsController {
     @Req() req: any,
   ): Promise<AppResponse<null>> {
     const { userId } = req.user;
-    console.log(itemsDeleteRequest.id)
+    
     const item = await this.itemsRepository.getById(itemsDeleteRequest.id);
     if (!item) {
       throw new NotFoundException("Item not found");
@@ -234,8 +233,8 @@ export class ItemsController {
     @Req() req: any,
   ): Promise<AppResponse<Array<ItemsGetAllResponse>>> {
     const { userId } = req.user || {};
-    console.log(userId)
-    console.log(itemsGetAllRequest.companyId)
+    
+    
     const query = new ItemsGetAllQuery(
       itemsGetAllRequest.pageSize,
       itemsGetAllRequest.pageNumber,

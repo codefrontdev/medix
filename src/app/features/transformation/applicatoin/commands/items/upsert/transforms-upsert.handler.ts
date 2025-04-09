@@ -39,7 +39,7 @@ export class TransformsUpsertHandler
         return AppResult.createError(AppErrors.notRelateToYourAccount());
       }*/
     } 
-    console.log(command,"commandcommand")
+    
     // Save or update the Transform using the factory
     let entity = await this.transformFactory.save(
       command.id,

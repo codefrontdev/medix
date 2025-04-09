@@ -39,7 +39,7 @@ export class NotificationsController {
     @Query('isRead') isRead?: boolean,
   ): Promise<Notification[]> {
     const { userId } = req.user;
-    console.log(userId,"userId")
+    
     const parsedIsRead = isRead === true ? true : isRead === false ? false : undefined;
     return this.notificationService.getNotificationsForUser(userId, parsedIsRead);
   }
@@ -53,7 +53,7 @@ export class NotificationsController {
   )
   @Put('/mark-as-read/:id')
   async markNotificationAsRead(@Param('id') id: string): Promise<Notification> {
-    console.log(id,"ID")
+    
     return this.notificationService.markAsRead(id);
   }
 

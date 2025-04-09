@@ -238,7 +238,7 @@ export class TenderQuotationsController {
     );
   
     const tenderIds = openedTenders.data ? openedTenders.data.map(tender => tender.id) : [];
-    console.log(tenderIds,"tenderIds")
+    
     const query2 = new TenderQuotationsGetAllQuery(
       10,
       1,
@@ -274,8 +274,7 @@ export class TenderQuotationsController {
     const openedTenders = await this.queryBus.execute<TendersGetAllQuery, AppResult<Array<TendersGetAllResult>>>(
       query
     );
-    console.log(openedTenders)
-    console.log(userId)
+    
     const tenderIds = openedTenders.data ? openedTenders.data.map(tender => tender.id) : [];
   
     const query2 = new TenderQuotationsGetAllQuery(
@@ -313,8 +312,7 @@ export class TenderQuotationsController {
     const openedTenders = await this.queryBus.execute<TendersGetAllQuery, AppResult<Array<TendersGetAllResult>>>(
       query
     );
-    console.log(openedTenders)
-    console.log(userId)
+    
     const tenderIds = openedTenders.data ? openedTenders.data.map(tender => tender.id) : [];
   
     const query2 = new TenderQuotationsGetAllQuery(
@@ -343,7 +341,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     TenderStatusEnum.RECEIVING,
     TenderStatusEnum.SENDING,
   ];
-  console.log(statuses,"statuses")
+  
   const totals: Record<string, number> = {};
 
   for (const status of statuses) {
@@ -363,7 +361,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     );
 /**/
     const tenderIds = tendersResult.data ? tendersResult.data.map(tender => tender.id) : [];
-    console.log(tenderIds,"tenderIds")
+    
     // Fetch tender quotations for the tenders of this status
     if(tenderIds.length > 0){
        // Save the total count for this status
@@ -422,8 +420,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     const openedTenders = await this.queryBus.execute<TendersGetAllQuery, AppResult<Array<TendersGetAllResult>>>(
       query
     );  
-    console.log(openedTenders)
-    console.log(userId)
+    
     return { total: openedTenders.data.filter(item=>item.userId === userId) ? openedTenders.data.filter(item=>item.userId === userId).length : 0};
   }
   //getAll/All/Mine
@@ -432,7 +429,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     @Req() req: any,
   ): Promise<{ total: number }> {
     const { userId } = req.user;
-    console.log(userId,"userId")
+    
     const query = new TenderQuotationsGetAllQuery(
       10,
       1,
@@ -444,7 +441,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     const openedTenders = await this.queryBus.execute<TenderQuotationsGetAllQuery, AppResult<Array<TenderQuotationsGetResult>>>(
       query
     );  
-    console.log(openedTenders.data.filter(item=>item.userId === userId))
+    
     return { total: openedTenders.data.filter(item=>item.userId === userId) ? openedTenders.data.filter(item=>item.userId === userId).length : 0 };
   }
   @UseGuards(
@@ -471,8 +468,6 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
       await this.queryBus.execute<TenderQuotationsGetAllQuery, AppResult<Array<TenderQuotationsGetAllResult>>>(
         query,
       );
-    console.log(result)
-    console.log(userId)
     // Create initial response array from tender quotations
     const response1 =
       result.data ?
@@ -509,8 +504,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
   
         // Check if result1 is successful before accessing the data
         const tenderData = result1.isSuccess ? result1.data : null;
-        console.log(tenderData)
-        console.log(userId)
+        
         if(tenderData !== null){
         if(req.user.roles.includes("Seller")){ 
           if(item.userId === userId){
@@ -692,8 +686,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
   @Req() req: any,
 ): Promise<AppResponse<null>> {
   const { userId } = req.user;
-  console.log(userId)
-  console.log(req.body.quatationID)
+  
   try {
     const updateQuotationCommand = new TenderQuotationsUpdateStatusCommand(
       req.body.quatationID,
@@ -725,8 +718,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     @Req() req: any,
   ): Promise<AppResponse<null>> {
     const { userId } = req.user;
-    console.log(userId)
-    console.log(req.body.quatationID)
+    
     try {
       const updateQuotationCommand = new TenderQuotationsUpdateStatusCommand(
         req.body.quatationID,
@@ -800,8 +792,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     @Req() req: any,
   ): Promise<AppResponse<null>> {
     const { userId } = req.user;
-    console.log(userId)
-    console.log(req.body.quatationID)
+    
     try {
       const updateQuotationCommand = new TenderQuotationsUpdateStatusCommand(
         req.body.quatationID,
@@ -874,8 +865,7 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     @Req() req: any,
   ): Promise<AppResponse<null>> {
     const { userId } = req.user;
-    console.log(userId)
-    console.log(req.body.quatationID)
+    
     try {
       const updateQuotationCommand = new TenderQuotationsUpdateStatusCommand(
         req.body.quatationID,
@@ -948,8 +938,6 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     @Req() req: any,
   ): Promise<AppResponse<null>> {
     const { userId } = req.user;
-    console.log(userId)
-    console.log(req.body.quatationID)
     try {
       const updateQuotationCommand = new TenderQuotationsUpdateStatusCommand(
         req.body.quatationID,
@@ -1022,8 +1010,6 @@ public async getTotalByStatus(@Req() req: any): Promise<{ totals: Record<string,
     @Req() req: any,
   ): Promise<AppResponse<null>> {
     const { userId } = req.user;
-    console.log(userId)
-    console.log(req.body.quatationID)
     try {
       const updateQuotationCommand = new TenderQuotationsUpdateStatusCommand(
         req.body.quatationID,

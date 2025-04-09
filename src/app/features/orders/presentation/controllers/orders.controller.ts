@@ -69,7 +69,7 @@ export class OrdersController {
     @Req() req: any
   ): Promise<AppResponse<OrdersGetResponse>> {
     const { userId } = req.user;
-    console.log(ordersUpsertRequest, "ordersUpsertRequest");
+    
     const defaultEndDate = new Date();
     defaultEndDate.setDate(defaultEndDate.getDate() + 30);
 
@@ -175,8 +175,8 @@ export class OrdersController {
         Status = OrderStatusEnum.PARTRECEIVING;
       }
     }
-    console.log(Status, "Status");
-    //console.log(ordersUpsertRequest,"ordersUpsertRequest")
+    
+    
     const command = new OrdersUpsertCommand(
       ordersUpsertRequest.id ? ordersUpsertRequest.id : null,
       ordersUpsertRequest.title,
@@ -206,7 +206,7 @@ export class OrdersController {
       ordersUpsertRequest.paymentMethod,
       invoices
     );
-    console.log(command);
+    
     const result = await this.commandBus.execute<
       OrdersUpsertCommand,
       AppResult<OrdersGetResult>
@@ -270,7 +270,7 @@ export class OrdersController {
     if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Canceled") {
       const factory = new NotificationFactory(this.notificationsRepository);
       const users = await this.userService.findById(userId);
-      console.log(users);
+      
       await factory.save(
         null, // No ID for new notification
         ordersUpsertRequest.userId, // Notification for the current user
@@ -545,7 +545,7 @@ export class OrdersController {
     @Req() req: any
   ): Promise<AppResponse<Array<OrdersGetAllResponse>>> {
     const { userId } = req.user || {};
-    console.log(ordersGetAllRequest.companyId);
+    
     const tendersResult = await this.queryBus.execute<
       TendersGetAllQuery,
       AppResult<Array<TendersGetAllResult>>
@@ -583,7 +583,7 @@ export class OrdersController {
       );
     }
     const tenderIds = tendersResult.data.map((tender) => tender.id);
-    console.log(tenderIds, "tenderIds");
+    
     const filterQuery = new OrdersGetAllQuery(
       null,
       null,

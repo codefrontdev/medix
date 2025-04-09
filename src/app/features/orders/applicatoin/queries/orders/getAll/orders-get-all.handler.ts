@@ -58,7 +58,7 @@ export class OrdersGetAllHandler
 if (query.TenderId && query.TenderId.length > 0) {
   filter.tenderId = { $in: query.TenderId.map((id) => createObjectId(id)) };
 }
-console.log('query.statusExclusion', query);
+
 if (query.statusExclusion) {
   filter.status = { $ne: query.statusExclusion };
 }

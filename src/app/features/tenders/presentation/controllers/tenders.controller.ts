@@ -44,8 +44,6 @@ export class TendersController {
     @Req() req: any,
   ): Promise<AppResponse<TendersGetResponse>> {
     const { userId } = req.user;
-console.log(userId)
-console.log(tendersUpsertRequest)
     const command = new TendersUpsertCommand(
       tendersUpsertRequest.id? tendersUpsertRequest.id : null,
       tendersUpsertRequest.title,
@@ -74,7 +72,7 @@ console.log(tendersUpsertRequest)
       tendersUpsertRequest.products,
       tendersUpsertRequest.TenderNr,      
     );
-    console.log(command)
+    
     const result =
       await this
         .commandBus
@@ -436,7 +434,7 @@ console.log(tendersUpsertRequest)
           .map(async (tender) => {
             // Fetch the company object
             const company = await this.companyService.getCompanyById(tender.companyId);
-            console.log(tender,22222)
+            
             return TendersGetAllResponse.create(
               tender.id,
               tender.title,

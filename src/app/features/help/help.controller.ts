@@ -28,7 +28,7 @@ export class HelpController {
     @Req() req: Request,
   ) {
     const user = await this.userService.findById((req.user as any)?.userId); // Get user from database
-    console.log(user)
+    
     const userName = user.nickName;
     const userEmail = user.email;
 

@@ -53,7 +53,7 @@ export class TendersUpsertHandler
       await this.companiesRepository.updateTenderNr(command.companyId, nexttendenr);
       
     }
-    console.log(command.products)
+    
     let entity =
       await this
         .tenderFactory

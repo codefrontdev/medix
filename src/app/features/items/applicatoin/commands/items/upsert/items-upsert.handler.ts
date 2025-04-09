@@ -65,11 +65,10 @@ export class ItemsUpsertHandler
       command.userId,
       command.ItemNR
     );
-    console.log(entity)
+    
     // Merge the entity with the event context
     entity = this.eventPublisher.mergeObjectContext(entity);
     entity.commit();
-    console.log(entity)
     // Create a result to return
     const resultData = ItemsGetResult.create(
       entity._id,

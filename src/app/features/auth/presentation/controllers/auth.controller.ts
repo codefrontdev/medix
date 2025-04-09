@@ -101,7 +101,6 @@ export class AuthController {
   public async upsert(
     @Body() usersUpsertRequest: AuthsUpsertRequest
   ): Promise<AppResponse<AuthsGetResponse>> {
-    console.log(":FFFFFFFFFF");
     const command = new AuthsUpsertCommand(
       usersUpsertRequest.id,
       usersUpsertRequest.nickName,
@@ -118,7 +117,6 @@ export class AuthController {
       usersUpsertRequest.residenceNo,
       usersUpsertRequest.dateOfBirth
     );
-    console.log(command, ":FFFFFFFFFF");
     const result = await this.commandBus.execute<
       AuthsUpsertCommand,
       AppResult<UsersGetResult>
@@ -188,7 +186,6 @@ export class AuthController {
       authConfirmRequest.email,
       authConfirmRequest.code
     );
-    console.log("command", command);
     const result = await this.commandBus.execute<
       AuthConfirmCommand,
       AppResult<AuthDataResult>

@@ -14,7 +14,6 @@ export class UserCompaniesService {
         const userCompanies = await this.userCompaniesModel.find({  companyId: new Types.ObjectId(companyId) })
         .populate('userId') // Populate userId to get user details
         .exec();
-        //console.log(userCompanies)
         return userCompanies.map(userCompany => {
             const user = userCompany.userId as any; // This should now be the populated user object
            

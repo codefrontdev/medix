@@ -89,7 +89,6 @@ export class CompaniesUpsertHandler
       command.OpportunityNr || 0,
       
     );
-    console.log('entity', entity);
 
     entity = this.eventPublisher.mergeObjectContext(entity);
     entity.commit();

@@ -75,9 +75,7 @@ export class TransformsController {
     @Req() req: any,
   ): Promise<AppResponse<TransformsGetResponse>> {
     const { userId } = req.user;
-    console.log(body,"Body")
-    console.log(files, "Uploaded Files");
-    console.log(userId,"userId")
+    
     try {
       const uploadedAttachments = files?.attachment
       ? await Promise.all(
@@ -85,7 +83,7 @@ export class TransformsController {
             try {
               const folderPath = `${body.companyId}/attachments`;
               const uploadResult = await S3UploadService.uploadFile(file, folderPath);
-              console.log(uploadResult, "Upload Result");
+              
               return { 
                 name:file.originalname,
                 filepath: uploadResult 
@@ -100,13 +98,11 @@ export class TransformsController {
 
       /**/const metadata = [];
       const fullAttachments=uploadedAttachments.map((meta: any, index: number) => {
-        console.log(meta)
+        
         const filepath = uploadedAttachments[index]?.filepath || null;
         return new Attachment(meta.name, "Tranformation" ,  null, filepath);
       });
-      console.log(fullAttachments,"fullAttachments")
-      console.log(body.products,"fullAttachments")
-      console.log(body.bankAccount,"fullAttachments")
+      
       let transformRequest = body.transformRequest === 'true'?true:false
       let products = null 
       try{
@@ -123,10 +119,7 @@ export class TransformsController {
         console.log(e)
       }
 
-      console.log(products,"fullAttachments")
       
-      console.log(bankAccount,"fullAttachments")
-
       const command = new TransformsUpsertCommand(
         body.id || null,
         body.title,
@@ -251,7 +244,7 @@ export class TransformsController {
       TransformsGetAllRequest.sellerId || null,
       null
     );
-    console.log(query)
+    
 
     const result = await this.queryBus.execute<
           TransformsGetAllQuery,

@@ -53,7 +53,7 @@ export class TransformsUpsertRequest {
 
   @IsBoolean()
   @Transform(({ value }) => {
-    console.log(value,"Value,Value")
+    
     if (typeof value === 'string') {
       return value.toLowerCase() === 'true';
     }

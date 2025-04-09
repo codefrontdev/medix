@@ -17,7 +17,6 @@ export class CompaniesGetMyHandler
   ): Promise<AppResult<CompaniesGetResult>> {
     const entity = await this.companiesRepository.getCompanyByUserId(query.userId);
 
-    console.log(entity);
 
     if (entity === null) {
       return AppResult.createError(AppErrors.nullValue('object'));

@@ -80,7 +80,6 @@ export class CompaniesController {
     companiesUpsertRequest.authorizationFileUrl = authorizationFileUrl;
     companiesUpsertRequest.registeringFileUrl = registeringFileUrl;
     companiesUpsertRequest.logoMedia = logoMediaUrl;
-    console.log(companiesUpsertRequest,"DDD")
     let categoriesIds = companiesUpsertRequest.categoriesIds;
     try {
       categoriesIds = JSON.parse(categoriesIds);
@@ -122,7 +121,6 @@ export class CompaniesController {
           command,
         );
     //insert into user-company
-    console.log(result,"result.data")
     if(result.data.id){
       await this.companiesService.addUserToCompany(
         new ObjectId(result.data.userId),
@@ -291,9 +289,6 @@ export class CompaniesController {
     @Req() req: any,
   ): Promise<AppResponse<Array<CompaniesGetAllResponse>>> {
     const { userId, roles } = req.user;   
-    console.log(userId) 
-    console.log(roles) 
-    console.log(roles.some(item=>item === "Admin")) 
     const query =
       new CompaniesGetAllQuery(
         companiesGetAllRequest.pageSize,
@@ -328,7 +323,6 @@ export class CompaniesController {
     @Req() req: any,
   ): Promise<AppResponse<Array<CompaniesGetAllResponse>>> {
     const {userId,pageSize,pageNumber,withPaging} = req.query;    
-    console.log(userId)
     const query =
       new CompaniesGetAllQuery(
         pageSize,
@@ -375,7 +369,7 @@ export class CompaniesController {
         return AppResponse.create(false, null, 'Company ID is required', null, null, null);
     }
 
-    console.log(ComapnyId);
+    
 
     // Call the service method to get users by company ID
     const users = await this.userCompaniesService.getAllUsersByCompanyId(ComapnyId);
@@ -408,7 +402,7 @@ export class CompaniesController {
         return AppResponse.create(false, null, 'Company ID is required', null, null, null);
     }
 
-    console.log(ComapnyId);
+    
 
     // Call the service method to get users by company ID
     //const users = await this.userCompaniesService.getAllUsersByCompanyId(ComapnyId);
@@ -441,7 +435,7 @@ export class CompaniesController {
         return AppResponse.create(false, null, 'Company ID is required', null, null, null);
     }
 
-    console.log(ComapnyId);
+    
 
     // Call the service method to get users by company ID
     //const users = await this.userCompaniesService.getAllUsersByCompanyId(ComapnyId);
@@ -470,7 +464,7 @@ export class CompaniesController {
     @Req() req: any,
   ): Promise<AppResponse<CompaniesGetResponse>> {
     const { userId } = req.user;
-    console.log(userId)
+    
     const query =
       new CompaniesGetMineQuery(
         userId

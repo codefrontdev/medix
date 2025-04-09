@@ -65,8 +65,7 @@ export class TendersGetAllHandler
           query.companyId,
         );
     }
-    console.log('query.userId', query.userId);
-    console.log('filter', filter);
+    
     if (query.userId !== null) {
       filter.userId =
          createObjectId(
@@ -100,14 +99,13 @@ export class TendersGetAllHandler
             },
           ]
         );
-    console.log('result', result);
-    console.log('data', result.data);    
+           
     const entitiesResults =
       result
         .data
         .map(
           element => {
-            console.log(element.TenderNr)
+            
             return TendersGetAllResult
               .create(
                 element._id,

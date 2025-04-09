@@ -25,7 +25,6 @@ export class CompaniesRepository
     const company = await this.getById(companyId);
     if (company) {
       company.itemNr = itemNr;
-      console.log('company', company);
       await this.getAndUpdate({ _id: new ObjectId(companyId) }, company);
     }
   }
@@ -34,7 +33,6 @@ export class CompaniesRepository
     const company = await this.getById(companyId);
     if (company) {
       company.TenderNr = TenderNr;      
-      console.log('company', company);
       await this.getAndUpdate({ _id: new ObjectId(companyId) }, company);
     }
   }
@@ -42,8 +40,7 @@ export class CompaniesRepository
     // Implement the logic to update the company's itemNr
     const company = await this.getById(companyId);
     if (company) {
-      company.OpportunityNr = OpportunityNr;      
-      console.log('company', company);
+      company.OpportunityNr = OpportunityNr;     
       await this.getAndUpdate({ _id: new ObjectId(companyId) }, company);
     }
   }
@@ -52,7 +49,6 @@ export class CompaniesRepository
     const company = await this.getById(companyId);
     if (company) {
       company.orderNr = OrderNr;      
-      console.log('company', company);
       await this.getAndUpdate({ _id: new ObjectId(companyId) }, company);
     }
   }

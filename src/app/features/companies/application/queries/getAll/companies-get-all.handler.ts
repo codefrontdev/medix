@@ -65,9 +65,7 @@ export class CompaniesGetAllHandler
           query.pageNumber,
           query.withPaging,
           [{ field: OrderByEnum.CREATED_AT, direction: OrderDirectionEnum.DESC }],
-        );
-   console.log('result', result);
-   console.log('data', result.data);     
+        );   
     const entitiesResults =
       result
         .data

@@ -55,7 +55,7 @@ export class OrdersUpsertHandler
       const lastOrder = await this.ordersRepository.getLatestOrder();
       const nextOrderNr = lastOrder ? lastOrder.OrderNr >= 1000? lastOrder.OrderNr + 1 :1000 : 1000;
       orderNr = nextOrderNr;
-      console.log('orderNr', orderNr);
+      
       if(command.products.length > 0){
         command.products.map(async (product) => {
           const updateQuotationCommand = new TenderQuotationsUpdateStatusCommand(
@@ -70,7 +70,7 @@ export class OrdersUpsertHandler
             });
       }     
     }
-    console.log('orderNr', orderNr);
+    
     let entity =
       await this
         .orderFactory

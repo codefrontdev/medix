@@ -10,7 +10,6 @@ import { AuthTokensResult } from "../../results/auth-tokens.result";
 import { UserCodesRepository } from "../../../persistence/repositories/user-codes.repository";
 import { AuthService } from "../../services/auth.service";
 import { UsersRepository } from "src/app/features/users/persistence/repositories/users.repository";
-import { log } from "node:console";
 
 
 @CommandHandler(AuthResetPasswordCommand)
