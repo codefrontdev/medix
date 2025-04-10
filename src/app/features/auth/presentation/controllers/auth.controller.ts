@@ -136,6 +136,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get("me")
   public async getMe(@Req() req: any): Promise<AppResponse<AuthDataResponse>> {
+    console.log(req.user);
     const { userId } = req.user;
     const command = new GetMeCommand(userId);
     const result = await this.commandBus.execute<

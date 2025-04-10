@@ -2,7 +2,7 @@ import { CorsOptions } from "@nestjs/common/interfaces/external/cors-options.int
 
 export const appCorsOptions: CorsOptions = {
 	origin: [
-		'https://medex2b.com',
+		'https://www.medex2b.com',
 		'http://medex2b.com',		
 		'http://admin.medex2b.com',		
 		'https://admin.medex2b.com',		

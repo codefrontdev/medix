@@ -33,17 +33,19 @@ import { UserModule } from './app/features/users/user.module';
 import { TransformsModule } from './app/features/transformation/transforms.module';
 import { PaymentModule } from './app/features/payment/payment.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppController } from './app.controller';
 // import { HelpModule } from './app/features/help/help.module'; // Ensure the correct path or create the module if it does not exist
 
 
 @Module({
+  controllers: [AppController],
   imports: [
-    // ServeStaticModule.forRoot(
-    //   {
-    //     rootPath: getPublicDirectory(),
-    //     serveRoot: `/${mediasConstants.paths.public}`,
-    //   },
-    // ),
+    ServeStaticModule.forRoot(
+      {
+        rootPath: getPublicDirectory(),
+        serveRoot: `/${mediasConstants.paths.public}`,
+      },
+    ),
 
     AppLoggerModule,
     AuthModule.prepareJwtModule(),
@@ -72,7 +74,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         transport: {
           host: configService.get("EMAIL_SMTP_SERVER"),
           port: parseInt(configService.get("EMAIL_SMTP_PORT"), 10),
-          secure: configService.get("EMAIL_SECURE") === "true", // تحويل القيمة إلى Boolean
+          secure: configService.get("EMAIL_SECURE") === "true", 
           auth: {
             user: configService.get("EMAIL_SENDER"),
             pass: configService.get("EMAIL_PASSWORD"),
@@ -89,7 +91,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           },
         },
       }),
-      inject: [ConfigService], // حقن configService
+      inject: [ConfigService],
     }),
   ],
   providers: [

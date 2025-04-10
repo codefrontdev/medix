@@ -35,20 +35,24 @@ const categories_module_1 = __webpack_require__(185);
 const database_module_1 = __webpack_require__(206);
 const utils_module_1 = __webpack_require__(138);
 const companies_module_1 = __webpack_require__(207);
-const protected_files_middleware_1 = __webpack_require__(242);
+const serve_static_1 = __webpack_require__(242);
+const medias_constants_1 = __webpack_require__(147);
+const miedas_functions_1 = __webpack_require__(148);
+const protected_files_middleware_1 = __webpack_require__(243);
 const app_logger_module_1 = __webpack_require__(140);
-const requests_logger_middleware_1 = __webpack_require__(243);
+const requests_logger_middleware_1 = __webpack_require__(244);
 const mailer_1 = __webpack_require__(61);
-const handlebars_adapter_1 = __webpack_require__(244);
-const tenders_module_1 = __webpack_require__(245);
-const orders_module_1 = __webpack_require__(309);
-const items_module_1 = __webpack_require__(353);
-const help_module_1 = __webpack_require__(379);
-const notification_module_1 = __webpack_require__(346);
-const user_module_1 = __webpack_require__(352);
-const transforms_module_1 = __webpack_require__(382);
-const payment_module_1 = __webpack_require__(414);
+const handlebars_adapter_1 = __webpack_require__(245);
+const tenders_module_1 = __webpack_require__(246);
+const orders_module_1 = __webpack_require__(310);
+const items_module_1 = __webpack_require__(354);
+const help_module_1 = __webpack_require__(380);
+const notification_module_1 = __webpack_require__(347);
+const user_module_1 = __webpack_require__(353);
+const transforms_module_1 = __webpack_require__(383);
+const payment_module_1 = __webpack_require__(415);
 const config_1 = __webpack_require__(8);
+const app_controller_1 = __webpack_require__(419);
 let AppModule = class AppModule {
     configure(consumer) {
     }
@@ -56,7 +60,12 @@ let AppModule = class AppModule {
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
+        controllers: [app_controller_1.AppController],
         imports: [
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, miedas_functions_1.getPublicDirectory)(),
+                serveRoot: `/${medias_constants_1.mediasConstants.paths.public}`,
+            }),
             app_logger_module_1.AppLoggerModule,
             auth_module_1.AuthModule.prepareJwtModule(),
             app_configs_module_1.AppConfigsModule,
@@ -3977,14 +3986,13 @@ let AuthController = class AuthController {
         return response;
     }
     async upsert(usersUpsertRequest) {
-        console.log(":FFFFFFFFFF");
         const command = new auth_update_command_1.AuthsUpsertCommand(usersUpsertRequest.id, usersUpsertRequest.nickName, usersUpsertRequest.email, String(usersUpsertRequest.phoneNumber), usersUpsertRequest.role, usersUpsertRequest.gender, usersUpsertRequest.accountType, usersUpsertRequest.region, usersUpsertRequest.city, usersUpsertRequest.address, usersUpsertRequest.identityType, usersUpsertRequest.identityNo, usersUpsertRequest.residenceNo, usersUpsertRequest.dateOfBirth);
-        console.log(command, ":FFFFFFFFFF");
         const result = await this.commandBus.execute(command);
         const response = app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, null, result.error);
         return response;
     }
     async getMe(req) {
+        console.log(req.user);
         const { userId } = req.user;
         const command = new auth_get_me_command_1.GetMeCommand(userId);
         const result = await this.commandBus.execute(command);
@@ -3999,7 +4007,6 @@ let AuthController = class AuthController {
     }
     async confirm(authConfirmRequest) {
         const command = new auth_confirm_command_1.AuthConfirmCommand(authConfirmRequest.email, authConfirmRequest.code);
-        console.log("command", command);
         const result = await this.commandBus.execute(command);
         const response = app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, result.paging, result.error);
         return response;
@@ -5312,18 +5319,15 @@ const medias_constants_1 = __webpack_require__(147);
 const mongo_functions_1 = __webpack_require__(29);
 const miedas_functions_1 = __webpack_require__(148);
 let AppFilesService = class AppFilesService {
-    constructor() {
-    }
+    constructor() { }
     async uploadMultipleFiles(files, directoryPath = medias_constants_1.mediasConstants.paths.temp, isProtected = true) {
         if (!files || files.length === 0) {
             return [];
         }
         const rootPath = this.getRootPath(isProtected);
-        this
-            .createDirectory(rootPath);
+        this.createDirectory(rootPath);
         const combinedDirectoryPath = (0, path_1.join)(rootPath, directoryPath);
-        this
-            .createDirectory(combinedDirectoryPath);
+        this.createDirectory(combinedDirectoryPath);
         const medias = [];
         for (const file of files) {
             if (!file || file.size === 0) {
@@ -5337,25 +5341,19 @@ let AppFilesService = class AppFilesService {
             const url = (0, path_1.join)(directoryPath, uniqueName);
             await new Promise((resolve, reject) => {
                 const stream = (0, fs_1.createWriteStream)(combinedFilePath);
-                stream
-                    .write(file.buffer);
+                stream.write(file.buffer);
                 stream.end();
-                stream.on('finish', () => resolve());
-                stream
-                    .on('error', reject);
+                stream.on("finish", () => resolve());
+                stream.on("error", reject);
             });
-            const media = this
-                .createMedia(mediaId, url, uniqueName, fileName, file.size, file.mimetype, isProtected);
-            medias
-                .push(media);
+            const media = this.createMedia(mediaId, url, uniqueName, fileName, file.size, file.mimetype, isProtected);
+            medias.push(media);
         }
         return medias;
     }
     async moveMultipleFiles(directoryPath, isProtected, medias) {
-        this
-            .createDirectories(isProtected, directoryPath);
-        const rootPath = this
-            .getRootPath(isProtected);
+        this.createDirectories(isProtected, directoryPath);
+        const rootPath = this.getRootPath(isProtected);
         const combinedDestDirectoryPath = (0, path_1.join)(rootPath, directoryPath);
         const mediasResult = [];
         for (const media of medias) {
@@ -5366,14 +5364,11 @@ let AppFilesService = class AppFilesService {
             const combinedDestFilePath = (0, path_1.join)(combinedDestDirectoryPath, media.uniqueName);
             try {
                 await (0, fs_extra_1.move)(combinedSrcFilePath, combinedDestFilePath);
-                media.url =
-                    (0, path_1.join)(directoryPath, media.uniqueName);
-                mediasResult
-                    .push(media);
+                media.url = (0, path_1.join)(directoryPath, media.uniqueName);
+                mediasResult.push(media);
             }
             catch (error) {
-                console
-                    .error('Failed to move file:', error);
+                console.error("Failed to move file:", error);
             }
         }
         return mediasResult;
@@ -5381,11 +5376,9 @@ let AppFilesService = class AppFilesService {
     async saveFileAsync(stream, fileName, mimeType, directoryPath = medias_constants_1.mediasConstants.paths.temp, isProtected = false) {
         if (!stream)
             return null;
-        const rootPath = this
-            .getRootPath(isProtected);
+        const rootPath = this.getRootPath(isProtected);
         const combinedDirectoryPath = (0, path_1.join)(rootPath, directoryPath);
-        this
-            .createDirectory(combinedDirectoryPath);
+        this.createDirectory(combinedDirectoryPath);
         const mediaId = (0, mongo_functions_1.fromObjectId)((0, mongo_functions_1.createObjectId)());
         const extension = (0, medias_constants_1.getFileExtension)(fileName);
         const uniqueName = `${mediaId}${extension}`;
@@ -5394,20 +5387,14 @@ let AppFilesService = class AppFilesService {
         try {
             const fileStream = (0, fs_1.createWriteStream)(combinedFilePath);
             await new Promise((resolve, reject) => {
-                stream.
-                    pipe(fileStream)
-                    .on('finish', resolve)
-                    .on('error', reject);
+                stream.pipe(fileStream).on("finish", resolve).on("error", reject);
             });
-            const fileSize = (0, fs_1.statSync)(combinedFilePath)
-                .size;
-            const media = this
-                .createMedia(mediaId, url, uniqueName, fileName, fileSize, mimeType, isProtected);
+            const fileSize = (0, fs_1.statSync)(combinedFilePath).size;
+            const media = this.createMedia(mediaId, url, uniqueName, fileName, fileSize, mimeType, isProtected);
             return media;
         }
         catch (error) {
-            console
-                .error('Error saving file:', error);
+            console.error("Error saving file:", error);
             return null;
         }
     }
@@ -5418,30 +5405,24 @@ let AppFilesService = class AppFilesService {
             if (!media || !media.fullUrl) {
                 continue;
             }
-            const rootPath = this
-                .getRootPath(false);
-            const sourceFilePath = path
-                .resolve(rootPath, media.fullUrl);
+            const rootPath = this.getRootPath(false);
+            const sourceFilePath = path.resolve(rootPath, media.fullUrl);
             const destinationFilePath = (0, path_1.join)(recyclerBinPath, media.uniqueName);
             try {
                 await (0, fs_extra_1.move)(sourceFilePath, destinationFilePath);
-                media.url =
-                    (0, path_1.join)(medias_constants_1.mediasConstants.paths.recyclerBin, media.uniqueName);
-                mediasResult
-                    .push(media);
+                media.url = (0, path_1.join)(medias_constants_1.mediasConstants.paths.recyclerBin, media.uniqueName);
+                mediasResult.push(media);
             }
             catch (error) {
-                console
-                    .error(`Failed to move file ${media.uniqueName}: ${error}`);
+                console.error(`Failed to move file ${media.uniqueName}: ${error}`);
             }
         }
         return mediasResult;
     }
     deleteFiles(directoryPath, isProtected, isPermanently, ...filePaths) {
-        const rootPath = this
-            .getRootPath(isProtected);
+        const rootPath = this.getRootPath(isProtected);
         const combinedDirectoryPath = (0, path_1.join)(rootPath, directoryPath);
-        filePaths.forEach(filePath => {
+        filePaths.forEach((filePath) => {
             if (!filePath) {
                 return;
             }
@@ -5460,8 +5441,7 @@ let AppFilesService = class AppFilesService {
         });
     }
     deleteDirectory(directoryPath, isProtected, isPermanently) {
-        const rootPath = this
-            .getRootPath(isProtected);
+        const rootPath = this.getRootPath(isProtected);
         const combinedDirectoryPath = (0, path_1.join)(rootPath, directoryPath);
         const isExist = (0, fs_extra_1.existsSync)(combinedDirectoryPath);
         if (isExist) {
@@ -5478,9 +5458,8 @@ let AppFilesService = class AppFilesService {
         }
     }
     createDirectories(isProtected, ...directoriesPaths) {
-        const rootPath = this
-            .getRootPath(isProtected);
-        directoriesPaths.forEach(directoryPath => {
+        const rootPath = this.getRootPath(isProtected);
+        directoriesPaths.forEach((directoryPath) => {
             const combinedDirectoryPath = (0, path_1.join)(rootPath, directoryPath);
             const isExist = (0, fs_extra_1.existsSync)(combinedDirectoryPath);
             if (!isExist) {
@@ -5491,17 +5470,14 @@ let AppFilesService = class AppFilesService {
         });
     }
     renameFile(filePath, newName, isProtected) {
-        const rootPath = this
-            .getRootPath(isProtected);
+        const rootPath = this.getRootPath(isProtected);
         const combinedFilePath = (0, path_1.join)(rootPath, filePath);
         const isExist = (0, fs_extra_1.existsSync)(combinedFilePath);
         if (!isExist) {
             return false;
         }
-        const oldName = path
-            .basename(filePath);
-        const directoryPath = combinedFilePath
-            .replace(oldName, '');
+        const oldName = path.basename(filePath);
+        const directoryPath = combinedFilePath.replace(oldName, "");
         const combinedDestPath = (0, path_1.join)(directoryPath, newName);
         try {
             (0, fs_extra_1.moveSync)(combinedFilePath, combinedDestPath, {
@@ -5510,8 +5486,7 @@ let AppFilesService = class AppFilesService {
             return true;
         }
         catch (error) {
-            console
-                .error('Failed to rename file:', error);
+            console.error("Failed to rename file:", error);
             return false;
         }
     }
@@ -5519,11 +5494,9 @@ let AppFilesService = class AppFilesService {
         if (!srcUrl || !destFileName) {
             return false;
         }
-        const rootPath = this
-            .getRootPath(isProtected);
+        const rootPath = this.getRootPath(isProtected);
         const combinedDirectoryPath = (0, path_1.join)(rootPath, directoryPath);
-        this
-            .createDirectory(combinedDirectoryPath);
+        this.createDirectory(combinedDirectoryPath);
         const combinedSrcFilePath = (0, path_1.join)(rootPath, srcUrl);
         const isExist = (0, fs_extra_1.existsSync)(combinedSrcFilePath);
         if (!isExist) {
@@ -5535,8 +5508,7 @@ let AppFilesService = class AppFilesService {
             return true;
         }
         catch (error) {
-            console
-                .error('Failed to copy file:', error);
+            console.error("Failed to copy file:", error);
             return false;
         }
     }
@@ -5556,8 +5528,7 @@ let AppFilesService = class AppFilesService {
     }
     deleteToRecycleBin(srcPath, isDirectory) {
         const recycleBinPath = this.getRecyclePath();
-        const fileName = path
-            .basename(srcPath);
+        const fileName = path.basename(srcPath);
         const destPath = (0, path_1.join)(recycleBinPath, fileName);
         if (isDirectory) {
             (0, fs_extra_1.moveSync)(srcPath, destPath, {
@@ -5571,21 +5542,17 @@ let AppFilesService = class AppFilesService {
         }
     }
     createAppDirectories() {
-        this
-            .createDirectories(false, ...medias_constants_1.mediasConstants.directories);
-        this
-            .createDirectories(true, ...medias_constants_1.mediasConstants.protectedDirectories);
+        this.createDirectories(false, ...medias_constants_1.mediasConstants.directories);
+        this.createDirectories(true, ...medias_constants_1.mediasConstants.protectedDirectories);
     }
     getRootPath(isProtected) {
         const rootPath = (0, miedas_functions_1.getPublicDirectory)();
         return isProtected ?
             (0, path_1.join)(rootPath, medias_constants_1.mediasConstants.paths.uploadsProtected)
-            :
-                (0, path_1.join)(rootPath, medias_constants_1.mediasConstants.paths.uploads);
+            : (0, path_1.join)(rootPath, medias_constants_1.mediasConstants.paths.uploads);
     }
     getRecyclePath() {
-        const rootPath = this
-            .getRootPath(false);
+        const rootPath = this.getRootPath(false);
         return (0, path_1.join)(rootPath, medias_constants_1.mediasConstants.paths.recyclerBin);
     }
     createDirectory(path) {
@@ -5597,7 +5564,7 @@ let AppFilesService = class AppFilesService {
         }
     }
     createMedia(id, url, uniqueName, name, size, type, isProtected) {
-        return media_1.Media.create(id, url, uniqueName, name, size, type, isProtected);
+        return media_1.Media.create(id, url, uniqueName, name, size, type, null, null, null, null, isProtected);
     }
 };
 exports.AppFilesService = AppFilesService;
@@ -7236,7 +7203,7 @@ let MediasUploadHandler = class MediasUploadHandler {
             .mediasRepository
             .insert(insertedMedia);
         const resultData = medias_result_1.MediasResult
-            .create(insertedMedia._id, insertedMedia.url, insertedMedia.uniqueName, insertedMedia.name, insertedMedia.size, insertedMedia.type, insertedMedia.isProtected, insertedMedia.fullUrl);
+            .create(insertedMedia._id, insertedMedia.url, insertedMedia.uniqueName, insertedMedia.name, insertedMedia.size, insertedMedia.type, insertedMedia.isProtected, insertedMedia.fullUrl, insertedMedia.userId, insertedMedia.companyId, insertedMedia.source, insertedMedia.sourceType);
         return app_result_1.AppResult
             .createSuccess(null, null, resultData);
     }
@@ -8508,7 +8475,6 @@ let CompaniesRepository = class CompaniesRepository extends base_repository_1.Ba
         const company = await this.getById(companyId);
         if (company) {
             company.itemNr = itemNr;
-            console.log('company', company);
             await this.getAndUpdate({ _id: new mongodb_1.ObjectId(companyId) }, company);
         }
     }
@@ -8516,7 +8482,6 @@ let CompaniesRepository = class CompaniesRepository extends base_repository_1.Ba
         const company = await this.getById(companyId);
         if (company) {
             company.TenderNr = TenderNr;
-            console.log('company', company);
             await this.getAndUpdate({ _id: new mongodb_1.ObjectId(companyId) }, company);
         }
     }
@@ -8524,7 +8489,6 @@ let CompaniesRepository = class CompaniesRepository extends base_repository_1.Ba
         const company = await this.getById(companyId);
         if (company) {
             company.OpportunityNr = OpportunityNr;
-            console.log('company', company);
             await this.getAndUpdate({ _id: new mongodb_1.ObjectId(companyId) }, company);
         }
     }
@@ -8532,7 +8496,6 @@ let CompaniesRepository = class CompaniesRepository extends base_repository_1.Ba
         const company = await this.getById(companyId);
         if (company) {
             company.orderNr = OrderNr;
-            console.log('company', company);
             await this.getAndUpdate({ _id: new mongodb_1.ObjectId(companyId) }, company);
         }
     }
@@ -8944,7 +8907,6 @@ let CompaniesUpsertHandler = class CompaniesUpsertHandler {
         };
         const companyNr = command.CompanyNr && command.CompanyNr.toString() !== 'null' ? command.CompanyNr.toString() : await generateUniqueCompanyNr();
         let entity = await this.companyFactory.save(command.id, command.nameAr, command.nameEn, command.website, command.address, command.region, command.city, command.registrationNumber, command.ownerType, command.stampedAuthorizationFormUrl, command.registrationExpirationDate, command.creationDate, command.placeOfIssue, command.turnover, command.type, command.activities, command.categoriesIds, command.logoMedia, command.authorizationFileUrl, command.registeringFileUrl, command.contactInfo, command.userId, command.taxInformation, command.deliveryAddress, command.employeesNumber, companyNr, command.itemNr || 0, command.orderNr || 0, command.TenderNr || 0, command.OpportunityNr || 0);
-        console.log('entity', entity);
         entity = this.eventPublisher.mergeObjectContext(entity);
         entity.commit();
         const resultData = companies_get_result_1.CompaniesGetResult.create(entity._id, entity.nameAr, entity.nameEn, entity.website, entity.address, entity.region, entity.city, entity.registrationNumber, entity.ownerType, command.stampedAuthorizationFormUrl, entity.registrationExpirationDate, entity.creationDate, entity.placeOfIssue, entity.turnover, entity.type, entity.activities, entity.categoriesIds, command.logoMedia, command.authorizationFileUrl, command.registeringFileUrl, entity.contactInfo, entity.userId, entity.taxInformation, entity.deliveryAddress, entity.employeesNumber, companyNr, entity.itemNr, entity.orderNr, entity.TenderNr, entity.OpportunityNr);
@@ -9260,8 +9222,6 @@ let CompaniesGetAllHandler = class CompaniesGetAllHandler {
         const result = await this
             .companiesRepository
             .getAllAsResult(filter, {}, null, query.pageSize, query.pageNumber, query.withPaging, [{ field: order_by_enum_1.OrderByEnum.CREATED_AT, direction: order_direction_enum_1.OrderDirectionEnum.DESC }]);
-        console.log('result', result);
-        console.log('data', result.data);
         const entitiesResults = result
             .data
             .map((element) => {
@@ -9385,7 +9345,6 @@ let CompaniesController = class CompaniesController {
         companiesUpsertRequest.authorizationFileUrl = authorizationFileUrl;
         companiesUpsertRequest.registeringFileUrl = registeringFileUrl;
         companiesUpsertRequest.logoMedia = logoMediaUrl;
-        console.log(companiesUpsertRequest, "DDD");
         let categoriesIds = companiesUpsertRequest.categoriesIds;
         try {
             categoriesIds = JSON.parse(categoriesIds);
@@ -9395,7 +9354,6 @@ let CompaniesController = class CompaniesController {
         const result = await this
             .commandBus
             .execute(command);
-        console.log(result, "result.data");
         if (result.data.id) {
             await this.companiesService.addUserToCompany(new mongodb_1.ObjectId(result.data.userId), new mongodb_1.ObjectId(result.data.id), companiesUpsertRequest.ownerType);
         }
@@ -9438,9 +9396,6 @@ let CompaniesController = class CompaniesController {
     }
     async getAll(companiesGetAllRequest, req) {
         const { userId, roles } = req.user;
-        console.log(userId);
-        console.log(roles);
-        console.log(roles.some(item => item === "Admin"));
         const query = new companies_get_all_query_1.CompaniesGetAllQuery(companiesGetAllRequest.pageSize, companiesGetAllRequest.pageNumber, companiesGetAllRequest.withPaging, companiesGetAllRequest.search, roles.some(item => item === "Admin") ? null : userId);
         const result = await this
             .queryBus
@@ -9451,7 +9406,6 @@ let CompaniesController = class CompaniesController {
     }
     async getUsersAll(req) {
         const { userId, pageSize, pageNumber, withPaging } = req.query;
-        console.log(userId);
         const query = new companies_get_all_query_1.CompaniesGetAllQuery(pageSize, pageNumber, withPaging, "", userId);
         const result = await this
             .queryBus
@@ -9465,7 +9419,6 @@ let CompaniesController = class CompaniesController {
         if (!ComapnyId) {
             return app_response_1.AppResponse.create(false, null, 'Company ID is required', null, null, null);
         }
-        console.log(ComapnyId);
         const users = await this.userCompaniesService.getAllUsersByCompanyId(ComapnyId);
         const response = app_response_1.AppResponse.create(true, null, 'Users retrieved successfully', users, null, null);
         return response;
@@ -9475,7 +9428,6 @@ let CompaniesController = class CompaniesController {
         if (!ComapnyId) {
             return app_response_1.AppResponse.create(false, null, 'Company ID is required', null, null, null);
         }
-        console.log(ComapnyId);
         const Attachment = [];
         const response = app_response_1.AppResponse.create(true, null, 'Attachments retrieved successfully', Attachment, null, null);
         return response;
@@ -9485,14 +9437,12 @@ let CompaniesController = class CompaniesController {
         if (!ComapnyId) {
             return app_response_1.AppResponse.create(false, null, 'Company ID is required', null, null, null);
         }
-        console.log(ComapnyId);
         const items = [];
         const response = app_response_1.AppResponse.create(true, null, 'items retrieved successfully', items, null, null);
         return response;
     }
     async getmy(req) {
         const { userId } = req.user;
-        console.log(userId);
         const query = new companies_get_mine_query_1.CompaniesGetMineQuery(userId);
         const result = await this
             .queryBus
@@ -10038,7 +9988,6 @@ let CompaniesGetMyHandler = class CompaniesGetMyHandler {
     }
     async execute(query) {
         const entity = await this.companiesRepository.getCompanyByUserId(query.userId);
-        console.log(entity);
         if (entity === null) {
             return app_result_1.AppResult.createError(app_errors_1.AppErrors.nullValue('object'));
         }
@@ -10055,6 +10004,12 @@ exports.CompaniesGetMyHandler = CompaniesGetMyHandler = __decorate([
 
 /***/ }),
 /* 242 */
+/***/ ((module) => {
+
+module.exports = require("@nestjs/serve-static");
+
+/***/ }),
+/* 243 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10106,7 +10061,7 @@ exports.ProtectedFilesMiddleware = ProtectedFilesMiddleware = __decorate([
 
 
 /***/ }),
-/* 243 */
+/* 244 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10143,13 +10098,13 @@ exports.RequestsLoggerMiddleware = RequestsLoggerMiddleware = __decorate([
 
 
 /***/ }),
-/* 244 */
+/* 245 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs-modules/mailer/dist/adapters/handlebars.adapter");
 
 /***/ }),
-/* 245 */
+/* 246 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10164,32 +10119,32 @@ exports.TendersModule = void 0;
 const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
-const tender_factory_1 = __webpack_require__(246);
-const tenders_repository_1 = __webpack_require__(251);
-const tender_schema_1 = __webpack_require__(252);
-const tender_schema_factory_1 = __webpack_require__(254);
-const tenders_controller_1 = __webpack_require__(255);
-const tenders_upsert_handler_1 = __webpack_require__(277);
-const tenders_delete_handler_1 = __webpack_require__(279);
-const tender_quotations_controller_1 = __webpack_require__(280);
-const tender_quotation_schema_1 = __webpack_require__(271);
-const tenders_get_handler_1 = __webpack_require__(293);
-const tenders_get_all_handler_1 = __webpack_require__(294);
-const tender_quotations_delete_handler_1 = __webpack_require__(296);
-const tender_quotations_upsert_handler_1 = __webpack_require__(297);
-const tender_quotation_factory_1 = __webpack_require__(299);
-const tender_quotations_get_handler_1 = __webpack_require__(300);
-const tender_quotations_get_all_handler_1 = __webpack_require__(301);
-const tender_quotation_schema_factory_1 = __webpack_require__(275);
-const tender_quotations_repository_1 = __webpack_require__(270);
-const tenders_change_status_handler_1 = __webpack_require__(304);
-const tender_update_status_handler_1 = __webpack_require__(306);
-const tender_quotations_update_status_handler_1 = __webpack_require__(307);
-const getCompanyById_1 = __webpack_require__(267);
+const tender_factory_1 = __webpack_require__(247);
+const tenders_repository_1 = __webpack_require__(252);
+const tender_schema_1 = __webpack_require__(253);
+const tender_schema_factory_1 = __webpack_require__(255);
+const tenders_controller_1 = __webpack_require__(256);
+const tenders_upsert_handler_1 = __webpack_require__(278);
+const tenders_delete_handler_1 = __webpack_require__(280);
+const tender_quotations_controller_1 = __webpack_require__(281);
+const tender_quotation_schema_1 = __webpack_require__(272);
+const tenders_get_handler_1 = __webpack_require__(294);
+const tenders_get_all_handler_1 = __webpack_require__(295);
+const tender_quotations_delete_handler_1 = __webpack_require__(297);
+const tender_quotations_upsert_handler_1 = __webpack_require__(298);
+const tender_quotation_factory_1 = __webpack_require__(300);
+const tender_quotations_get_handler_1 = __webpack_require__(301);
+const tender_quotations_get_all_handler_1 = __webpack_require__(302);
+const tender_quotation_schema_factory_1 = __webpack_require__(276);
+const tender_quotations_repository_1 = __webpack_require__(271);
+const tenders_change_status_handler_1 = __webpack_require__(305);
+const tender_update_status_handler_1 = __webpack_require__(307);
+const tender_quotations_update_status_handler_1 = __webpack_require__(308);
+const getCompanyById_1 = __webpack_require__(268);
 const companies_module_1 = __webpack_require__(207);
-const tenders_cron_service_1 = __webpack_require__(268);
-const schedule_1 = __webpack_require__(269);
-const tender_quotations_get_allj2_handler_1 = __webpack_require__(308);
+const tenders_cron_service_1 = __webpack_require__(269);
+const schedule_1 = __webpack_require__(270);
+const tender_quotations_get_allj2_handler_1 = __webpack_require__(309);
 let TendersModule = class TendersModule {
 };
 exports.TendersModule = TendersModule;
@@ -10246,7 +10201,7 @@ exports.TendersModule = TendersModule = __decorate([
 
 
 /***/ }),
-/* 246 */
+/* 247 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10263,8 +10218,8 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderFactory = void 0;
 const common_1 = __webpack_require__(3);
-const tender_1 = __webpack_require__(247);
-const tenders_repository_1 = __webpack_require__(251);
+const tender_1 = __webpack_require__(248);
+const tenders_repository_1 = __webpack_require__(252);
 const mongo_functions_1 = __webpack_require__(29);
 let TenderFactory = class TenderFactory {
     constructor(tendersRepository) {
@@ -10318,7 +10273,7 @@ exports.TenderFactory = TenderFactory = __decorate([
 
 
 /***/ }),
-/* 247 */
+/* 248 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -10326,9 +10281,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Tender = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const receive_documents_type_enum_1 = __webpack_require__(248);
-const tender_status_enum_1 = __webpack_require__(249);
-const Paylater_type_enum_1 = __webpack_require__(250);
+const receive_documents_type_enum_1 = __webpack_require__(249);
+const tender_status_enum_1 = __webpack_require__(250);
+const Paylater_type_enum_1 = __webpack_require__(251);
 class Tender extends cqrs_1.AggregateRoot {
     constructor(_id, title, minValue, value, endDate, deliverDate, type, status = tender_status_enum_1.TenderStatusEnum.PLANING, categoriesIds = [], categories = [], region, city, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired = false, attachmentDeliverDays, receiveDocumentsType = receive_documents_type_enum_1.ReceiveDocumentsTypeEnum.BOTH, Paylater = Paylater_type_enum_1.PaylaterTypeEnum.NO, contactInfo, companyId = '', userId = '', products = [], TenderNr = 1000, displayOrder = 0, isVisible = true, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -10376,7 +10331,7 @@ exports.Tender = Tender;
 
 
 /***/ }),
-/* 248 */
+/* 249 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10390,7 +10345,7 @@ var ReceiveDocumentsTypeEnum;
 
 
 /***/ }),
-/* 249 */
+/* 250 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10413,7 +10368,7 @@ var TenderStatusEnum;
 
 
 /***/ }),
-/* 250 */
+/* 251 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10427,7 +10382,7 @@ var PaylaterTypeEnum;
 
 
 /***/ }),
-/* 251 */
+/* 252 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10450,8 +10405,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const tender_schema_1 = __webpack_require__(252);
-const tender_schema_factory_1 = __webpack_require__(254);
+const tender_schema_1 = __webpack_require__(253);
+const tender_schema_factory_1 = __webpack_require__(255);
 let TendersRepository = class TendersRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -10474,7 +10429,7 @@ exports.TendersRepository = TendersRepository = __decorate([
 
 
 /***/ }),
-/* 252 */
+/* 253 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10497,12 +10452,12 @@ const base_with_Info_schema_1 = __webpack_require__(37);
 const schemas_names_1 = __webpack_require__(34);
 const media_schema_1 = __webpack_require__(170);
 const category_schema_1 = __webpack_require__(186);
-const tender_type_enum_1 = __webpack_require__(253);
-const tender_status_enum_1 = __webpack_require__(249);
-const receive_documents_type_enum_1 = __webpack_require__(248);
+const tender_type_enum_1 = __webpack_require__(254);
+const tender_status_enum_1 = __webpack_require__(250);
+const receive_documents_type_enum_1 = __webpack_require__(249);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
-const Paylater_type_enum_1 = __webpack_require__(250);
+const Paylater_type_enum_1 = __webpack_require__(251);
 let TenderSchema = class TenderSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.TenderSchema = TenderSchema;
@@ -10698,7 +10653,7 @@ exports.CreatedTenderSchema
 
 
 /***/ }),
-/* 253 */
+/* 254 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10712,7 +10667,7 @@ var TenderTypeEnum;
 
 
 /***/ }),
-/* 254 */
+/* 255 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10725,7 +10680,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const tender_1 = __webpack_require__(247);
+const tender_1 = __webpack_require__(248);
 const mongo_functions_1 = __webpack_require__(29);
 let TenderSchemaFactory = class TenderSchemaFactory {
     create(entity) {
@@ -10778,7 +10733,7 @@ exports.TenderSchemaFactory = TenderSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 255 */
+/* 256 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10801,21 +10756,21 @@ const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const roles_guard_1 = __webpack_require__(85);
 const cqrs_1 = __webpack_require__(41);
-const tenders_get_all_response_1 = __webpack_require__(256);
-const tenders_upsert_request_1 = __webpack_require__(257);
-const tenders_get_request_1 = __webpack_require__(258);
-const tenders_get_all_request_1 = __webpack_require__(259);
-const tenders_delete_request_1 = __webpack_require__(260);
-const tenders_get_query_1 = __webpack_require__(261);
-const tenders_get_all_query_1 = __webpack_require__(262);
-const tenders_upsert_command_1 = __webpack_require__(263);
-const tenders_delete_command_1 = __webpack_require__(264);
-const tenders_change_status_command_1 = __webpack_require__(265);
-const tenders_change_status_request_1 = __webpack_require__(266);
+const tenders_get_all_response_1 = __webpack_require__(257);
+const tenders_upsert_request_1 = __webpack_require__(258);
+const tenders_get_request_1 = __webpack_require__(259);
+const tenders_get_all_request_1 = __webpack_require__(260);
+const tenders_delete_request_1 = __webpack_require__(261);
+const tenders_get_query_1 = __webpack_require__(262);
+const tenders_get_all_query_1 = __webpack_require__(263);
+const tenders_upsert_command_1 = __webpack_require__(264);
+const tenders_delete_command_1 = __webpack_require__(265);
+const tenders_change_status_command_1 = __webpack_require__(266);
+const tenders_change_status_request_1 = __webpack_require__(267);
 const app_response_1 = __webpack_require__(87);
-const tender_status_enum_1 = __webpack_require__(249);
-const getCompanyById_1 = __webpack_require__(267);
-const tenders_cron_service_1 = __webpack_require__(268);
+const tender_status_enum_1 = __webpack_require__(250);
+const getCompanyById_1 = __webpack_require__(268);
+const tenders_cron_service_1 = __webpack_require__(269);
 let TendersController = class TendersController {
     constructor(queryBus, commandBus, companyService, tendersCronService) {
         this.queryBus = queryBus;
@@ -10825,10 +10780,7 @@ let TendersController = class TendersController {
     }
     async upsert(tendersUpsertRequest, req) {
         const { userId } = req.user;
-        console.log(userId);
-        console.log(tendersUpsertRequest);
         const command = new tenders_upsert_command_1.TendersUpsertCommand(tendersUpsertRequest.id ? tendersUpsertRequest.id : null, tendersUpsertRequest.title, tendersUpsertRequest.minValue, tendersUpsertRequest.value, tendersUpsertRequest.endDate, tendersUpsertRequest.deliverDate, tendersUpsertRequest.type, tendersUpsertRequest.status ? tendersUpsertRequest.status : tender_status_enum_1.TenderStatusEnum.PLANING, tendersUpsertRequest.categoriesIds, tendersUpsertRequest.region, tendersUpsertRequest.city, tendersUpsertRequest.fileName, tendersUpsertRequest.fileDescription, tendersUpsertRequest.fileId, tendersUpsertRequest.attachmentName, tendersUpsertRequest.attachmentDescription, tendersUpsertRequest.attachmentId, tendersUpsertRequest.attachmentRequired, tendersUpsertRequest.attachmentDeliverDays, tendersUpsertRequest.receiveDocumentsType, tendersUpsertRequest.Paylater, tendersUpsertRequest.contactInfo, tendersUpsertRequest.companyId ? tendersUpsertRequest.companyId : null, userId, tendersUpsertRequest.products, tendersUpsertRequest.TenderNr);
-        console.log(command);
         const result = await this
             .commandBus
             .execute(command);
@@ -10913,7 +10865,6 @@ let TendersController = class TendersController {
                 .filter(item => item.userId === userId)
                 .map(async (tender) => {
                 const company = await this.companyService.getCompanyById(tender.companyId);
-                console.log(tender, 22222);
                 return tenders_get_all_response_1.TendersGetAllResponse.create(tender.id, tender.title, tender.minValue, tender.value, tender.endDate, tender.deliverDate, tender.type, tender.status, tender.categoriesIds, tender.categories, tender.region, tender.city, tender.attachmentRequired, tender.receiveDocumentsType, tender.Paylater, tender.companyId, tender.userId, tender.TenderNr, company);
             }))
             : [];
@@ -11062,14 +11013,14 @@ exports.TendersController = TendersController = __decorate([
 
 
 /***/ }),
-/* 256 */
+/* 257 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersGetAllResponse = void 0;
-const Paylater_type_enum_1 = __webpack_require__(250);
-const receive_documents_type_enum_1 = __webpack_require__(248);
+const Paylater_type_enum_1 = __webpack_require__(251);
+const receive_documents_type_enum_1 = __webpack_require__(249);
 class TendersGetAllResponse {
     constructor(id, title, minValue, value, endDate, deliverDate, type, status, categoriesIds = [], categories = [], region, city, attachmentRequired = false, receiveDocumentsType = receive_documents_type_enum_1.ReceiveDocumentsTypeEnum.BOTH, Paylater = Paylater_type_enum_1.PaylaterTypeEnum.NO, companyId = '', userId = '', TenderNr, company) {
         this.id = id;
@@ -11100,7 +11051,7 @@ exports.TendersGetAllResponse = TendersGetAllResponse;
 
 
 /***/ }),
-/* 257 */
+/* 258 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11118,10 +11069,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersUpsertRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
 const class_transformer_1 = __webpack_require__(72);
-const tender_type_enum_1 = __webpack_require__(253);
-const tender_status_enum_1 = __webpack_require__(249);
-const receive_documents_type_enum_1 = __webpack_require__(248);
-const Paylater_type_enum_1 = __webpack_require__(250);
+const tender_type_enum_1 = __webpack_require__(254);
+const tender_status_enum_1 = __webpack_require__(250);
+const receive_documents_type_enum_1 = __webpack_require__(249);
+const Paylater_type_enum_1 = __webpack_require__(251);
 class Product {
 }
 __decorate([
@@ -11270,7 +11221,7 @@ __decorate([
 
 
 /***/ }),
-/* 258 */
+/* 259 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11296,7 +11247,7 @@ __decorate([
 
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11316,8 +11267,8 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const tender_status_enum_1 = __webpack_require__(249);
-const tender_type_enum_1 = __webpack_require__(253);
+const tender_status_enum_1 = __webpack_require__(250);
+const tender_type_enum_1 = __webpack_require__(254);
 class TendersGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -11363,7 +11314,7 @@ __decorate([
 
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11389,7 +11340,7 @@ __decorate([
 
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11404,7 +11355,7 @@ exports.TendersGetQuery = TendersGetQuery;
 
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11427,7 +11378,7 @@ exports.TendersGetAllQuery = TendersGetAllQuery;
 
 
 /***/ }),
-/* 263 */
+/* 264 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11467,7 +11418,7 @@ exports.TendersUpsertCommand = TendersUpsertCommand;
 
 
 /***/ }),
-/* 264 */
+/* 265 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11483,7 +11434,7 @@ exports.TendersDeleteCommand = TendersDeleteCommand;
 
 
 /***/ }),
-/* 265 */
+/* 266 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11501,7 +11452,7 @@ exports.TendersChangeStatusCommand = TendersChangeStatusCommand;
 
 
 /***/ }),
-/* 266 */
+/* 267 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11518,7 +11469,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const tender_status_enum_1 = __webpack_require__(249);
+const tender_status_enum_1 = __webpack_require__(250);
 class TendersChangeStatusRequest {
 }
 exports.TendersChangeStatusRequest = TendersChangeStatusRequest;
@@ -11540,7 +11491,7 @@ __decorate([
 
 
 /***/ }),
-/* 267 */
+/* 268 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11574,7 +11525,7 @@ exports.CompanyService = CompanyService = __decorate([
 
 
 /***/ }),
-/* 268 */
+/* 269 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11592,10 +11543,10 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersCronService = void 0;
 const common_1 = __webpack_require__(3);
-const schedule_1 = __webpack_require__(269);
-const tenders_repository_1 = __webpack_require__(251);
-const tender_status_enum_1 = __webpack_require__(249);
-const tender_quotations_repository_1 = __webpack_require__(270);
+const schedule_1 = __webpack_require__(270);
+const tenders_repository_1 = __webpack_require__(252);
+const tender_status_enum_1 = __webpack_require__(250);
+const tender_quotations_repository_1 = __webpack_require__(271);
 const mongo_functions_1 = __webpack_require__(29);
 let TendersCronService = TendersCronService_1 = class TendersCronService {
     constructor(tendersRepository, tenderQuotationsRepository) {
@@ -11650,13 +11601,13 @@ exports.TendersCronService = TendersCronService = TendersCronService_1 = __decor
 
 
 /***/ }),
-/* 269 */
+/* 270 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/schedule");
 
 /***/ }),
-/* 270 */
+/* 271 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11679,8 +11630,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const tender_quotation_schema_1 = __webpack_require__(271);
-const tender_quotation_schema_factory_1 = __webpack_require__(275);
+const tender_quotation_schema_1 = __webpack_require__(272);
+const tender_quotation_schema_factory_1 = __webpack_require__(276);
 let TenderQuotationsRepository = class TenderQuotationsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -11697,7 +11648,7 @@ exports.TenderQuotationsRepository = TenderQuotationsRepository = __decorate([
 
 
 /***/ }),
-/* 271 */
+/* 272 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11720,9 +11671,9 @@ const base_with_Info_schema_1 = __webpack_require__(37);
 const schemas_names_1 = __webpack_require__(34);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
-const tender_quotation_status_enum_1 = __webpack_require__(272);
-const tender_schema_1 = __webpack_require__(252);
-const item_schema_1 = __webpack_require__(273);
+const tender_quotation_status_enum_1 = __webpack_require__(273);
+const tender_schema_1 = __webpack_require__(253);
+const item_schema_1 = __webpack_require__(274);
 let TenderQuotationSchema = class TenderQuotationSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.TenderQuotationSchema = TenderQuotationSchema;
@@ -11828,7 +11779,7 @@ exports.CreatedTenderQuotationSchema
 
 
 /***/ }),
-/* 272 */
+/* 273 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11843,7 +11794,7 @@ var TenderQuotationStatusEnum;
 
 
 /***/ }),
-/* 273 */
+/* 274 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11863,7 +11814,7 @@ const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const mongodb_1 = __webpack_require__(30);
 const schemas_names_1 = __webpack_require__(34);
-const item_status_enum_1 = __webpack_require__(274);
+const item_status_enum_1 = __webpack_require__(275);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
 const base_with_Info_schema_1 = __webpack_require__(37);
@@ -12022,7 +11973,7 @@ exports.CreatedItemSchema.set("toObject", { virtuals: true });
 
 
 /***/ }),
-/* 274 */
+/* 275 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12037,7 +11988,7 @@ var ItemStatusEnum;
 
 
 /***/ }),
-/* 275 */
+/* 276 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12051,7 +12002,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
 const mongo_functions_1 = __webpack_require__(29);
-const tender_quotation_1 = __webpack_require__(276);
+const tender_quotation_1 = __webpack_require__(277);
 let TenderQuotationSchemaFactory = class TenderQuotationSchemaFactory {
     create(entity) {
         return {
@@ -12089,7 +12040,7 @@ exports.TenderQuotationSchemaFactory = TenderQuotationSchemaFactory = __decorate
 
 
 /***/ }),
-/* 276 */
+/* 277 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -12097,7 +12048,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotation = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const tender_quotation_status_enum_1 = __webpack_require__(272);
+const tender_quotation_status_enum_1 = __webpack_require__(273);
 class TenderQuotation extends cqrs_1.AggregateRoot {
     constructor(_id, products = [], paymentMethod, DeadLineDate, DeliveryMethod, contactMethod, deliverDays, status = tender_quotation_status_enum_1.TenderQuotationStatusEnum.PENDING, tenderId = '', companyId = '', company, userId = '', OpportunityNr = 0, displayOrder = 0, isVisible = true, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -12131,7 +12082,7 @@ exports.TenderQuotation = TenderQuotation;
 
 
 /***/ }),
-/* 277 */
+/* 278 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12148,12 +12099,12 @@ var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const tenders_upsert_command_1 = __webpack_require__(263);
+const tenders_upsert_command_1 = __webpack_require__(264);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tenders_repository_1 = __webpack_require__(251);
-const tender_factory_1 = __webpack_require__(246);
-const tenders_get_result_1 = __webpack_require__(278);
+const tenders_repository_1 = __webpack_require__(252);
+const tender_factory_1 = __webpack_require__(247);
+const tenders_get_result_1 = __webpack_require__(279);
 const companies_repository_1 = __webpack_require__(210);
 let TendersUpsertHandler = class TendersUpsertHandler {
     constructor(tendersRepository, tenderFactory, eventPublisher, companiesRepository) {
@@ -12185,7 +12136,6 @@ let TendersUpsertHandler = class TendersUpsertHandler {
             TenderNR = nexttendenr;
             await this.companiesRepository.updateTenderNr(command.companyId, nexttendenr);
         }
-        console.log(command.products);
         let entity = await this
             .tenderFactory
             .save(command.id, command.title, command.minValue, command.value, command.endDate, command.deliverDate, command.type, command.status, command.categoriesIds, command.region, command.city, command.fileName, command.fileDescription, command.fileId, command.attachmentName, command.attachmentDescription, command.attachmentId, command.attachmentRequired, command.attachmentDeliverDays, command.receiveDocumentsType, command.Paylater, command.contactInfo, command.companyId, command.userId, command.products, TenderNR);
@@ -12208,14 +12158,14 @@ exports.TendersUpsertHandler = TendersUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 278 */
+/* 279 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersGetResult = void 0;
-const Paylater_type_enum_1 = __webpack_require__(250);
-const receive_documents_type_enum_1 = __webpack_require__(248);
+const Paylater_type_enum_1 = __webpack_require__(251);
+const receive_documents_type_enum_1 = __webpack_require__(249);
 class TendersGetResult {
     constructor(id, title, minValue, value, endDate, deliverDate, type, status, categoriesIds = [], categories = [], region, city, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired = false, attachmentDeliverDays, receiveDocumentsType = receive_documents_type_enum_1.ReceiveDocumentsTypeEnum.BOTH, Paylater = Paylater_type_enum_1.PaylaterTypeEnum.NO, contactInfo, companyId = '', userId = '', products = [], TenderNr = 0) {
         this.id = id;
@@ -12254,7 +12204,7 @@ exports.TendersGetResult = TendersGetResult;
 
 
 /***/ }),
-/* 279 */
+/* 280 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12271,10 +12221,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const tenders_delete_command_1 = __webpack_require__(264);
+const tenders_delete_command_1 = __webpack_require__(265);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tenders_repository_1 = __webpack_require__(251);
+const tenders_repository_1 = __webpack_require__(252);
 let TendersDeleteHandler = class TendersDeleteHandler {
     constructor(tendersRepository) {
         this.tendersRepository = tendersRepository;
@@ -12311,7 +12261,7 @@ exports.TendersDeleteHandler = TendersDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 280 */
+/* 281 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12334,23 +12284,23 @@ const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const roles_guard_1 = __webpack_require__(85);
 const cqrs_1 = __webpack_require__(41);
-const tender_quotations_delete_request_1 = __webpack_require__(281);
-const tender_quotations_get_request_1 = __webpack_require__(282);
-const tender_quotations_get_all_response_1 = __webpack_require__(283);
-const tender_quotations_get_all_query_1 = __webpack_require__(284);
-const tender_quotations_get_all_request_1 = __webpack_require__(285);
-const tender_quotations_get_query_1 = __webpack_require__(286);
-const tender_quotations_delete_command_1 = __webpack_require__(287);
-const tender_quotations_upsert_command_1 = __webpack_require__(288);
-const tender_quotations_upsert_request_1 = __webpack_require__(289);
+const tender_quotations_delete_request_1 = __webpack_require__(282);
+const tender_quotations_get_request_1 = __webpack_require__(283);
+const tender_quotations_get_all_response_1 = __webpack_require__(284);
+const tender_quotations_get_all_query_1 = __webpack_require__(285);
+const tender_quotations_get_all_request_1 = __webpack_require__(286);
+const tender_quotations_get_query_1 = __webpack_require__(287);
+const tender_quotations_delete_command_1 = __webpack_require__(288);
+const tender_quotations_upsert_command_1 = __webpack_require__(289);
+const tender_quotations_upsert_request_1 = __webpack_require__(290);
 const app_response_1 = __webpack_require__(87);
-const tenders_get_all_query_1 = __webpack_require__(262);
-const tender_status_enum_1 = __webpack_require__(249);
-const tenders_get_query_1 = __webpack_require__(261);
-const tenders_update_status_query_1 = __webpack_require__(290);
-const tenders_quatation_update_status_query_1 = __webpack_require__(291);
+const tenders_get_all_query_1 = __webpack_require__(263);
+const tender_status_enum_1 = __webpack_require__(250);
+const tenders_get_query_1 = __webpack_require__(262);
+const tenders_update_status_query_1 = __webpack_require__(291);
+const tenders_quatation_update_status_query_1 = __webpack_require__(292);
 const companies_repository_1 = __webpack_require__(210);
-const tender_quotations_get_all_J2_query_1 = __webpack_require__(292);
+const tender_quotations_get_all_J2_query_1 = __webpack_require__(293);
 let TenderQuotationsController = class TenderQuotationsController {
     constructor(queryBus, commandBus, companiesRepository) {
         this.queryBus = queryBus;
@@ -12413,7 +12363,6 @@ let TenderQuotationsController = class TenderQuotationsController {
         const query = new tenders_get_all_query_1.TendersGetAllQuery(10, 1, false, null, null, null, null, null, null);
         const openedTenders = await this.queryBus.execute(query);
         const tenderIds = openedTenders.data ? openedTenders.data.map(tender => tender.id) : [];
-        console.log(tenderIds, "tenderIds");
         const query2 = new tender_quotations_get_all_query_1.TenderQuotationsGetAllQuery(10, 1, false, null, tenderIds ? tenderIds : null, userId);
         const totalTenderQuestions = await this.queryBus.execute(query2);
         return { total: totalTenderQuestions.data ? totalTenderQuestions.data.length : 0 };
@@ -12424,8 +12373,6 @@ let TenderQuotationsController = class TenderQuotationsController {
         ;
         const query = new tenders_get_all_query_1.TendersGetAllQuery(10, 1, false, null, null, status, null, null, null);
         const openedTenders = await this.queryBus.execute(query);
-        console.log(openedTenders);
-        console.log(userId);
         const tenderIds = openedTenders.data ? openedTenders.data.map(tender => tender.id) : [];
         const query2 = new tender_quotations_get_all_query_1.TenderQuotationsGetAllQuery(10, 1, false, null, tenderIds ? tenderIds : null, userId);
         const totalTenderQuestions = await this.queryBus.execute(query2);
@@ -12436,8 +12383,6 @@ let TenderQuotationsController = class TenderQuotationsController {
         const status = tender_status_enum_1.TenderStatusEnum.CLOSED;
         const query = new tenders_get_all_query_1.TendersGetAllQuery(10, 1, false, null, null, status, null, null, null);
         const openedTenders = await this.queryBus.execute(query);
-        console.log(openedTenders);
-        console.log(userId);
         const tenderIds = openedTenders.data ? openedTenders.data.map(tender => tender.id) : [];
         const query2 = new tender_quotations_get_all_query_1.TenderQuotationsGetAllQuery(10, 1, false, null, tenderIds ? tenderIds : null, userId);
         const totalTenderQuestions = await this.queryBus.execute(query2);
@@ -12453,13 +12398,11 @@ let TenderQuotationsController = class TenderQuotationsController {
             tender_status_enum_1.TenderStatusEnum.RECEIVING,
             tender_status_enum_1.TenderStatusEnum.SENDING,
         ];
-        console.log(statuses, "statuses");
         const totals = {};
         for (const status of statuses) {
             const query = new tender_quotations_get_all_J2_query_1.TenderQuotationsGetAllQueryj2(10, 1, false, status, null, null, company._id);
             const tendersResult = await this.queryBus.execute(query);
             const tenderIds = tendersResult.data ? tendersResult.data.map(tender => tender.id) : [];
-            console.log(tenderIds, "tenderIds");
             if (tenderIds.length > 0) {
                 totals[status] = tendersResult.data ? tendersResult.data.length : 0;
             }
@@ -12483,24 +12426,18 @@ let TenderQuotationsController = class TenderQuotationsController {
         const { userId } = req.user;
         const query = new tenders_get_all_query_1.TendersGetAllQuery(10, 1, false, null, null, status, null, null, userId);
         const openedTenders = await this.queryBus.execute(query);
-        console.log(openedTenders);
-        console.log(userId);
         return { total: openedTenders.data.filter(item => item.userId === userId) ? openedTenders.data.filter(item => item.userId === userId).length : 0 };
     }
     async getTotalAllMine(req) {
         const { userId } = req.user;
-        console.log(userId, "userId");
         const query = new tender_quotations_get_all_query_1.TenderQuotationsGetAllQuery(10, 1, false, null, null, userId);
         const openedTenders = await this.queryBus.execute(query);
-        console.log(openedTenders.data.filter(item => item.userId === userId));
         return { total: openedTenders.data.filter(item => item.userId === userId) ? openedTenders.data.filter(item => item.userId === userId).length : 0 };
     }
     async getAllTrenders(req) {
         const { userId, role } = req.user;
         const query = new tender_quotations_get_all_query_1.TenderQuotationsGetAllQuery(10, 1, false, null, null, role === "Seller" ? userId : null);
         const result = await this.queryBus.execute(query);
-        console.log(result);
-        console.log(userId);
         const response1 = result.data ?
             result.data.map(tenderQuotation => tender_quotations_get_all_response_1.TenderQuotationsGetAllResponse.create(tenderQuotation.id, tenderQuotation.products, tenderQuotation.paymentMethod, tenderQuotation.DeadLineDate, tenderQuotation.DeliveryMethod, tenderQuotation.contactMethod, tenderQuotation.deliverDays, tenderQuotation.status, tenderQuotation.tenderId, tenderQuotation.companyId, tenderQuotation.company, tenderQuotation.userId, tenderQuotation.OpportunityNr))
             : [];
@@ -12509,8 +12446,6 @@ let TenderQuotationsController = class TenderQuotationsController {
             const query1 = new tenders_get_query_1.TendersGetQuery(item.tenderId);
             const result1 = await this.queryBus.execute(query1);
             const tenderData = result1.isSuccess ? result1.data : null;
-            console.log(tenderData);
-            console.log(userId);
             if (tenderData !== null) {
                 if (req.user.roles.includes("Seller")) {
                     if (item.userId === userId) {
@@ -12573,8 +12508,6 @@ let TenderQuotationsController = class TenderQuotationsController {
     }
     async cancelled(id, req) {
         const { userId } = req.user;
-        console.log(userId);
-        console.log(req.body.quatationID);
         try {
             const updateQuotationCommand = new tenders_quatation_update_status_query_1.TenderQuotationsUpdateStatusCommand(req.body.quatationID, tender_status_enum_1.TenderStatusEnum.CANCELLED, userId);
             const quotationResult = await this.commandBus.execute(updateQuotationCommand);
@@ -12587,8 +12520,6 @@ let TenderQuotationsController = class TenderQuotationsController {
     }
     async accept(id, req) {
         const { userId } = req.user;
-        console.log(userId);
-        console.log(req.body.quatationID);
         try {
             const updateQuotationCommand = new tenders_quatation_update_status_query_1.TenderQuotationsUpdateStatusCommand(req.body.quatationID, tender_status_enum_1.TenderStatusEnum.ACCEPTED, userId);
             const quotationResult = await this.commandBus.execute(updateQuotationCommand);
@@ -12612,8 +12543,6 @@ let TenderQuotationsController = class TenderQuotationsController {
     }
     async Payrequest(id, req) {
         const { userId } = req.user;
-        console.log(userId);
-        console.log(req.body.quatationID);
         try {
             const updateQuotationCommand = new tenders_quatation_update_status_query_1.TenderQuotationsUpdateStatusCommand(req.body.quatationID, tender_status_enum_1.TenderStatusEnum.PAYMENT, userId);
             const quotationResult = await this.commandBus.execute(updateQuotationCommand);
@@ -12637,8 +12566,6 @@ let TenderQuotationsController = class TenderQuotationsController {
     }
     async Send(id, req) {
         const { userId } = req.user;
-        console.log(userId);
-        console.log(req.body.quatationID);
         try {
             const updateQuotationCommand = new tenders_quatation_update_status_query_1.TenderQuotationsUpdateStatusCommand(req.body.quatationID, tender_status_enum_1.TenderStatusEnum.SENDING, userId);
             const quotationResult = await this.commandBus.execute(updateQuotationCommand);
@@ -12662,8 +12589,6 @@ let TenderQuotationsController = class TenderQuotationsController {
     }
     async receive(id, req) {
         const { userId } = req.user;
-        console.log(userId);
-        console.log(req.body.quatationID);
         try {
             const updateQuotationCommand = new tenders_quatation_update_status_query_1.TenderQuotationsUpdateStatusCommand(req.body.quatationID, tender_status_enum_1.TenderStatusEnum.RECEIVING, userId);
             const quotationResult = await this.commandBus.execute(updateQuotationCommand);
@@ -12687,8 +12612,6 @@ let TenderQuotationsController = class TenderQuotationsController {
     }
     async Sendrequest(id, req) {
         const { userId } = req.user;
-        console.log(userId);
-        console.log(req.body.quatationID);
         try {
             const updateQuotationCommand = new tenders_quatation_update_status_query_1.TenderQuotationsUpdateStatusCommand(req.body.quatationID, tender_status_enum_1.TenderStatusEnum.SENDING, userId);
             const quotationResult = await this.commandBus.execute(updateQuotationCommand);
@@ -12910,7 +12833,7 @@ exports.TenderQuotationsController = TenderQuotationsController = __decorate([
 
 
 /***/ }),
-/* 281 */
+/* 282 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12936,7 +12859,7 @@ __decorate([
 
 
 /***/ }),
-/* 282 */
+/* 283 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12962,7 +12885,7 @@ __decorate([
 
 
 /***/ }),
-/* 283 */
+/* 284 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12992,7 +12915,7 @@ exports.TenderQuotationsGetAllResponse = TenderQuotationsGetAllResponse;
 
 
 /***/ }),
-/* 284 */
+/* 285 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13012,7 +12935,7 @@ exports.TenderQuotationsGetAllQuery = TenderQuotationsGetAllQuery;
 
 
 /***/ }),
-/* 285 */
+/* 286 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13032,7 +12955,7 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const tender_quotation_status_enum_1 = __webpack_require__(272);
+const tender_quotation_status_enum_1 = __webpack_require__(273);
 class TenderQuotationsGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -13057,7 +12980,7 @@ __decorate([
 
 
 /***/ }),
-/* 286 */
+/* 287 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13072,7 +12995,7 @@ exports.TenderQuotationsGetQuery = TenderQuotationsGetQuery;
 
 
 /***/ }),
-/* 287 */
+/* 288 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13088,7 +13011,7 @@ exports.TenderQuotationsDeleteCommand = TenderQuotationsDeleteCommand;
 
 
 /***/ }),
-/* 288 */
+/* 289 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13114,7 +13037,7 @@ exports.TenderQuotationsUpsertCommand = TenderQuotationsUpsertCommand;
 
 
 /***/ }),
-/* 289 */
+/* 290 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13132,7 +13055,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsUpsertRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
 const class_transformer_1 = __webpack_require__(72);
-const tender_quotation_status_enum_1 = __webpack_require__(272);
+const tender_quotation_status_enum_1 = __webpack_require__(273);
 class Product {
 }
 __decorate([
@@ -13228,7 +13151,7 @@ __decorate([
 
 
 /***/ }),
-/* 290 */
+/* 291 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13245,7 +13168,7 @@ exports.TendersUpdateStatusCommand = TendersUpdateStatusCommand;
 
 
 /***/ }),
-/* 291 */
+/* 292 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13262,7 +13185,7 @@ exports.TenderQuotationsUpdateStatusCommand = TenderQuotationsUpdateStatusComman
 
 
 /***/ }),
-/* 292 */
+/* 293 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13283,7 +13206,7 @@ exports.TenderQuotationsGetAllQueryj2 = TenderQuotationsGetAllQueryj2;
 
 
 /***/ }),
-/* 293 */
+/* 294 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13302,9 +13225,9 @@ exports.TendersGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tenders_get_query_1 = __webpack_require__(261);
-const tenders_get_result_1 = __webpack_require__(278);
-const tenders_repository_1 = __webpack_require__(251);
+const tenders_get_query_1 = __webpack_require__(262);
+const tenders_get_result_1 = __webpack_require__(279);
+const tenders_repository_1 = __webpack_require__(252);
 let TendersGetHandler = class TendersGetHandler {
     constructor(tendersRepository) {
         this.tendersRepository = tendersRepository;
@@ -13338,7 +13261,7 @@ exports.TendersGetHandler = TendersGetHandler = __decorate([
 
 
 /***/ }),
-/* 294 */
+/* 295 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13356,11 +13279,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tenders_get_all_query_1 = __webpack_require__(262);
+const tenders_get_all_query_1 = __webpack_require__(263);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const tenders_get_all_result_1 = __webpack_require__(295);
-const tenders_repository_1 = __webpack_require__(251);
+const tenders_get_all_result_1 = __webpack_require__(296);
+const tenders_repository_1 = __webpack_require__(252);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
 let TendersGetAllHandler = class TendersGetAllHandler {
@@ -13396,8 +13319,6 @@ let TendersGetAllHandler = class TendersGetAllHandler {
             filter.companyId =
                 (0, mongo_functions_1.createObjectId)(query.companyId);
         }
-        console.log('query.userId', query.userId);
-        console.log('filter', filter);
         if (query.userId !== null) {
             filter.userId =
                 (0, mongo_functions_1.createObjectId)(query.userId);
@@ -13419,12 +13340,9 @@ let TendersGetAllHandler = class TendersGetAllHandler {
                 direction: order_direction_enum_1.OrderDirectionEnum.ASC,
             },
         ]);
-        console.log('result', result);
-        console.log('data', result.data);
         const entitiesResults = result
             .data
             .map(element => {
-            console.log(element.TenderNr);
             return tenders_get_all_result_1.TendersGetAllResult
                 .create(element._id, element.title, element.minValue, element.value, element.endDate, element.deliverDate, element.type, element.status, element.categoriesIds, element
                 .categories
@@ -13441,14 +13359,14 @@ exports.TendersGetAllHandler = TendersGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 295 */
+/* 296 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersGetAllResult = void 0;
-const Paylater_type_enum_1 = __webpack_require__(250);
-const receive_documents_type_enum_1 = __webpack_require__(248);
+const Paylater_type_enum_1 = __webpack_require__(251);
+const receive_documents_type_enum_1 = __webpack_require__(249);
 class TendersGetAllResult {
     constructor(id, title, minValue, value, endDate, deliverDate, type, status, categoriesIds = [], categories = [], region, city, attachmentRequired = false, receiveDocumentsType = receive_documents_type_enum_1.ReceiveDocumentsTypeEnum.BOTH, Paylater = Paylater_type_enum_1.PaylaterTypeEnum.NO, companyId = '', userId = '', TenderNr) {
         this.id = id;
@@ -13478,7 +13396,7 @@ exports.TendersGetAllResult = TendersGetAllResult;
 
 
 /***/ }),
-/* 296 */
+/* 297 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13497,8 +13415,8 @@ exports.TenderQuotationsDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tender_quotations_repository_1 = __webpack_require__(270);
-const tender_quotations_delete_command_1 = __webpack_require__(287);
+const tender_quotations_repository_1 = __webpack_require__(271);
+const tender_quotations_delete_command_1 = __webpack_require__(288);
 let TenderQuotationsDeleteHandler = class TenderQuotationsDeleteHandler {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13535,7 +13453,7 @@ exports.TenderQuotationsDeleteHandler = TenderQuotationsDeleteHandler = __decora
 
 
 /***/ }),
-/* 297 */
+/* 298 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13553,10 +13471,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tender_quotations_get_result_1 = __webpack_require__(298);
-const tender_quotations_upsert_command_1 = __webpack_require__(288);
-const tender_quotations_repository_1 = __webpack_require__(270);
-const tender_quotation_factory_1 = __webpack_require__(299);
+const tender_quotations_get_result_1 = __webpack_require__(299);
+const tender_quotations_upsert_command_1 = __webpack_require__(289);
+const tender_quotations_repository_1 = __webpack_require__(271);
+const tender_quotation_factory_1 = __webpack_require__(300);
 const app_errors_1 = __webpack_require__(102);
 const companies_repository_1 = __webpack_require__(210);
 let TenderQuotationsUpsertHandler = class TenderQuotationsUpsertHandler {
@@ -13607,7 +13525,7 @@ exports.TenderQuotationsUpsertHandler = TenderQuotationsUpsertHandler = __decora
 
 
 /***/ }),
-/* 298 */
+/* 299 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13636,7 +13554,7 @@ exports.TenderQuotationsGetResult = TenderQuotationsGetResult;
 
 
 /***/ }),
-/* 299 */
+/* 300 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13654,9 +13572,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationFactory = void 0;
 const common_1 = __webpack_require__(3);
 const mongo_functions_1 = __webpack_require__(29);
-const tender_quotation_1 = __webpack_require__(276);
-const tender_quotations_repository_1 = __webpack_require__(270);
-const tender_quotation_status_enum_1 = __webpack_require__(272);
+const tender_quotation_1 = __webpack_require__(277);
+const tender_quotations_repository_1 = __webpack_require__(271);
+const tender_quotation_status_enum_1 = __webpack_require__(273);
 let TenderQuotationFactory = class TenderQuotationFactory {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13702,7 +13620,7 @@ exports.TenderQuotationFactory = TenderQuotationFactory = __decorate([
 
 
 /***/ }),
-/* 300 */
+/* 301 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13720,10 +13638,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tender_quotations_get_query_1 = __webpack_require__(286);
+const tender_quotations_get_query_1 = __webpack_require__(287);
 const app_errors_1 = __webpack_require__(102);
-const tender_quotations_repository_1 = __webpack_require__(270);
-const tender_quotations_get_result_1 = __webpack_require__(298);
+const tender_quotations_repository_1 = __webpack_require__(271);
+const tender_quotations_get_result_1 = __webpack_require__(299);
 let TenderQuotationsGetHandler = class TenderQuotationsGetHandler {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13750,7 +13668,7 @@ exports.TenderQuotationsGetHandler = TenderQuotationsGetHandler = __decorate([
 
 
 /***/ }),
-/* 301 */
+/* 302 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13768,13 +13686,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tender_quotations_get_all_query_1 = __webpack_require__(284);
+const tender_quotations_get_all_query_1 = __webpack_require__(285);
 const mongo_functions_1 = __webpack_require__(29);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
-const tender_quotations_repository_1 = __webpack_require__(270);
-const tender_quotations_get_all_result_1 = __webpack_require__(302);
-const companies_result_1 = __webpack_require__(303);
+const tender_quotations_repository_1 = __webpack_require__(271);
+const tender_quotations_get_all_result_1 = __webpack_require__(303);
+const companies_result_1 = __webpack_require__(304);
 let TenderQuotationsGetAllHandler = class TenderQuotationsGetAllHandler {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13826,7 +13744,7 @@ exports.TenderQuotationsGetAllHandler = TenderQuotationsGetAllHandler = __decora
 
 
 /***/ }),
-/* 302 */
+/* 303 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13856,7 +13774,7 @@ exports.TenderQuotationsGetAllResult = TenderQuotationsGetAllResult;
 
 
 /***/ }),
-/* 303 */
+/* 304 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13880,7 +13798,7 @@ exports.CompaniesResult = CompaniesResult;
 
 
 /***/ }),
-/* 304 */
+/* 305 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13897,17 +13815,17 @@ var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const tenders_change_status_command_1 = __webpack_require__(265);
+const tenders_change_status_command_1 = __webpack_require__(266);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tenders_repository_1 = __webpack_require__(251);
-const tender_factory_1 = __webpack_require__(246);
-const tenders_get_result_1 = __webpack_require__(278);
-const tender_quotations_repository_1 = __webpack_require__(270);
-const tender_quotation_factory_1 = __webpack_require__(299);
-const tender_status_enum_1 = __webpack_require__(249);
-const tender_quotation_status_enum_1 = __webpack_require__(272);
-const tenders_error_1 = __webpack_require__(305);
+const tenders_repository_1 = __webpack_require__(252);
+const tender_factory_1 = __webpack_require__(247);
+const tenders_get_result_1 = __webpack_require__(279);
+const tender_quotations_repository_1 = __webpack_require__(271);
+const tender_quotation_factory_1 = __webpack_require__(300);
+const tender_status_enum_1 = __webpack_require__(250);
+const tender_quotation_status_enum_1 = __webpack_require__(273);
+const tenders_error_1 = __webpack_require__(306);
 let TendersChangeStatusHandler = class TendersChangeStatusHandler {
     constructor(tendersRepository, tenderQuotationsRepository, tenderFactory, tenderQuotationFactory, eventPublisher) {
         this.tendersRepository = tendersRepository;
@@ -13975,7 +13893,7 @@ exports.TendersChangeStatusHandler = TendersChangeStatusHandler = __decorate([
 
 
 /***/ }),
-/* 305 */
+/* 306 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -13997,7 +13915,7 @@ exports.TendersError = TendersError;
 
 
 /***/ }),
-/* 306 */
+/* 307 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14015,8 +13933,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersUpdateStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tenders_update_status_query_1 = __webpack_require__(290);
-const tenders_repository_1 = __webpack_require__(251);
+const tenders_update_status_query_1 = __webpack_require__(291);
+const tenders_repository_1 = __webpack_require__(252);
 let TendersUpdateStatusHandler = class TendersUpdateStatusHandler {
     constructor(tenderRepository) {
         this.tenderRepository = tenderRepository;
@@ -14042,7 +13960,7 @@ exports.TendersUpdateStatusHandler = TendersUpdateStatusHandler = __decorate([
 
 
 /***/ }),
-/* 307 */
+/* 308 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14060,8 +13978,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsUpdateStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tenders_quatation_update_status_query_1 = __webpack_require__(291);
-const tender_quotations_repository_1 = __webpack_require__(270);
+const tenders_quatation_update_status_query_1 = __webpack_require__(292);
+const tender_quotations_repository_1 = __webpack_require__(271);
 let TenderQuotationsUpdateStatusHandler = class TenderQuotationsUpdateStatusHandler {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -14087,7 +14005,7 @@ exports.TenderQuotationsUpdateStatusHandler = TenderQuotationsUpdateStatusHandle
 
 
 /***/ }),
-/* 308 */
+/* 309 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14108,10 +14026,10 @@ const app_result_1 = __webpack_require__(27);
 const mongo_functions_1 = __webpack_require__(29);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
-const tender_quotations_repository_1 = __webpack_require__(270);
-const tender_quotations_get_all_result_1 = __webpack_require__(302);
-const companies_result_1 = __webpack_require__(303);
-const tender_quotations_get_all_J2_query_1 = __webpack_require__(292);
+const tender_quotations_repository_1 = __webpack_require__(271);
+const tender_quotations_get_all_result_1 = __webpack_require__(303);
+const companies_result_1 = __webpack_require__(304);
+const tender_quotations_get_all_J2_query_1 = __webpack_require__(293);
 let TenderQuotationsGetAllHandlerj2 = class TenderQuotationsGetAllHandlerj2 {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -14163,7 +14081,7 @@ exports.TenderQuotationsGetAllHandlerj2 = TenderQuotationsGetAllHandlerj2 = __de
 
 
 /***/ }),
-/* 309 */
+/* 310 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14178,21 +14096,21 @@ exports.OrdersModule = void 0;
 const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
-const order_factory_1 = __webpack_require__(310);
-const orders_repository_1 = __webpack_require__(313);
-const order_schema_1 = __webpack_require__(314);
-const order_schema_factory_1 = __webpack_require__(316);
-const orders_controller_1 = __webpack_require__(317);
-const tenders_upsert_handler_1 = __webpack_require__(338);
-const orders_delete_handler_1 = __webpack_require__(340);
-const orders_get_handler_1 = __webpack_require__(341);
-const orders_get_all_handler_1 = __webpack_require__(342);
-const orders_change_status_handler_1 = __webpack_require__(344);
-const tenders_module_1 = __webpack_require__(245);
+const order_factory_1 = __webpack_require__(311);
+const orders_repository_1 = __webpack_require__(314);
+const order_schema_1 = __webpack_require__(315);
+const order_schema_factory_1 = __webpack_require__(317);
+const orders_controller_1 = __webpack_require__(318);
+const tenders_upsert_handler_1 = __webpack_require__(339);
+const orders_delete_handler_1 = __webpack_require__(341);
+const orders_get_handler_1 = __webpack_require__(342);
+const orders_get_all_handler_1 = __webpack_require__(343);
+const orders_change_status_handler_1 = __webpack_require__(345);
+const tenders_module_1 = __webpack_require__(246);
 const companies_module_1 = __webpack_require__(207);
-const notification_module_1 = __webpack_require__(346);
-const user_module_1 = __webpack_require__(352);
-const getCompanyById_1 = __webpack_require__(267);
+const notification_module_1 = __webpack_require__(347);
+const user_module_1 = __webpack_require__(353);
+const getCompanyById_1 = __webpack_require__(268);
 let OrdersModule = class OrdersModule {
 };
 exports.OrdersModule = OrdersModule;
@@ -14228,7 +14146,7 @@ exports.OrdersModule = OrdersModule = __decorate([
 
 
 /***/ }),
-/* 310 */
+/* 311 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14245,8 +14163,8 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrderFactory = void 0;
 const common_1 = __webpack_require__(3);
-const order_1 = __webpack_require__(311);
-const orders_repository_1 = __webpack_require__(313);
+const order_1 = __webpack_require__(312);
+const orders_repository_1 = __webpack_require__(314);
 const mongo_functions_1 = __webpack_require__(29);
 let OrderFactory = class OrderFactory {
     constructor(tendersRepository) {
@@ -14302,7 +14220,7 @@ exports.OrderFactory = OrderFactory = __decorate([
 
 
 /***/ }),
-/* 311 */
+/* 312 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -14310,7 +14228,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Order = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const order_status_enum_1 = __webpack_require__(312);
+const order_status_enum_1 = __webpack_require__(313);
 class Order extends cqrs_1.AggregateRoot {
     constructor(_id, title, endDate, deliverDate, type, status = order_status_enum_1.OrderStatusEnum.PLANING, region, city, address, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired = false, attachmentDeliverDays, contactInfo, tenderId = '', companyId = '', userId = '', products = [], Sendedproducts = [], OrderNr = 0, DeliveryMethod = '', paymentMethod = '', invoices = [], displayOrder = 0, isVisible = true, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -14358,7 +14276,7 @@ exports.Order = Order;
 
 
 /***/ }),
-/* 312 */
+/* 313 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -14382,7 +14300,7 @@ var OrderStatusEnum;
 
 
 /***/ }),
-/* 313 */
+/* 314 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14405,8 +14323,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const order_schema_1 = __webpack_require__(314);
-const order_schema_factory_1 = __webpack_require__(316);
+const order_schema_1 = __webpack_require__(315);
+const order_schema_factory_1 = __webpack_require__(317);
 let OrdersRepository = class OrdersRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -14429,7 +14347,7 @@ exports.OrdersRepository = OrdersRepository = __decorate([
 
 
 /***/ }),
-/* 314 */
+/* 315 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14451,11 +14369,11 @@ const mongodb_1 = __webpack_require__(30);
 const base_with_Info_schema_1 = __webpack_require__(37);
 const schemas_names_1 = __webpack_require__(34);
 const media_schema_1 = __webpack_require__(170);
-const order_status_enum_1 = __webpack_require__(312);
+const order_status_enum_1 = __webpack_require__(313);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
-const order_type_enum_1 = __webpack_require__(315);
-const tender_schema_1 = __webpack_require__(252);
+const order_type_enum_1 = __webpack_require__(316);
+const tender_schema_1 = __webpack_require__(253);
 let OrderSchema = class OrderSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.OrderSchema = OrderSchema;
@@ -14663,7 +14581,7 @@ exports.CreatedOrderSchema
 
 
 /***/ }),
-/* 315 */
+/* 316 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -14677,7 +14595,7 @@ var OrderTypeEnum;
 
 
 /***/ }),
-/* 316 */
+/* 317 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14690,7 +14608,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrderSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const order_1 = __webpack_require__(311);
+const order_1 = __webpack_require__(312);
 const mongo_functions_1 = __webpack_require__(29);
 let OrderSchemaFactory = class OrderSchemaFactory {
     create(entity) {
@@ -14743,7 +14661,7 @@ exports.OrderSchemaFactory = OrderSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 317 */
+/* 318 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14765,31 +14683,31 @@ exports.OrdersController = void 0;
 const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const cqrs_1 = __webpack_require__(41);
-const orders_get_all_response_1 = __webpack_require__(318);
-const orders_upsert_request_1 = __webpack_require__(319);
-const orders_get_request_1 = __webpack_require__(321);
-const orders_get_all_request_1 = __webpack_require__(322);
-const orders_delete_request_1 = __webpack_require__(323);
-const orders_get_query_1 = __webpack_require__(324);
-const orders_get_all_query_1 = __webpack_require__(325);
-const orders_upsert_command_1 = __webpack_require__(326);
-const orders_delete_command_1 = __webpack_require__(327);
-const orders_change_status_command_1 = __webpack_require__(328);
-const orders_change_status_request_1 = __webpack_require__(329);
+const orders_get_all_response_1 = __webpack_require__(319);
+const orders_upsert_request_1 = __webpack_require__(320);
+const orders_get_request_1 = __webpack_require__(322);
+const orders_get_all_request_1 = __webpack_require__(323);
+const orders_delete_request_1 = __webpack_require__(324);
+const orders_get_query_1 = __webpack_require__(325);
+const orders_get_all_query_1 = __webpack_require__(326);
+const orders_upsert_command_1 = __webpack_require__(327);
+const orders_delete_command_1 = __webpack_require__(328);
+const orders_change_status_command_1 = __webpack_require__(329);
+const orders_change_status_request_1 = __webpack_require__(330);
 const app_response_1 = __webpack_require__(87);
-const order_status_enum_1 = __webpack_require__(312);
-const tenders_get_all_query_1 = __webpack_require__(262);
+const order_status_enum_1 = __webpack_require__(313);
+const tenders_get_all_query_1 = __webpack_require__(263);
 const companies_get_query_1 = __webpack_require__(222);
-const orders_buyer_all_response_1 = __webpack_require__(330);
-const tenders_get_query_1 = __webpack_require__(261);
-const notifications_repository_1 = __webpack_require__(331);
-const notification_factory_1 = __webpack_require__(335);
+const orders_buyer_all_response_1 = __webpack_require__(331);
+const tenders_get_query_1 = __webpack_require__(262);
+const notifications_repository_1 = __webpack_require__(332);
+const notification_factory_1 = __webpack_require__(336);
 const user_companies_service_1 = __webpack_require__(234);
-const user_service_1 = __webpack_require__(336);
-const order_type_enum_1 = __webpack_require__(315);
-const puppeteer_1 = __webpack_require__(337);
+const user_service_1 = __webpack_require__(337);
+const order_type_enum_1 = __webpack_require__(316);
+const puppeteer_1 = __webpack_require__(338);
 const fs = __webpack_require__(144);
-const getCompanyById_1 = __webpack_require__(267);
+const getCompanyById_1 = __webpack_require__(268);
 const s3_upload_service_1 = __webpack_require__(238);
 let OrdersController = class OrdersController {
     constructor(queryBus, commandBus, notificationsRepository, userCompaniesService, userService, companyService) {
@@ -14802,18 +14720,17 @@ let OrdersController = class OrdersController {
     }
     async upsert(ordersUpsertRequest, req) {
         const { userId } = req.user;
-        console.log(ordersUpsertRequest, "ordersUpsertRequest");
         const defaultEndDate = new Date();
         defaultEndDate.setDate(defaultEndDate.getDate() + 30);
         const defaultDeliverDate = new Date();
         defaultDeliverDate.setDate(defaultDeliverDate.getDate() + 30);
-        const mappedProducts = ordersUpsertRequest.products.map(product => ({
-            itemId: product.itemId || '',
+        const mappedProducts = ordersUpsertRequest.products.map((product) => ({
+            itemId: product.itemId || "",
             item: product.item,
             quantity: product.quantity,
             price: product.price,
             discount: product.discount,
-            notice: product.notice || '',
+            notice: product.notice || "",
             image: product.image,
             attachment: product.attachment,
             SKUCode: product.SKUCode,
@@ -14822,14 +14739,14 @@ let OrdersController = class OrdersController {
             tender: product.tender || null,
             quatationId: product.quatationId || null,
         }));
-        const mappedSendedproducts = ordersUpsertRequest.Sendedproducts
-            ? ordersUpsertRequest.Sendedproducts.map(product => ({
-                itemId: product.itemId || '',
+        const mappedSendedproducts = ordersUpsertRequest.Sendedproducts ?
+            ordersUpsertRequest.Sendedproducts.map((product) => ({
+                itemId: product.itemId || "",
                 item: product.item,
                 quantity: product.quantity,
                 price: product.price,
                 discount: product.discount,
-                notice: product.notice || '',
+                notice: product.notice || "",
                 image: product.image,
                 attachment: product.attachment,
                 SKUCode: product.SKUCode,
@@ -14842,10 +14759,11 @@ let OrdersController = class OrdersController {
         let invoices = ordersUpsertRequest.invoices || [];
         let Status = ordersUpsertRequest.status;
         if (req.user.roles.includes("Seller")) {
-            if (mappedSendedproducts.length > 0 && mappedSendedproducts.length === mappedProducts.length) {
+            if (mappedSendedproducts.length > 0 &&
+                mappedSendedproducts.length === mappedProducts.length) {
                 Status = order_status_enum_1.OrderStatusEnum.SENDING;
-                const englishPDF = await this.createAndUploadPDF(ordersUpsertRequest, 'en');
-                const arabicPDF = await this.createAndUploadPDF(ordersUpsertRequest, 'ar');
+                const englishPDF = await this.createAndUploadPDF(ordersUpsertRequest, "en");
+                const arabicPDF = await this.createAndUploadPDF(ordersUpsertRequest, "ar");
                 invoices.push({
                     fileName: `invoice_${ordersUpsertRequest.OrderNr}`,
                     companyId: mappedSendedproducts[0].companyId || null,
@@ -14855,10 +14773,11 @@ let OrdersController = class OrdersController {
                     arVersion: arabicPDF,
                 });
             }
-            if (mappedSendedproducts.length > 0 && mappedSendedproducts.length < mappedProducts.length) {
+            if (mappedSendedproducts.length > 0 &&
+                mappedSendedproducts.length < mappedProducts.length) {
                 Status = order_status_enum_1.OrderStatusEnum.PARTSENDING;
-                const englishPDF = await this.createAndUploadPDF(ordersUpsertRequest, 'en');
-                const arabicPDF = await this.createAndUploadPDF(ordersUpsertRequest, 'ar');
+                const englishPDF = await this.createAndUploadPDF(ordersUpsertRequest, "en");
+                const arabicPDF = await this.createAndUploadPDF(ordersUpsertRequest, "ar");
                 invoices.push({
                     fileName: `invoice_${ordersUpsertRequest.OrderNr}`,
                     companyId: mappedSendedproducts[0].companyId || null,
@@ -14870,66 +14789,57 @@ let OrdersController = class OrdersController {
             }
         }
         if (req.user.roles.includes("Buyer")) {
-            if (mappedSendedproducts.length > 0 && mappedSendedproducts.length === mappedProducts.length) {
+            if (mappedSendedproducts.length > 0 &&
+                mappedSendedproducts.length === mappedProducts.length) {
                 Status = order_status_enum_1.OrderStatusEnum.FINISHED;
             }
-            if (mappedSendedproducts.length > 0 && mappedSendedproducts.length < mappedProducts.length && ordersUpsertRequest.status === order_status_enum_1.OrderStatusEnum.PARTSENDING) {
+            if (mappedSendedproducts.length > 0 &&
+                mappedSendedproducts.length < mappedProducts.length &&
+                ordersUpsertRequest.status === order_status_enum_1.OrderStatusEnum.PARTSENDING) {
                 Status = order_status_enum_1.OrderStatusEnum.PARTRECEIVING;
             }
         }
-        console.log(Status, "Status");
         const command = new orders_upsert_command_1.OrdersUpsertCommand(ordersUpsertRequest.id ? ordersUpsertRequest.id : null, ordersUpsertRequest.title, ordersUpsertRequest.endDate || defaultEndDate, ordersUpsertRequest.deliverDate || defaultDeliverDate, ordersUpsertRequest.type || order_type_enum_1.OrderTypeEnum.TINY, Status, ordersUpsertRequest.region, ordersUpsertRequest.city, ordersUpsertRequest.address, ordersUpsertRequest.fileName, ordersUpsertRequest.fileDescription, ordersUpsertRequest.fileId, ordersUpsertRequest.attachmentName, ordersUpsertRequest.attachmentDescription, ordersUpsertRequest.attachmentId, ordersUpsertRequest.attachmentRequired ?? false, ordersUpsertRequest.attachmentDeliverDays, ordersUpsertRequest.contactInfo, ordersUpsertRequest.tenderId ? ordersUpsertRequest.tenderId : null, ordersUpsertRequest.companyId ? ordersUpsertRequest.companyId : null, userId, mappedProducts, mappedSendedproducts, ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0, ordersUpsertRequest.DeliveryMethod, ordersUpsertRequest.paymentMethod, invoices);
-        console.log(command);
-        const result = await this
-            .commandBus
-            .execute(command);
+        const result = await this.commandBus.execute(command);
         if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Planning") {
             const factory = new notification_factory_1.NotificationFactory(this.notificationsRepository);
-            await factory.save(null, userId, 'INFO', `تم تحديث طلبك برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
+            await factory.save(null, userId, "INFO", `تم تحديث طلبك برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
         }
         if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Opened") {
             const factory = new notification_factory_1.NotificationFactory(this.notificationsRepository);
             mappedProducts.map(async (item) => {
                 const users = await this.userCompaniesService.getAllUsersByCompanyId(item.companyId);
-                await factory.save(null, users ? users[0].id : null, 'INFO', `${users ? users[0].nickName : null} ارسال الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
+                await factory.save(null, users ? users[0].id : null, "INFO", `${users ? users[0].nickName : null} ارسال الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
             });
         }
         if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Accepted") {
             const factory = new notification_factory_1.NotificationFactory(this.notificationsRepository);
             const users = await this.userService.findById(userId);
-            await factory.save(null, ordersUpsertRequest.userId, 'INFO', `${users?.nickName} قبول الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
+            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${users?.nickName} قبول الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
         }
         if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Sending") {
             const factory = new notification_factory_1.NotificationFactory(this.notificationsRepository);
             const users = await this.userService.findById(userId);
-            await factory.save(null, ordersUpsertRequest.userId, 'INFO', `${users?.nickName} شحن الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
+            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${users?.nickName} شحن الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
         }
         if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Canceled") {
             const factory = new notification_factory_1.NotificationFactory(this.notificationsRepository);
             const users = await this.userService.findById(userId);
-            console.log(users);
-            await factory.save(null, ordersUpsertRequest.userId, 'INFO', `${users?.nickName} رفض الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
+            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${users?.nickName} رفض الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
         }
-        return app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, result.data, null, result.error);
+        return app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, null, result.error);
     }
     async changeStatus(ordersChangeStatusRequest, req) {
         const { userId } = req.user;
         const command = new orders_change_status_command_1.OrdersChangeStatusCommand(ordersChangeStatusRequest.id, ordersChangeStatusRequest.status, ordersChangeStatusRequest.tenderQuotationId, ordersChangeStatusRequest.orderId, userId);
-        const result = await this
-            .commandBus
-            .execute(command);
-        return app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, result.data, null, result.error);
+        const result = await this.commandBus.execute(command);
+        return app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, null, result.error);
     }
     async delete(ordersDeleteRequest, req) {
         const { userId } = req.user;
         const command = new orders_delete_command_1.OrdersDeleteCommand(ordersDeleteRequest.id, userId);
-        const result = await this
-            .commandBus
-            .execute(command);
-        return app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, null, null, result.error);
+        const result = await this.commandBus.execute(command);
+        return app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, null, null, result.error);
     }
     async get(ordersGetRequest) {
         try {
@@ -14942,14 +14852,20 @@ let OrdersController = class OrdersController {
             const tenderQuery = new tenders_get_query_1.TendersGetQuery(orderData.tenderId);
             const tenderResult = await this.queryBus.execute(tenderQuery);
             if (tenderResult.isSuccess) {
-                orderData = { ...orderData, Tender: tenderResult.data };
+                orderData = {
+                    ...orderData,
+                    Tender: tenderResult.data,
+                };
                 const BuycompanyQuery = new companies_get_query_1.CompaniesGetQuery(tenderResult.data.companyId);
                 const BuycompanyResult = await this.queryBus.execute(BuycompanyQuery);
                 orderData = { ...orderData, Buycompany: BuycompanyResult.data };
             }
             const companyQuery = new companies_get_query_1.CompaniesGetQuery(orderData.companyId);
             const companyResult = await this.queryBus.execute(companyQuery);
-            orderData = { ...orderData, company: companyResult.isSuccess ? companyResult.data : null };
+            orderData = {
+                ...orderData,
+                company: companyResult.isSuccess ? companyResult.data : null,
+            };
             const productCompanyPromises = orderData.products.map(async (product) => {
                 const productCompanyQuery = new companies_get_query_1.CompaniesGetQuery(product.companyId);
                 const productCompanyResult = await this.queryBus.execute(productCompanyQuery);
@@ -14965,15 +14881,17 @@ let OrdersController = class OrdersController {
                 const SendedproductsCompanyResult = await this.queryBus.execute(SendedproductsCompanyQuery);
                 return {
                     ...product,
-                    company: SendedproductsCompanyResult.isSuccess ? SendedproductsCompanyResult.data : null,
+                    company: SendedproductsCompanyResult.isSuccess ?
+                        SendedproductsCompanyResult.data
+                        : null,
                 };
             });
             const updatedSendedproducts = await Promise.all(SendedproductsCompanyPromises);
             orderData = { ...orderData, Sendedproducts: updatedSendedproducts };
-            return app_response_1.AppResponse.create(true, orderResult.key, 'Order retrieved successfully', orderData, null, null);
+            return app_response_1.AppResponse.create(true, orderResult.key, "Order retrieved successfully", orderData, null, null);
         }
         catch (error) {
-            return app_response_1.AppResponse.create(false, 'error.unexpected', 'An unexpected error occurred', null, null, error);
+            return app_response_1.AppResponse.create(false, "error.unexpected", "An unexpected error occurred", null, null, error);
         }
     }
     async getAll(ordersGetAllRequest, req) {
@@ -14981,18 +14899,18 @@ let OrdersController = class OrdersController {
         const role = userId?.role;
         const query = new orders_get_all_query_1.OrdersGetAllQuery(ordersGetAllRequest.pageSize, ordersGetAllRequest.pageNumber, ordersGetAllRequest.withPaging, ordersGetAllRequest.search, ordersGetAllRequest.type, ordersGetAllRequest.status, ordersGetAllRequest.TenderId, ordersGetAllRequest.companyId, null, order_status_enum_1.OrderStatusEnum.PLANING);
         const result = await this.queryBus.execute(query);
-        let responseData = result.data ? result.data.map(order => {
-            const filteredProducts = role === 'Seller' && ordersGetAllRequest.companyId
-                ? order.products.filter(product => product.companyId === ordersGetAllRequest.companyId)
-                : order.products;
-            return orders_get_all_response_1.OrdersGetAllResponse.create(order.id, order.title, order.endDate, order.deliverDate, order.type, order.status, order.region, order.city, order.address, order.attachmentRequired, order.tenderId, order.companyId, order.userId, filteredProducts, order.Sendedproducts, order.OrderNr, order.DeliveryMethod, order.paymentMethod, order.invoices, order.tender);
-        }) : [];
-        return app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, responseData, result.paging, result.error);
+        let responseData = result.data ?
+            result.data.map((order) => {
+                const filteredProducts = role === "Seller" && ordersGetAllRequest.companyId ?
+                    order.products.filter((product) => product.companyId === ordersGetAllRequest.companyId)
+                    : order.products;
+                return orders_get_all_response_1.OrdersGetAllResponse.create(order.id, order.title, order.endDate, order.deliverDate, order.type, order.status, order.region, order.city, order.address, order.attachmentRequired, order.tenderId, order.companyId, order.userId, filteredProducts, order.Sendedproducts, order.OrderNr, order.DeliveryMethod, order.paymentMethod, order.invoices, order.tender);
+            })
+            : [];
+        return app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, responseData, result.paging, result.error);
     }
     async getAllBuyer(ordersGetAllRequest, req) {
         const { userId } = req.user || {};
-        console.log(ordersGetAllRequest.companyId);
         const tendersResult = await this.queryBus.execute(new tenders_get_all_query_1.TendersGetAllQuery(null, null, null, null, null, null, null, ordersGetAllRequest.companyId, null));
         if (!tendersResult.isSuccess || !tendersResult.data) {
             return app_response_1.AppResponse.create(false, tendersResult.key, tendersResult.message, [], null, tendersResult.error);
@@ -15001,7 +14919,6 @@ let OrdersController = class OrdersController {
             return app_response_1.AppResponse.create(true, tendersResult.key, tendersResult.message, [], null, tendersResult.error);
         }
         const tenderIds = tendersResult.data.map((tender) => tender.id);
-        console.log(tenderIds, 'tenderIds');
         const filterQuery = new orders_get_all_query_1.OrdersGetAllQuery(null, null, null, null, null, null, tenderIds, null, null);
         const ordersResult = await this.queryBus.execute(filterQuery);
         if (!ordersResult.isSuccess || !ordersResult.data) {
@@ -15017,10 +14934,12 @@ let OrdersController = class OrdersController {
         const { userId } = req.user || {};
         const query = new orders_get_all_query_1.OrdersGetAllQuery(OrdersGetAllRequest.pageSize, OrdersGetAllRequest.pageNumber, OrdersGetAllRequest.withPaging, OrdersGetAllRequest.search, OrdersGetAllRequest.type, OrdersGetAllRequest.status, OrdersGetAllRequest.TenderId, OrdersGetAllRequest.companyId, userId);
         const result = await this.queryBus.execute(query);
-        const responseData = result.data ? result.data.filter(item => item.userId === userId).map(order => orders_get_all_response_1.OrdersGetAllResponse
-            .create(order.id, order.title, order.endDate, order.deliverDate, order.type, order.status, order.region, order.city, order.address, order.attachmentRequired, order.companyId, order.userId)) : [];
-        return app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, responseData, result.paging, result.error);
+        const responseData = result.data ?
+            result.data
+                .filter((item) => item.userId === userId)
+                .map((order) => orders_get_all_response_1.OrdersGetAllResponse.create(order.id, order.title, order.endDate, order.deliverDate, order.type, order.status, order.region, order.city, order.address, order.attachmentRequired, order.companyId, order.userId))
+            : [];
+        return app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, responseData, result.paging, result.error);
     }
     async getAllTotal(req) {
         const { userId } = req.user;
@@ -15034,8 +14953,10 @@ let OrdersController = class OrdersController {
         const query = new orders_get_all_query_1.OrdersGetAllQuery(10, 1, false, null, null, null, null, null, userId);
         const Orders = await this.queryBus.execute(query);
         const statusCountMap = {};
-        if (Orders.data.filter(item => item.userId === userId)) {
-            Orders.data.filter(item => item.userId === userId).forEach(order => {
+        if (Orders.data.filter((item) => item.userId === userId)) {
+            Orders.data
+                .filter((item) => item.userId === userId)
+                .forEach((order) => {
                 const status = order.status;
                 if (statusCountMap[status]) {
                     statusCountMap[status]++;
@@ -15045,15 +14966,18 @@ let OrdersController = class OrdersController {
                 }
             });
         }
-        const result = Object.entries(statusCountMap).map(([status, total]) => ({ status, total }));
+        const result = Object.entries(statusCountMap).map(([status, total]) => ({
+            status,
+            total,
+        }));
         return result;
     }
     async createPDFInvoice(order, company, lang) {
-        const isArabic = lang === 'ar';
-        const alignment = isArabic ? 'right' : 'left';
-        const direction = isArabic ? 'rtl' : 'ltr';
-        const companyName = company ? company.nameAr : 'N/A';
-        const createdDate = new Date(order.endDate).toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US');
+        const isArabic = lang === "ar";
+        const alignment = isArabic ? "right" : "left";
+        const direction = isArabic ? "rtl" : "ltr";
+        const companyName = company ? company.nameAr : "N/A";
+        const createdDate = new Date(order.endDate).toLocaleDateString(lang === "ar" ? "ar-SA" : "en-US");
         const htmlContent = `
       <html lang="${lang}">
       <head>
@@ -15070,49 +14994,49 @@ let OrdersController = class OrdersController {
         </style>
       </head>
       <body>
-        <h1>${isArabic ? 'فاتورة' : 'Invoice'}</h1>
+        <h1>${isArabic ? "فاتورة" : "Invoice"}</h1>
         
         <div class="invoice-details">
-          <p><strong>${isArabic ? 'رقم الطلب:' : 'Order Number:'}</strong> ${order.OrderNr}</p>
-          <p><strong>${isArabic ? 'تاريخ الإنشاء:' : 'Created Date:'}</strong> ${createdDate}</p>
-          <p><strong>${isArabic ? 'عنوان التسليم:' : 'Delivery Address:'}</strong> ${order.address}</p>
-          <p><strong>${isArabic ? 'شركة:' : 'Company:'}</strong> ${companyName}</p>
-          <p><strong>${isArabic ? 'طريقة التوصيل:' : 'Delivery Method:'}</strong> ${order.DeliveryMethod}</p>
+          <p><strong>${isArabic ? "رقم الطلب:" : "Order Number:"}</strong> ${order.OrderNr}</p>
+          <p><strong>${isArabic ? "تاريخ الإنشاء:" : "Created Date:"}</strong> ${createdDate}</p>
+          <p><strong>${isArabic ? "عنوان التسليم:" : "Delivery Address:"}</strong> ${order.address}</p>
+          <p><strong>${isArabic ? "شركة:" : "Company:"}</strong> ${companyName}</p>
+          <p><strong>${isArabic ? "طريقة التوصيل:" : "Delivery Method:"}</strong> ${order.DeliveryMethod}</p>
         </div>
   
         <table>
           <thead>
             <tr>
-              <th>${isArabic ? 'الصورة' : 'Image'}</th>
-              <th>${isArabic ? 'SKU' : 'SKU Code'}</th>
-              <th>${isArabic ? 'البند' : 'Item'}</th>
-              <th>${isArabic ? 'الكمية' : 'Quantity'}</th>
-              <th>${isArabic ? 'السعر' : 'Price (SAR)'}</th>
-              <th>${isArabic ? 'ضريبة القيمة المضافة' : 'VAT (%)'}</th>
+              <th>${isArabic ? "الصورة" : "Image"}</th>
+              <th>${isArabic ? "SKU" : "SKU Code"}</th>
+              <th>${isArabic ? "البند" : "Item"}</th>
+              <th>${isArabic ? "الكمية" : "Quantity"}</th>
+              <th>${isArabic ? "السعر" : "Price (SAR)"}</th>
+              <th>${isArabic ? "ضريبة القيمة المضافة" : "VAT (%)"}</th>
             </tr>
           </thead>
           <tbody>
-            ${order.Sendedproducts.map(product => `
+            ${order.Sendedproducts.map((product) => `
               <tr>
-                <td><img src="${product.image || 'https://via.placeholder.com/50'}" /></td>
+                <td><img src="${product.image || "https://via.placeholder.com/50"}" /></td>
                 <td>${product.SKUCode}</td>
                 <td>${product.item}</td>
                 <td>${product.quantity}</td>
                 <td>${product.price.toFixed(2)} SAR</td>
                 <td>${product.vat}%</td>
               </tr>
-            `).join('')}
+            `).join("")}
           </tbody>
         </table>
   
-        <p class="footer">${isArabic ? 'شكراً لتعاملكم معنا!' : 'Thank you for your business!'}</p>
+        <p class="footer">${isArabic ? "شكراً لتعاملكم معنا!" : "Thank you for your business!"}</p>
       </body>
       </html>`;
         const browser = await puppeteer_1.default.launch();
         const page = await browser.newPage();
-        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+        await page.setContent(htmlContent, { waitUntil: "networkidle0" });
         const filePath = `./invoice_${order.OrderNr}_${lang}.pdf`;
-        await page.pdf({ path: filePath, format: 'A4', printBackground: true });
+        await page.pdf({ path: filePath, format: "A4", printBackground: true });
         await browser.close();
         return filePath;
     }
@@ -15123,7 +15047,7 @@ let OrdersController = class OrdersController {
         const file = {
             buffer: fileBuffer,
             originalname: `${order.OrderNr}_${lang}.pdf`,
-            mimetype: 'application/pdf',
+            mimetype: "application/pdf",
         };
         const folderPath = `${company.registrationNumber}/orders/${order.OrderNr}`;
         const s3Url = await s3_upload_service_1.S3UploadService.uploadFile(file, folderPath);
@@ -15134,7 +15058,7 @@ let OrdersController = class OrdersController {
 exports.OrdersController = OrdersController;
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Post)('upsert'),
+    (0, common_1.Post)("upsert"),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -15143,7 +15067,7 @@ __decorate([
 ], OrdersController.prototype, "upsert", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Post)('changeStatus'),
+    (0, common_1.Post)("changeStatus"),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -15152,7 +15076,7 @@ __decorate([
 ], OrdersController.prototype, "changeStatus", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Delete)('delete'),
+    (0, common_1.Delete)("delete"),
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -15160,14 +15084,14 @@ __decorate([
     __metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
 ], OrdersController.prototype, "delete", null);
 __decorate([
-    (0, common_1.Get)('get'),
+    (0, common_1.Get)("get"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [typeof (_o = typeof orders_get_request_1.OrdersGetRequest !== "undefined" && orders_get_request_1.OrdersGetRequest) === "function" ? _o : Object]),
     __metadata("design:returntype", typeof (_p = typeof Promise !== "undefined" && Promise) === "function" ? _p : Object)
 ], OrdersController.prototype, "get", null);
 __decorate([
-    (0, common_1.Get)('getAll'),
+    (0, common_1.Get)("getAll"),
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -15175,7 +15099,7 @@ __decorate([
     __metadata("design:returntype", typeof (_r = typeof Promise !== "undefined" && Promise) === "function" ? _r : Object)
 ], OrdersController.prototype, "getAll", null);
 __decorate([
-    (0, common_1.Get)('getAllBuyer'),
+    (0, common_1.Get)("getAllBuyer"),
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -15184,7 +15108,7 @@ __decorate([
 ], OrdersController.prototype, "getAllBuyer", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('getMy'),
+    (0, common_1.Get)("getMy"),
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -15193,7 +15117,7 @@ __decorate([
 ], OrdersController.prototype, "getMyAll", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('getTotal/Closed'),
+    (0, common_1.Get)("getTotal/Closed"),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -15201,7 +15125,7 @@ __decorate([
 ], OrdersController.prototype, "getAllTotal", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('getTotal/ByStatus'),
+    (0, common_1.Get)("getTotal/ByStatus"),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -15209,14 +15133,14 @@ __decorate([
 ], OrdersController.prototype, "getAllTotalByStatus", null);
 exports.OrdersController = OrdersController = __decorate([
     (0, common_1.Controller)({
-        path: 'web/orders',
+        path: "web/orders",
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _b : Object, typeof (_c = typeof notifications_repository_1.NotificationsRepository !== "undefined" && notifications_repository_1.NotificationsRepository) === "function" ? _c : Object, typeof (_d = typeof user_companies_service_1.UserCompaniesService !== "undefined" && user_companies_service_1.UserCompaniesService) === "function" ? _d : Object, typeof (_e = typeof user_service_1.UserService !== "undefined" && user_service_1.UserService) === "function" ? _e : Object, typeof (_f = typeof getCompanyById_1.CompanyService !== "undefined" && getCompanyById_1.CompanyService) === "function" ? _f : Object])
 ], OrdersController);
 
 
 /***/ }),
-/* 318 */
+/* 319 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15253,7 +15177,7 @@ exports.OrdersGetAllResponse = OrdersGetAllResponse;
 
 
 /***/ }),
-/* 319 */
+/* 320 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15271,9 +15195,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersUpsertRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
 const class_transformer_1 = __webpack_require__(72);
-const order_type_enum_1 = __webpack_require__(315);
-const order_status_enum_1 = __webpack_require__(312);
-const invoice_1 = __webpack_require__(320);
+const order_type_enum_1 = __webpack_require__(316);
+const order_status_enum_1 = __webpack_require__(313);
+const invoice_1 = __webpack_require__(321);
 class Product {
 }
 __decorate([
@@ -15473,7 +15397,7 @@ __decorate([
 
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15493,7 +15417,7 @@ exports.Invoice = Invoice;
 
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15519,7 +15443,7 @@ __decorate([
 
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15539,8 +15463,8 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const order_status_enum_1 = __webpack_require__(312);
-const order_type_enum_1 = __webpack_require__(315);
+const order_status_enum_1 = __webpack_require__(313);
+const order_type_enum_1 = __webpack_require__(316);
 class OrdersGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -15586,7 +15510,7 @@ __decorate([
 
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15612,7 +15536,7 @@ __decorate([
 
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15627,7 +15551,7 @@ exports.OrdersGetQuery = OrdersGetQuery;
 
 
 /***/ }),
-/* 325 */
+/* 326 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15651,7 +15575,7 @@ exports.OrdersGetAllQuery = OrdersGetAllQuery;
 
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15692,7 +15616,7 @@ exports.OrdersUpsertCommand = OrdersUpsertCommand;
 
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15708,7 +15632,7 @@ exports.OrdersDeleteCommand = OrdersDeleteCommand;
 
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15727,7 +15651,7 @@ exports.OrdersChangeStatusCommand = OrdersChangeStatusCommand;
 
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15744,7 +15668,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const order_status_enum_1 = __webpack_require__(312);
+const order_status_enum_1 = __webpack_require__(313);
 class OrdersChangeStatusRequest {
 }
 exports.OrdersChangeStatusRequest = OrdersChangeStatusRequest;
@@ -15771,7 +15695,7 @@ __decorate([
 
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15809,7 +15733,7 @@ exports.OrdersGetAllBResponse = OrdersGetAllBResponse;
 
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15832,8 +15756,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const notification_schema_1 = __webpack_require__(332);
-const category_schema_factory_1 = __webpack_require__(333);
+const notification_schema_1 = __webpack_require__(333);
+const category_schema_factory_1 = __webpack_require__(334);
 const mongodb_1 = __webpack_require__(30);
 let NotificationsRepository = class NotificationsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
@@ -15875,7 +15799,7 @@ exports.NotificationsRepository = NotificationsRepository = __decorate([
 
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15931,7 +15855,7 @@ exports.CreatedNotificationSchema = mongoose_1.SchemaFactory.createForClass(Noti
 
 
 /***/ }),
-/* 333 */
+/* 334 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15945,7 +15869,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(25);
-const notification_1 = __webpack_require__(334);
+const notification_1 = __webpack_require__(335);
 let NotificationSchemaFactory = class NotificationSchemaFactory {
     create(entity) {
         return {
@@ -15969,7 +15893,7 @@ exports.NotificationSchemaFactory = NotificationSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 334 */
+/* 335 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -16005,7 +15929,7 @@ exports.Notification = Notification;
 
 
 /***/ }),
-/* 335 */
+/* 336 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16023,9 +15947,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationFactory = void 0;
 const common_1 = __webpack_require__(3);
 const mongodb_1 = __webpack_require__(30);
-const notification_1 = __webpack_require__(334);
+const notification_1 = __webpack_require__(335);
 const mongo_functions_1 = __webpack_require__(29);
-const notifications_repository_1 = __webpack_require__(331);
+const notifications_repository_1 = __webpack_require__(332);
 let NotificationFactory = class NotificationFactory {
     constructor(notificationsRepository) {
         this.notificationsRepository = notificationsRepository;
@@ -16054,7 +15978,7 @@ exports.NotificationFactory = NotificationFactory = __decorate([
 
 
 /***/ }),
-/* 336 */
+/* 337 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16088,13 +16012,13 @@ exports.UserService = UserService = __decorate([
 
 
 /***/ }),
-/* 337 */
+/* 338 */
 /***/ ((module) => {
 
 module.exports = require("puppeteer");
 
 /***/ }),
-/* 338 */
+/* 339 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16111,15 +16035,15 @@ var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const orders_upsert_command_1 = __webpack_require__(326);
+const orders_upsert_command_1 = __webpack_require__(327);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const orders_repository_1 = __webpack_require__(313);
-const order_factory_1 = __webpack_require__(310);
-const orders_get_result_1 = __webpack_require__(339);
+const orders_repository_1 = __webpack_require__(314);
+const order_factory_1 = __webpack_require__(311);
+const orders_get_result_1 = __webpack_require__(340);
 const companies_repository_1 = __webpack_require__(210);
-const tenders_quatation_update_status_query_1 = __webpack_require__(291);
-const tender_status_enum_1 = __webpack_require__(249);
+const tenders_quatation_update_status_query_1 = __webpack_require__(292);
+const tender_status_enum_1 = __webpack_require__(250);
 let OrdersUpsertHandler = class OrdersUpsertHandler {
     constructor(ordersRepository, orderFactory, eventPublisher, companiesRepository, commandBus) {
         this.ordersRepository = ordersRepository;
@@ -16145,7 +16069,6 @@ let OrdersUpsertHandler = class OrdersUpsertHandler {
             const lastOrder = await this.ordersRepository.getLatestOrder();
             const nextOrderNr = lastOrder ? lastOrder.OrderNr >= 1000 ? lastOrder.OrderNr + 1 : 1000 : 1000;
             orderNr = nextOrderNr;
-            console.log('orderNr', orderNr);
             if (command.products.length > 0) {
                 command.products.map(async (product) => {
                     const updateQuotationCommand = new tenders_quatation_update_status_query_1.TenderQuotationsUpdateStatusCommand(product.quatationId, tender_status_enum_1.TenderStatusEnum.ACCEPTED, command.userId);
@@ -16153,7 +16076,6 @@ let OrdersUpsertHandler = class OrdersUpsertHandler {
                 });
             }
         }
-        console.log('orderNr', orderNr);
         let entity = await this
             .orderFactory
             .save(command.id, command.title, command.endDate, command.deliverDate, command.type, command.status, command.region, command.city, command.address, command.fileName, command.fileDescription, command.fileId, command.attachmentName, command.attachmentDescription, command.attachmentId, command.attachmentRequired, command.attachmentDeliverDays, command.contactInfo, command.tenderId, command.companyId, command.userId, command.products, command.Sendedproducts, orderNr, command.DeliveryMethod, command.paymentMethod, command.invoices);
@@ -16176,14 +16098,14 @@ exports.OrdersUpsertHandler = OrdersUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 339 */
+/* 340 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersGetResult = void 0;
 class OrdersGetResult {
-    constructor(id, title, endDate, deliverDate, type, status, region, city, address, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired = false, attachmentDeliverDays, contactInfo, tenderId = '', companyId = '', userId = '', products = [], Sendedproducts = [], OrderNr = 0, DeliveryMethod = '', paymentMethod = '', invoices = [], Tender = null, company = null, Buycompany = null) {
+    constructor(id, title, endDate, deliverDate, type, status, region, city, address, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired = false, attachmentDeliverDays, contactInfo, tenderId = "", companyId = "", userId = "", products = [], Sendedproducts = [], OrderNr = 0, DeliveryMethod = "", paymentMethod = "", invoices = [], Tender = null, company = null, Buycompany = null) {
         this.id = id;
         this.title = title;
         this.endDate = endDate;
@@ -16215,7 +16137,7 @@ class OrdersGetResult {
         this.company = company;
         this.Buycompany = Buycompany;
     }
-    static create(id, title, endDate, deliverDate, type, status = null, region = null, city = null, address = null, fileName = null, fileDescription = null, fileId = null, attachmentName = null, attachmentDescription = null, attachmentId = null, attachmentRequired = false, attachmentDeliverDays = null, contactInfo = null, tenderId = '', companyId = '', userId = '', products = [], Sendedproducts = [], OrderNr = 0, DeliveryMethod = '', paymentMethod = '', invoices = [], Tender = null, company = null, Buycompany = null) {
+    static create(id, title, endDate, deliverDate, type, status = null, region = null, city = null, address = null, fileName = null, fileDescription = null, fileId = null, attachmentName = null, attachmentDescription = null, attachmentId = null, attachmentRequired = false, attachmentDeliverDays = null, contactInfo = null, tenderId = "", companyId = "", userId = "", products = [], Sendedproducts = [], OrderNr = 0, DeliveryMethod = "", paymentMethod = "", invoices = [], Tender = null, company = null, Buycompany = null) {
         return new OrdersGetResult(id, title, endDate, deliverDate, type, status, region, city, address, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired, attachmentDeliverDays, contactInfo, tenderId, companyId, userId, products, Sendedproducts, OrderNr, DeliveryMethod, paymentMethod, invoices, Tender, company, Buycompany);
     }
 }
@@ -16223,7 +16145,7 @@ exports.OrdersGetResult = OrdersGetResult;
 
 
 /***/ }),
-/* 340 */
+/* 341 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16240,10 +16162,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const orders_delete_command_1 = __webpack_require__(327);
+const orders_delete_command_1 = __webpack_require__(328);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const orders_repository_1 = __webpack_require__(313);
+const orders_repository_1 = __webpack_require__(314);
 let OrdersDeleteHandler = class OrdersDeleteHandler {
     constructor(ordersRepository) {
         this.ordersRepository = ordersRepository;
@@ -16280,7 +16202,7 @@ exports.OrdersDeleteHandler = OrdersDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 341 */
+/* 342 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16299,9 +16221,9 @@ exports.OrdersGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const orders_get_query_1 = __webpack_require__(324);
-const orders_get_result_1 = __webpack_require__(339);
-const orders_repository_1 = __webpack_require__(313);
+const orders_get_query_1 = __webpack_require__(325);
+const orders_get_result_1 = __webpack_require__(340);
+const orders_repository_1 = __webpack_require__(314);
 let OrdersGetHandler = class OrdersGetHandler {
     constructor(ordersRepository) {
         this.ordersRepository = ordersRepository;
@@ -16328,7 +16250,7 @@ exports.OrdersGetHandler = OrdersGetHandler = __decorate([
 
 
 /***/ }),
-/* 342 */
+/* 343 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16346,14 +16268,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const orders_get_all_query_1 = __webpack_require__(325);
+const orders_get_all_query_1 = __webpack_require__(326);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const orders_get_all_result_1 = __webpack_require__(343);
-const orders_repository_1 = __webpack_require__(313);
+const orders_get_all_result_1 = __webpack_require__(344);
+const orders_repository_1 = __webpack_require__(314);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
-const tenders_repository_1 = __webpack_require__(251);
+const tenders_repository_1 = __webpack_require__(252);
 let OrdersGetAllHandler = class OrdersGetAllHandler {
     constructor(ordersRepository, tendersRepository) {
         this.ordersRepository = ordersRepository;
@@ -16386,7 +16308,6 @@ let OrdersGetAllHandler = class OrdersGetAllHandler {
         if (query.TenderId && query.TenderId.length > 0) {
             filter.tenderId = { $in: query.TenderId.map((id) => (0, mongo_functions_1.createObjectId)(id)) };
         }
-        console.log('query.statusExclusion', query);
         if (query.statusExclusion) {
             filter.status = { $ne: query.statusExclusion };
         }
@@ -16417,7 +16338,7 @@ exports.OrdersGetAllHandler = OrdersGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 343 */
+/* 344 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -16454,7 +16375,7 @@ exports.OrdersGetAllResult = OrdersGetAllResult;
 
 
 /***/ }),
-/* 344 */
+/* 345 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16471,14 +16392,14 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const orders_change_status_command_1 = __webpack_require__(328);
+const orders_change_status_command_1 = __webpack_require__(329);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const orders_repository_1 = __webpack_require__(313);
-const order_factory_1 = __webpack_require__(310);
-const orders_get_result_1 = __webpack_require__(339);
-const order_status_enum_1 = __webpack_require__(312);
-const orders_error_1 = __webpack_require__(345);
+const orders_repository_1 = __webpack_require__(314);
+const order_factory_1 = __webpack_require__(311);
+const orders_get_result_1 = __webpack_require__(340);
+const order_status_enum_1 = __webpack_require__(313);
+const orders_error_1 = __webpack_require__(346);
 let OrdersChangeStatusHandler = class OrdersChangeStatusHandler {
     constructor(ordersRepository, orderFactory, eventPublisher) {
         this.ordersRepository = ordersRepository;
@@ -16524,7 +16445,7 @@ exports.OrdersChangeStatusHandler = OrdersChangeStatusHandler = __decorate([
 
 
 /***/ }),
-/* 345 */
+/* 346 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -16546,7 +16467,7 @@ exports.OrdersError = OrdersError;
 
 
 /***/ }),
-/* 346 */
+/* 347 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16560,13 +16481,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationModule = void 0;
 const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
-const notification_gateway_1 = __webpack_require__(347);
-const notifications_repository_1 = __webpack_require__(331);
-const notification_schema_1 = __webpack_require__(332);
-const category_schema_factory_1 = __webpack_require__(333);
-const notification_factory_1 = __webpack_require__(335);
-const notifications_controller_1 = __webpack_require__(350);
-const notification_service_1 = __webpack_require__(351);
+const notification_gateway_1 = __webpack_require__(348);
+const notifications_repository_1 = __webpack_require__(332);
+const notification_schema_1 = __webpack_require__(333);
+const category_schema_factory_1 = __webpack_require__(334);
+const notification_factory_1 = __webpack_require__(336);
+const notifications_controller_1 = __webpack_require__(351);
+const notification_service_1 = __webpack_require__(352);
 let NotificationModule = class NotificationModule {
 };
 exports.NotificationModule = NotificationModule;
@@ -16594,7 +16515,7 @@ exports.NotificationModule = NotificationModule = __decorate([
 
 
 /***/ }),
-/* 347 */
+/* 348 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16610,8 +16531,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationGateway = void 0;
-const websockets_1 = __webpack_require__(348);
-const socket_io_1 = __webpack_require__(349);
+const websockets_1 = __webpack_require__(349);
+const socket_io_1 = __webpack_require__(350);
 let NotificationGateway = class NotificationGateway {
     handleConnection(client) {
         console.log(`Client connected: ${client.id}`);
@@ -16634,19 +16555,19 @@ exports.NotificationGateway = NotificationGateway = __decorate([
 
 
 /***/ }),
-/* 348 */
+/* 349 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/websockets");
 
 /***/ }),
-/* 349 */
+/* 350 */
 /***/ ((module) => {
 
 module.exports = require("socket.io");
 
 /***/ }),
-/* 350 */
+/* 351 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16667,7 +16588,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationsController = void 0;
 const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
-const notification_service_1 = __webpack_require__(351);
+const notification_service_1 = __webpack_require__(352);
 let NotificationsController = class NotificationsController {
     constructor(notificationService) {
         this.notificationService = notificationService;
@@ -16677,12 +16598,10 @@ let NotificationsController = class NotificationsController {
     }
     async getNotificationsForUser(req, isRead) {
         const { userId } = req.user;
-        console.log(userId, "userId");
         const parsedIsRead = isRead === true ? true : isRead === false ? false : undefined;
         return this.notificationService.getNotificationsForUser(userId, parsedIsRead);
     }
     async markNotificationAsRead(id) {
-        console.log(id, "ID");
         return this.notificationService.markAsRead(id);
     }
     async deleteNotification(id) {
@@ -16732,7 +16651,7 @@ exports.NotificationsController = NotificationsController = __decorate([
 
 
 /***/ }),
-/* 351 */
+/* 352 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16749,9 +16668,9 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationService = void 0;
 const common_1 = __webpack_require__(3);
-const notifications_repository_1 = __webpack_require__(331);
-const notification_1 = __webpack_require__(334);
-const notification_gateway_1 = __webpack_require__(347);
+const notifications_repository_1 = __webpack_require__(332);
+const notification_1 = __webpack_require__(335);
+const notification_gateway_1 = __webpack_require__(348);
 const mongodb_1 = __webpack_require__(30);
 let NotificationService = class NotificationService {
     constructor(notificationsRepository, notificationGateway) {
@@ -16788,7 +16707,7 @@ exports.NotificationService = NotificationService = __decorate([
 
 
 /***/ }),
-/* 352 */
+/* 353 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16801,7 +16720,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserModule = void 0;
 const common_1 = __webpack_require__(3);
-const user_service_1 = __webpack_require__(336);
+const user_service_1 = __webpack_require__(337);
 const users_repository_1 = __webpack_require__(45);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
@@ -16835,7 +16754,7 @@ exports.UserModule = UserModule = __decorate([
 
 
 /***/ }),
-/* 353 */
+/* 354 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16850,16 +16769,16 @@ exports.ItemsModule = void 0;
 const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
-const items_repository_1 = __webpack_require__(354);
-const item_schema_1 = __webpack_require__(273);
-const item_schema_factory_1 = __webpack_require__(355);
-const item_factory_1 = __webpack_require__(358);
-const items_upsert_handler_1 = __webpack_require__(359);
-const items_change_status_handler_1 = __webpack_require__(362);
-const items_delete_handler_1 = __webpack_require__(365);
-const items_get_handler_1 = __webpack_require__(367);
-const items_get_all_handler_1 = __webpack_require__(369);
-const items_controller_1 = __webpack_require__(372);
+const items_repository_1 = __webpack_require__(355);
+const item_schema_1 = __webpack_require__(274);
+const item_schema_factory_1 = __webpack_require__(356);
+const item_factory_1 = __webpack_require__(359);
+const items_upsert_handler_1 = __webpack_require__(360);
+const items_change_status_handler_1 = __webpack_require__(363);
+const items_delete_handler_1 = __webpack_require__(366);
+const items_get_handler_1 = __webpack_require__(368);
+const items_get_all_handler_1 = __webpack_require__(370);
+const items_controller_1 = __webpack_require__(373);
 const companies_module_1 = __webpack_require__(207);
 let ItemsModule = class ItemsModule {
 };
@@ -16893,7 +16812,7 @@ exports.ItemsModule = ItemsModule = __decorate([
 
 
 /***/ }),
-/* 354 */
+/* 355 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16916,8 +16835,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const item_schema_1 = __webpack_require__(273);
-const item_schema_factory_1 = __webpack_require__(355);
+const item_schema_1 = __webpack_require__(274);
+const item_schema_factory_1 = __webpack_require__(356);
 let ItemsRepository = class ItemsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -16934,7 +16853,7 @@ exports.ItemsRepository = ItemsRepository = __decorate([
 
 
 /***/ }),
-/* 355 */
+/* 356 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16947,9 +16866,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const item_1 = __webpack_require__(356);
+const item_1 = __webpack_require__(357);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(357);
+const attachment_1 = __webpack_require__(358);
 let ItemSchemaFactory = class ItemSchemaFactory {
     create(entity) {
         return {
@@ -16999,7 +16918,7 @@ exports.ItemSchemaFactory = ItemSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 356 */
+/* 357 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -17007,7 +16926,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Item = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const item_status_enum_1 = __webpack_require__(274);
+const item_status_enum_1 = __webpack_require__(275);
 class Item extends cqrs_1.AggregateRoot {
     constructor(_id, name, SKUCode, manufacturer, brand, model, unit, categories, description, price, vat, stock = 0, tags = [], image = '', attachments = [], status = item_status_enum_1.ItemStatusEnum.ACTIVE, type, companyId, userId, ItemNR = 0, displayOrder = 0, isVisible = true, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -17048,7 +16967,7 @@ exports.Item = Item;
 
 
 /***/ }),
-/* 357 */
+/* 358 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17066,7 +16985,7 @@ exports.Attachment = Attachment;
 
 
 /***/ }),
-/* 358 */
+/* 359 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17083,10 +17002,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemFactory = void 0;
 const common_1 = __webpack_require__(3);
-const item_1 = __webpack_require__(356);
-const items_repository_1 = __webpack_require__(354);
+const item_1 = __webpack_require__(357);
+const items_repository_1 = __webpack_require__(355);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(357);
+const attachment_1 = __webpack_require__(358);
 const class_validator_1 = __webpack_require__(55);
 let ItemFactory = class ItemFactory {
     constructor(itemsRepository) {
@@ -17098,7 +17017,6 @@ let ItemFactory = class ItemFactory {
         if (!(0, class_validator_1.isEmpty)(attachments)) {
             processedAttachments = attachments.map((attachment) => new attachment_1.Attachment(attachment.name, attachment.description, attachment.fileId || null, attachment.filepath || null));
         }
-        console.log(processedAttachments);
         if (isInsert) {
             const entity = item_1.Item.create((0, mongo_functions_1.createObjectIdAsString)(id), name, SKUCode, manufacturer, brand, model, unit, categories, description, price, vat, stock, tags, image, processedAttachments, status, type, companyId, userId, ItemNR);
             await this.itemsRepository.insert(entity);
@@ -17137,7 +17055,7 @@ exports.ItemFactory = ItemFactory = __decorate([
 
 
 /***/ }),
-/* 359 */
+/* 360 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17154,12 +17072,12 @@ var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_upsert_command_1 = __webpack_require__(360);
+const items_upsert_command_1 = __webpack_require__(361);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(354);
-const item_factory_1 = __webpack_require__(358);
-const items_get_result_1 = __webpack_require__(361);
+const items_repository_1 = __webpack_require__(355);
+const item_factory_1 = __webpack_require__(359);
+const items_get_result_1 = __webpack_require__(362);
 const companies_repository_1 = __webpack_require__(210);
 let ItemsUpsertHandler = class ItemsUpsertHandler {
     constructor(itemsRepository, itemFactory, eventPublisher, companiesRepository) {
@@ -17183,10 +17101,8 @@ let ItemsUpsertHandler = class ItemsUpsertHandler {
             await this.companiesRepository.updateItemNr(command.companyId, command.ItemNR);
         }
         let entity = await this.itemFactory.save(command.id, command.name, command.SKUCode, command.manufacturer, command.brand, command.model, command.unit, command.categories, command.description, command.price, command.vat, command.stock, command.tags, command.image, command.attachments, command.status, command.type, command.companyId, command.userId, command.ItemNR);
-        console.log(entity);
         entity = this.eventPublisher.mergeObjectContext(entity);
         entity.commit();
-        console.log(entity);
         const resultData = items_get_result_1.ItemsGetResult.create(entity._id, entity.name, entity.SKUCode, entity.manufacturer, entity.brand, entity.model, entity.unit, entity.categories, entity.description, entity.price, entity.vat, entity.stock, entity.tags, entity.image, entity.attachments || [], entity.status, entity.type, entity.companyId, entity.userId, entity.ItemNR);
         return app_result_1.AppResult.createSuccess(null, null, resultData);
     }
@@ -17199,7 +17115,7 @@ exports.ItemsUpsertHandler = ItemsUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 360 */
+/* 361 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17233,7 +17149,7 @@ exports.ItemsUpsertCommand = ItemsUpsertCommand;
 
 
 /***/ }),
-/* 361 */
+/* 362 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17278,7 +17194,7 @@ exports.ItemsGetResult = ItemsGetResult;
 
 
 /***/ }),
-/* 362 */
+/* 363 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17295,14 +17211,14 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_change_status_command_1 = __webpack_require__(363);
+const items_change_status_command_1 = __webpack_require__(364);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(354);
-const item_factory_1 = __webpack_require__(358);
-const items_get_result_1 = __webpack_require__(361);
-const item_status_enum_1 = __webpack_require__(274);
-const items_error_1 = __webpack_require__(364);
+const items_repository_1 = __webpack_require__(355);
+const item_factory_1 = __webpack_require__(359);
+const items_get_result_1 = __webpack_require__(362);
+const item_status_enum_1 = __webpack_require__(275);
+const items_error_1 = __webpack_require__(365);
 let ItemsChangeStatusHandler = class ItemsChangeStatusHandler {
     constructor(itemsRepository, itemFactory, eventPublisher) {
         this.itemsRepository = itemsRepository;
@@ -17344,7 +17260,7 @@ exports.ItemsChangeStatusHandler = ItemsChangeStatusHandler = __decorate([
 
 
 /***/ }),
-/* 363 */
+/* 364 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17361,7 +17277,7 @@ exports.ItemsChangeStatusCommand = ItemsChangeStatusCommand;
 
 
 /***/ }),
-/* 364 */
+/* 365 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -17398,7 +17314,7 @@ exports.ItemsError = ItemsError;
 
 
 /***/ }),
-/* 365 */
+/* 366 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17415,10 +17331,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_delete_command_1 = __webpack_require__(366);
+const items_delete_command_1 = __webpack_require__(367);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(354);
+const items_repository_1 = __webpack_require__(355);
 let ItemsDeleteHandler = class ItemsDeleteHandler {
     constructor(itemsRepository) {
         this.itemsRepository = itemsRepository;
@@ -17443,7 +17359,7 @@ exports.ItemsDeleteHandler = ItemsDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 366 */
+/* 367 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17458,7 +17374,7 @@ exports.ItemsDeleteCommand = ItemsDeleteCommand;
 
 
 /***/ }),
-/* 367 */
+/* 368 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17477,9 +17393,9 @@ exports.ItemsGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_get_query_1 = __webpack_require__(368);
-const items_get_result_1 = __webpack_require__(361);
-const items_repository_1 = __webpack_require__(354);
+const items_get_query_1 = __webpack_require__(369);
+const items_get_result_1 = __webpack_require__(362);
+const items_repository_1 = __webpack_require__(355);
 let ItemsGetHandler = class ItemsGetHandler {
     constructor(itemsRepository) {
         this.itemsRepository = itemsRepository;
@@ -17501,7 +17417,7 @@ exports.ItemsGetHandler = ItemsGetHandler = __decorate([
 
 
 /***/ }),
-/* 368 */
+/* 369 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17516,7 +17432,7 @@ exports.ItemsGetQuery = ItemsGetQuery;
 
 
 /***/ }),
-/* 369 */
+/* 370 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17534,11 +17450,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const items_get_all_query_1 = __webpack_require__(370);
+const items_get_all_query_1 = __webpack_require__(371);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const items_get_all_result_1 = __webpack_require__(371);
-const items_repository_1 = __webpack_require__(354);
+const items_get_all_result_1 = __webpack_require__(372);
+const items_repository_1 = __webpack_require__(355);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
 let ItemsGetAllHandler = class ItemsGetAllHandler {
@@ -17591,7 +17507,7 @@ exports.ItemsGetAllHandler = ItemsGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 370 */
+/* 371 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17613,7 +17529,7 @@ exports.ItemsGetAllQuery = ItemsGetAllQuery;
 
 
 /***/ }),
-/* 371 */
+/* 372 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17649,7 +17565,7 @@ exports.ItemsGetAllResult = ItemsGetAllResult;
 
 
 /***/ }),
-/* 372 */
+/* 373 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17671,23 +17587,23 @@ exports.ItemsController = void 0;
 const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const cqrs_1 = __webpack_require__(41);
-const items_get_all_response_1 = __webpack_require__(373);
-const items_get_request_1 = __webpack_require__(374);
-const items_get_all_request_1 = __webpack_require__(375);
-const items_delete_request_1 = __webpack_require__(377);
-const items_change_status_request_1 = __webpack_require__(378);
+const items_get_all_response_1 = __webpack_require__(374);
+const items_get_request_1 = __webpack_require__(375);
+const items_get_all_request_1 = __webpack_require__(376);
+const items_delete_request_1 = __webpack_require__(378);
+const items_change_status_request_1 = __webpack_require__(379);
 const app_response_1 = __webpack_require__(87);
-const items_upsert_command_1 = __webpack_require__(360);
-const items_change_status_command_1 = __webpack_require__(363);
-const items_delete_command_1 = __webpack_require__(366);
-const items_get_query_1 = __webpack_require__(368);
-const items_get_all_query_1 = __webpack_require__(370);
+const items_upsert_command_1 = __webpack_require__(361);
+const items_change_status_command_1 = __webpack_require__(364);
+const items_delete_command_1 = __webpack_require__(367);
+const items_get_query_1 = __webpack_require__(369);
+const items_get_all_query_1 = __webpack_require__(371);
 const platform_express_1 = __webpack_require__(174);
 const multer_config_1 = __webpack_require__(236);
 const s3_upload_service_1 = __webpack_require__(238);
 const s3_config_1 = __webpack_require__(240);
 const client_s3_1 = __webpack_require__(239);
-const items_repository_1 = __webpack_require__(354);
+const items_repository_1 = __webpack_require__(355);
 const class_validator_1 = __webpack_require__(55);
 let ItemsController = class ItemsController {
     constructor(queryBus, commandBus, itemsRepository) {
@@ -17697,8 +17613,6 @@ let ItemsController = class ItemsController {
     }
     async upsert(body, files, req) {
         const { userId } = req.user;
-        console.log(body, "body");
-        console.log(files, "files");
         try {
             let imagePath = null;
             if (files?.image && files.image[0]) {
@@ -17738,7 +17652,6 @@ let ItemsController = class ItemsController {
     }
     async delete(itemsDeleteRequest, req) {
         const { userId } = req.user;
-        console.log(itemsDeleteRequest.id);
         const item = await this.itemsRepository.getById(itemsDeleteRequest.id);
         if (!item) {
             throw new common_1.NotFoundException("Item not found");
@@ -17767,8 +17680,6 @@ let ItemsController = class ItemsController {
     }
     async getAll(itemsGetAllRequest, req) {
         const { userId } = req.user || {};
-        console.log(userId);
-        console.log(itemsGetAllRequest.companyId);
         const query = new items_get_all_query_1.ItemsGetAllQuery(itemsGetAllRequest.pageSize, itemsGetAllRequest.pageNumber, itemsGetAllRequest.withPaging, itemsGetAllRequest.search, itemsGetAllRequest.type, itemsGetAllRequest.status, itemsGetAllRequest.companyId, userId);
         const result = await this.queryBus.execute(query);
         const responseData = result.data?.map(item => items_get_all_response_1.ItemsGetAllResponse.create(item.id, item.name, item.SKUCode, item.manufacturer, item.brand, item.model, item.unit, item.categories, item.description, item.price, item.vat, item.stock, item.tags, item.image, item.type, item.status, item.companyId, item.userId, item.ItemNR));
@@ -17833,7 +17744,7 @@ exports.ItemsController = ItemsController = __decorate([
 
 
 /***/ }),
-/* 373 */
+/* 374 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17869,7 +17780,7 @@ exports.ItemsGetAllResponse = ItemsGetAllResponse;
 
 
 /***/ }),
-/* 374 */
+/* 375 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17895,7 +17806,7 @@ __decorate([
 
 
 /***/ }),
-/* 375 */
+/* 376 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17915,8 +17826,8 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const item_status_enum_1 = __webpack_require__(274);
-const item_type_enum_1 = __webpack_require__(376);
+const item_status_enum_1 = __webpack_require__(275);
+const item_type_enum_1 = __webpack_require__(377);
 class ItemsGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -17961,7 +17872,7 @@ __decorate([
 
 
 /***/ }),
-/* 376 */
+/* 377 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17976,7 +17887,7 @@ var ItemTypeEnum;
 
 
 /***/ }),
-/* 377 */
+/* 378 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18002,7 +17913,7 @@ __decorate([
 
 
 /***/ }),
-/* 378 */
+/* 379 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18019,7 +17930,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const item_status_enum_1 = __webpack_require__(274);
+const item_status_enum_1 = __webpack_require__(275);
 class ItemsChangeStatusRequest {
 }
 exports.ItemsChangeStatusRequest = ItemsChangeStatusRequest;
@@ -18041,7 +17952,7 @@ __decorate([
 
 
 /***/ }),
-/* 379 */
+/* 380 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18054,9 +17965,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HelpModule = void 0;
 const common_1 = __webpack_require__(3);
-const help_controller_1 = __webpack_require__(380);
-const help_service_1 = __webpack_require__(381);
-const user_service_1 = __webpack_require__(336);
+const help_controller_1 = __webpack_require__(381);
+const help_service_1 = __webpack_require__(382);
+const user_service_1 = __webpack_require__(337);
 const users_module_1 = __webpack_require__(67);
 let HelpModule = class HelpModule {
 };
@@ -18071,7 +17982,7 @@ exports.HelpModule = HelpModule = __decorate([
 
 
 /***/ }),
-/* 380 */
+/* 381 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18092,10 +18003,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HelpController = void 0;
 const common_1 = __webpack_require__(3);
 const platform_express_1 = __webpack_require__(174);
-const help_service_1 = __webpack_require__(381);
+const help_service_1 = __webpack_require__(382);
 const express_1 = __webpack_require__(180);
 const jwt_auth_guard_1 = __webpack_require__(69);
-const user_service_1 = __webpack_require__(336);
+const user_service_1 = __webpack_require__(337);
 let HelpController = class HelpController {
     constructor(helpService, userService) {
         this.helpService = helpService;
@@ -18103,7 +18014,6 @@ let HelpController = class HelpController {
     }
     async sendHelpRequest(question, attachment, req) {
         const user = await this.userService.findById(req.user?.userId);
-        console.log(user);
         const userName = user.nickName;
         const userEmail = user.email;
         const attachmentFileName = attachment ? attachment : null;
@@ -18137,7 +18047,7 @@ exports.HelpController = HelpController = __decorate([
 
 
 /***/ }),
-/* 381 */
+/* 382 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18189,7 +18099,7 @@ exports.HelpService = HelpService = __decorate([
 
 
 /***/ }),
-/* 382 */
+/* 383 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18205,20 +18115,20 @@ const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
 const companies_module_1 = __webpack_require__(207);
-const transforms_upsert_handler_1 = __webpack_require__(383);
-const transforms_change_status_handler_1 = __webpack_require__(394);
-const transforms_delete_handler_1 = __webpack_require__(397);
-const transforms_get_handler_1 = __webpack_require__(399);
-const notification_module_1 = __webpack_require__(346);
-const user_module_1 = __webpack_require__(352);
-const orders_module_1 = __webpack_require__(309);
-const transforms_get_all_handler_1 = __webpack_require__(401);
-const transform_controller_1 = __webpack_require__(404);
-const stransforms_repository_1 = __webpack_require__(390);
-const stransform_schema_1 = __webpack_require__(392);
-const transform_factory_1 = __webpack_require__(386);
-const transform_schema_factory_1 = __webpack_require__(391);
-const transforms_get_all_admin_handler_1 = __webpack_require__(412);
+const transforms_upsert_handler_1 = __webpack_require__(384);
+const transforms_change_status_handler_1 = __webpack_require__(395);
+const transforms_delete_handler_1 = __webpack_require__(398);
+const transforms_get_handler_1 = __webpack_require__(400);
+const notification_module_1 = __webpack_require__(347);
+const user_module_1 = __webpack_require__(353);
+const orders_module_1 = __webpack_require__(310);
+const transforms_get_all_handler_1 = __webpack_require__(402);
+const transform_controller_1 = __webpack_require__(405);
+const stransforms_repository_1 = __webpack_require__(391);
+const stransform_schema_1 = __webpack_require__(393);
+const transform_factory_1 = __webpack_require__(387);
+const transform_schema_factory_1 = __webpack_require__(392);
+const transforms_get_all_admin_handler_1 = __webpack_require__(413);
 let TransformsModule = class TransformsModule {
 };
 exports.TransformsModule = TransformsModule;
@@ -18258,7 +18168,7 @@ exports.TransformsModule = TransformsModule = __decorate([
 
 
 /***/ }),
-/* 383 */
+/* 384 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18277,10 +18187,10 @@ exports.TransformsUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_upsert_command_1 = __webpack_require__(384);
-const transforms_get_result_1 = __webpack_require__(385);
-const transform_factory_1 = __webpack_require__(386);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_upsert_command_1 = __webpack_require__(385);
+const transforms_get_result_1 = __webpack_require__(386);
+const transform_factory_1 = __webpack_require__(387);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsUpsertHandler = class TransformsUpsertHandler {
     constructor(transformsRepository, transformFactory, eventPublisher) {
         this.transformsRepository = transformsRepository;
@@ -18296,7 +18206,6 @@ let TransformsUpsertHandler = class TransformsUpsertHandler {
                 return app_result_1.AppResult.createError(app_errors_1.AppErrors.nullValue("Transform"));
             }
         }
-        console.log(command, "commandcommand");
         let entity = await this.transformFactory.save(command.id, command.title, command.status, command.buyerId, command.sellerId, command.userId, command.orderId, command.type, command.products || [], command.totalPrice, command.transformRequest, command.transformDoc || [], command.withdrawRequest, command.bankAccount || []);
         entity = this.eventPublisher.mergeObjectContext(entity);
         entity.commit();
@@ -18312,7 +18221,7 @@ exports.TransformsUpsertHandler = TransformsUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 384 */
+/* 385 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18340,7 +18249,7 @@ exports.TransformsUpsertCommand = TransformsUpsertCommand;
 
 
 /***/ }),
-/* 385 */
+/* 386 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18372,7 +18281,7 @@ exports.TransformsGetResult = TransformsGetResult;
 
 
 /***/ }),
-/* 386 */
+/* 387 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18389,11 +18298,11 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformFactory = void 0;
 const common_1 = __webpack_require__(3);
-const transform_1 = __webpack_require__(387);
+const transform_1 = __webpack_require__(388);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(357);
-const bank_1 = __webpack_require__(389);
-const stransforms_repository_1 = __webpack_require__(390);
+const attachment_1 = __webpack_require__(358);
+const bank_1 = __webpack_require__(390);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformFactory = class TransformFactory {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -18437,7 +18346,7 @@ exports.TransformFactory = TransformFactory = __decorate([
 
 
 /***/ }),
-/* 387 */
+/* 388 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -18445,7 +18354,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Transform = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const transform_status_enum_1 = __webpack_require__(388);
+const transform_status_enum_1 = __webpack_require__(389);
 class Transform extends cqrs_1.AggregateRoot {
     constructor(_id, title, status = transform_status_enum_1.TransformStatusEnum.PENDING, buyerId, sellerId, userId, orderId, type, products = [], totalPrice, transformRequest = false, transformDoc = [], withdrawRequest = false, bankAccount = [], createdAt, updatedAt, displayOrder, isVisible, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -18480,7 +18389,7 @@ exports.Transform = Transform;
 
 
 /***/ }),
-/* 388 */
+/* 389 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18495,7 +18404,7 @@ var TransformStatusEnum;
 
 
 /***/ }),
-/* 389 */
+/* 390 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18513,7 +18422,7 @@ exports.Bank = Bank;
 
 
 /***/ }),
-/* 390 */
+/* 391 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18536,8 +18445,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const transform_schema_factory_1 = __webpack_require__(391);
-const stransform_schema_1 = __webpack_require__(392);
+const transform_schema_factory_1 = __webpack_require__(392);
+const stransform_schema_1 = __webpack_require__(393);
 let TransformsRepository = class TransformsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -18554,7 +18463,7 @@ exports.TransformsRepository = TransformsRepository = __decorate([
 
 
 /***/ }),
-/* 391 */
+/* 392 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18570,10 +18479,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const transform_1 = __webpack_require__(387);
+const transform_1 = __webpack_require__(388);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(357);
-const bank_1 = __webpack_require__(389);
+const attachment_1 = __webpack_require__(358);
+const bank_1 = __webpack_require__(390);
 let TransformSchemaFactory = class TransformSchemaFactory {
     constructor() {
         console.log('TransformSchemaFactory is initialized');
@@ -18599,6 +18508,7 @@ let TransformSchemaFactory = class TransformSchemaFactory {
                 attachment: product.attachment || null,
                 SKUCode: product.SKUCode || '',
                 vat: product.vat || '0',
+                quatationId: product.quatationId || null,
             })) || [],
             totalPrice: entity.totalPrice || 0,
             transformRequest: Boolean(entity.transformRequest),
@@ -18637,6 +18547,7 @@ let TransformSchemaFactory = class TransformSchemaFactory {
             attachment: product.attachment || null,
             SKUCode: product.SKUCode || '',
             vat: product.vat || '0',
+            quatationId: product.quatationId
         })) || [], Number(schema.totalPrice) || 0, Boolean(schema.transformRequest), schema.transformDoc?.map((doc) => new attachment_1.Attachment(doc.name, doc.description, doc.fileId || null, doc.filepath)) || [], Boolean(schema.withdrawRequest), schema.bankAccount?.map((bank) => new bank_1.Bank(bank.accountName, bank.accountNumber, bank.bankName, bank.iban)) || [], schema.createdAt || new Date(), schema.updatedAt || new Date(), schema.displayOrder, schema.isVisible, schema.deletedAt, schema.createdBy, schema.updatedBy, schema.deletedBy);
     }
 };
@@ -18648,7 +18559,7 @@ exports.TransformSchemaFactory = TransformSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 392 */
+/* 393 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18671,9 +18582,9 @@ const schemas_names_1 = __webpack_require__(34);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
 const base_with_Info_schema_1 = __webpack_require__(37);
-const transform_status_enum_1 = __webpack_require__(388);
-const order_schema_1 = __webpack_require__(314);
-const transform_type_enum_1 = __webpack_require__(393);
+const transform_status_enum_1 = __webpack_require__(389);
+const order_schema_1 = __webpack_require__(315);
+const transform_type_enum_1 = __webpack_require__(394);
 let TransformSchema = class TransformSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.TransformSchema = TransformSchema;
@@ -18805,7 +18716,7 @@ exports.CreatedTransformSchema.set("toObject", { virtuals: true });
 
 
 /***/ }),
-/* 393 */
+/* 394 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18820,7 +18731,7 @@ var TransformTypeEnum;
 
 
 /***/ }),
-/* 394 */
+/* 395 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18839,12 +18750,12 @@ exports.TransformsChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_change_status_command_1 = __webpack_require__(395);
-const transforms_get_result_1 = __webpack_require__(385);
-const transform_status_enum_1 = __webpack_require__(388);
-const transforms_error_1 = __webpack_require__(396);
-const transform_factory_1 = __webpack_require__(386);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_change_status_command_1 = __webpack_require__(396);
+const transforms_get_result_1 = __webpack_require__(386);
+const transform_status_enum_1 = __webpack_require__(389);
+const transforms_error_1 = __webpack_require__(397);
+const transform_factory_1 = __webpack_require__(387);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsChangeStatusHandler = class TransformsChangeStatusHandler {
     constructor(transformsRepository, transformFactory, eventPublisher) {
         this.transformsRepository = transformsRepository;
@@ -18876,7 +18787,7 @@ exports.TransformsChangeStatusHandler = TransformsChangeStatusHandler = __decora
 
 
 /***/ }),
-/* 395 */
+/* 396 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18894,7 +18805,7 @@ exports.TransformsChangeStatusCommand = TransformsChangeStatusCommand;
 
 
 /***/ }),
-/* 396 */
+/* 397 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -18934,7 +18845,7 @@ exports.TransformsError = TransformsError;
 
 
 /***/ }),
-/* 397 */
+/* 398 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18953,8 +18864,8 @@ exports.TransformsDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_delete_command_1 = __webpack_require__(398);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_delete_command_1 = __webpack_require__(399);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsDeleteHandler = class TransformsDeleteHandler {
     constructor(TransformsRepository) {
         this.TransformsRepository = TransformsRepository;
@@ -18979,7 +18890,7 @@ exports.TransformsDeleteHandler = TransformsDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 398 */
+/* 399 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18994,7 +18905,7 @@ exports.TransformsDeleteCommand = TransformsDeleteCommand;
 
 
 /***/ }),
-/* 399 */
+/* 400 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19013,9 +18924,9 @@ exports.TransformsGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_get_query_1 = __webpack_require__(400);
-const transforms_get_result_1 = __webpack_require__(385);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_get_query_1 = __webpack_require__(401);
+const transforms_get_result_1 = __webpack_require__(386);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsGetHandler = class TransformsGetHandler {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -19037,7 +18948,7 @@ exports.TransformsGetHandler = TransformsGetHandler = __decorate([
 
 
 /***/ }),
-/* 400 */
+/* 401 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19052,7 +18963,7 @@ exports.TransfromsGetQuery = TransfromsGetQuery;
 
 
 /***/ }),
-/* 401 */
+/* 402 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19072,9 +18983,9 @@ const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const transforms_get_all_result_1 = __webpack_require__(402);
-const stransforms_get_all_query_1 = __webpack_require__(403);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_get_all_result_1 = __webpack_require__(403);
+const stransforms_get_all_query_1 = __webpack_require__(404);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsGetAllHandler = class TransformsGetAllHandler {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -19112,7 +19023,7 @@ exports.TransformsGetAllHandler = TransformsGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 402 */
+/* 403 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19145,7 +19056,7 @@ exports.TransformsGetAllResult = TransformsGetAllResult;
 
 
 /***/ }),
-/* 403 */
+/* 404 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19169,7 +19080,7 @@ exports.TransformsGetAllQuery = TransformsGetAllQuery;
 
 
 /***/ }),
-/* 404 */
+/* 405 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19195,23 +19106,23 @@ const app_response_1 = __webpack_require__(87);
 const platform_express_1 = __webpack_require__(174);
 const multer_config_1 = __webpack_require__(236);
 const s3_upload_service_1 = __webpack_require__(238);
-const transforms_upsert_command_1 = __webpack_require__(384);
-const transforms_change_status_command_1 = __webpack_require__(395);
-const transforms_delete_command_1 = __webpack_require__(398);
-const transforms_get_query_1 = __webpack_require__(400);
-const stransforms_get_all_query_1 = __webpack_require__(403);
-const stransforms_repository_1 = __webpack_require__(390);
-const transforms_get_all_response_1 = __webpack_require__(405);
-const transforms_get_all_request_1 = __webpack_require__(406);
-const transforms_change_status_request_1 = __webpack_require__(407);
-const transforms_delete_request_1 = __webpack_require__(408);
-const transforms_get_request_1 = __webpack_require__(409);
-const transform_type_enum_1 = __webpack_require__(393);
+const transforms_upsert_command_1 = __webpack_require__(385);
+const transforms_change_status_command_1 = __webpack_require__(396);
+const transforms_delete_command_1 = __webpack_require__(399);
+const transforms_get_query_1 = __webpack_require__(401);
+const stransforms_get_all_query_1 = __webpack_require__(404);
+const stransforms_repository_1 = __webpack_require__(391);
+const transforms_get_all_response_1 = __webpack_require__(406);
+const transforms_get_all_request_1 = __webpack_require__(407);
+const transforms_change_status_request_1 = __webpack_require__(408);
+const transforms_delete_request_1 = __webpack_require__(409);
+const transforms_get_request_1 = __webpack_require__(410);
+const transform_type_enum_1 = __webpack_require__(394);
 const roles_decorator_1 = __webpack_require__(86);
 const roles_guard_1 = __webpack_require__(85);
-const transforms_get_admin_all_response_1 = __webpack_require__(410);
-const stransforms_get_all_admin_query_1 = __webpack_require__(411);
-const attachment_1 = __webpack_require__(357);
+const transforms_get_admin_all_response_1 = __webpack_require__(411);
+const stransforms_get_all_admin_query_1 = __webpack_require__(412);
+const attachment_1 = __webpack_require__(358);
 let TransformsController = class TransformsController {
     constructor(queryBus, commandBus, transformsRepository) {
         this.queryBus = queryBus;
@@ -19221,16 +19132,12 @@ let TransformsController = class TransformsController {
     }
     async upsert(body, files, req) {
         const { userId } = req.user;
-        console.log(body, "Body");
-        console.log(files, "Uploaded Files");
-        console.log(userId, "userId");
         try {
             const uploadedAttachments = files?.attachment
                 ? await Promise.all(files.attachment.map(async (file) => {
                     try {
                         const folderPath = `${body.companyId}/attachments`;
                         const uploadResult = await s3_upload_service_1.S3UploadService.uploadFile(file, folderPath);
-                        console.log(uploadResult, "Upload Result");
                         return {
                             name: file.originalname,
                             filepath: uploadResult
@@ -19244,13 +19151,9 @@ let TransformsController = class TransformsController {
                 : [];
             const metadata = [];
             const fullAttachments = uploadedAttachments.map((meta, index) => {
-                console.log(meta);
                 const filepath = uploadedAttachments[index]?.filepath || null;
                 return new attachment_1.Attachment(meta.name, "Tranformation", null, filepath);
             });
-            console.log(fullAttachments, "fullAttachments");
-            console.log(body.products, "fullAttachments");
-            console.log(body.bankAccount, "fullAttachments");
             let transformRequest = body.transformRequest === 'true' ? true : false;
             let products = null;
             try {
@@ -19266,8 +19169,6 @@ let TransformsController = class TransformsController {
             catch (e) {
                 console.log(e);
             }
-            console.log(products, "fullAttachments");
-            console.log(bankAccount, "fullAttachments");
             const command = new transforms_upsert_command_1.TransformsUpsertCommand(body.id || null, body.title, body.status, body.buyerId || null, body.sellerId, userId, body.orderId || null, body.orderId === undefined ? body.buyerId === undefined ? transform_type_enum_1.TransformTypeEnum.WITHDRAW : transform_type_enum_1.TransformTypeEnum.TRANSFORM : transform_type_enum_1.TransformTypeEnum.ORDERTRASFORM, products, body.totalPrice, false, fullAttachments || [], false, bankAccount);
             const result = await this.commandBus.execute(command);
             return app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, null, result.error);
@@ -19301,7 +19202,6 @@ let TransformsController = class TransformsController {
     async getAll(TransformsGetAllRequest, req) {
         const { userId } = req.user || {};
         const query = new stransforms_get_all_query_1.TransformsGetAllQuery(TransformsGetAllRequest.pageSize || 10, TransformsGetAllRequest.pageNumber || 1, TransformsGetAllRequest.withPaging || false, TransformsGetAllRequest.search || null, TransformsGetAllRequest.status || null, TransformsGetAllRequest.buyerId || null, TransformsGetAllRequest.sellerId || null, null);
-        console.log(query);
         const result = await this.queryBus.execute(query);
         console.log('Registered Query Handlers:', Array.from(this.queryBus['handlers'].keys()));
         const responseData = result.data?.map((transform) => transforms_get_all_response_1.TransformsGetAllResponse.create(transform.id, transform.title, transform.status, transform.buyerId, transform.sellerId, transform.userId, transform.orderId, transform.type, transform.products, transform.totalPrice, transform.transformRequest, transform.transformDoc, transform.withdrawRequest, transform.bankAccount, transform.createdAt));
@@ -19383,7 +19283,7 @@ exports.TransformsController = TransformsController = __decorate([
 
 
 /***/ }),
-/* 405 */
+/* 406 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19416,7 +19316,7 @@ exports.TransformsGetAllResponse = TransformsGetAllResponse;
 
 
 /***/ }),
-/* 406 */
+/* 407 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19436,7 +19336,7 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const transform_status_enum_1 = __webpack_require__(388);
+const transform_status_enum_1 = __webpack_require__(389);
 class TransformsGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -19485,7 +19385,7 @@ __decorate([
 
 
 /***/ }),
-/* 407 */
+/* 408 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19502,7 +19402,7 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformsChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const transform_status_enum_1 = __webpack_require__(388);
+const transform_status_enum_1 = __webpack_require__(389);
 class TransformsChangeStatusRequest {
 }
 exports.TransformsChangeStatusRequest = TransformsChangeStatusRequest;
@@ -19537,7 +19437,7 @@ __decorate([
 
 
 /***/ }),
-/* 408 */
+/* 409 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19563,7 +19463,7 @@ __decorate([
 
 
 /***/ }),
-/* 409 */
+/* 410 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19589,7 +19489,7 @@ __decorate([
 
 
 /***/ }),
-/* 410 */
+/* 411 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19624,7 +19524,7 @@ exports.TransformsGetAllAdminResponse = TransformsGetAllAdminResponse;
 
 
 /***/ }),
-/* 411 */
+/* 412 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19648,7 +19548,7 @@ exports.TransformsGetAllAdminQuery = TransformsGetAllAdminQuery;
 
 
 /***/ }),
-/* 412 */
+/* 413 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19665,10 +19565,10 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformsGetAllAdminHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const transforms_get_all_admin_result_1 = __webpack_require__(413);
+const transforms_get_all_admin_result_1 = __webpack_require__(414);
 const companies_repository_1 = __webpack_require__(210);
-const stransforms_get_all_admin_query_1 = __webpack_require__(411);
-const stransforms_repository_1 = __webpack_require__(390);
+const stransforms_get_all_admin_query_1 = __webpack_require__(412);
+const stransforms_repository_1 = __webpack_require__(391);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
 const app_result_1 = __webpack_require__(27);
@@ -19711,7 +19611,7 @@ exports.TransformsGetAllAdminHandler = TransformsGetAllAdminHandler = __decorate
 
 
 /***/ }),
-/* 413 */
+/* 414 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19746,7 +19646,7 @@ exports.TransformsGetAllAdminResult = TransformsGetAllAdminResult;
 
 
 /***/ }),
-/* 414 */
+/* 415 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19759,11 +19659,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentModule = void 0;
 const common_1 = __webpack_require__(3);
-const payment_controller_1 = __webpack_require__(415);
-const payment_service_1 = __webpack_require__(416);
-const user_service_1 = __webpack_require__(336);
+const payment_controller_1 = __webpack_require__(416);
+const payment_service_1 = __webpack_require__(417);
+const user_service_1 = __webpack_require__(337);
 const users_module_1 = __webpack_require__(67);
-const paylat_request_schema_1 = __webpack_require__(417);
+const paylat_request_schema_1 = __webpack_require__(418);
 const mongoose_1 = __webpack_require__(24);
 let PaymentModule = class PaymentModule {
 };
@@ -19781,7 +19681,7 @@ exports.PaymentModule = PaymentModule = __decorate([
 
 
 /***/ }),
-/* 415 */
+/* 416 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19801,10 +19701,10 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentController = void 0;
 const common_1 = __webpack_require__(3);
-const payment_service_1 = __webpack_require__(416);
+const payment_service_1 = __webpack_require__(417);
 const express_1 = __webpack_require__(180);
 const jwt_auth_guard_1 = __webpack_require__(69);
-const user_service_1 = __webpack_require__(336);
+const user_service_1 = __webpack_require__(337);
 let PaymentController = class PaymentController {
     constructor(paymentService, userService) {
         this.paymentService = paymentService;
@@ -19885,7 +19785,7 @@ exports.PaymentController = PaymentController = __decorate([
 
 
 /***/ }),
-/* 416 */
+/* 417 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19908,7 +19808,7 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const mailer_1 = __webpack_require__(61);
-const paylat_request_schema_1 = __webpack_require__(417);
+const paylat_request_schema_1 = __webpack_require__(418);
 let PaymentService = class PaymentService {
     constructor(mailerService, paylatRequestModel) {
         this.mailerService = mailerService;
@@ -19996,7 +19896,7 @@ exports.PaymentService = PaymentService = __decorate([
 
 
 /***/ }),
-/* 417 */
+/* 418 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -20047,7 +19947,41 @@ exports.PaylatRequestSchema = mongoose_1.SchemaFactory.createForClass(PaylatRequ
 
 
 /***/ }),
-/* 418 */
+/* 419 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppController = void 0;
+const common_1 = __webpack_require__(3);
+let AppController = class AppController {
+    getHello() {
+        return 'Hello World!';
+    }
+};
+exports.AppController = AppController;
+__decorate([
+    (0, common_1.Get)('/'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", String)
+], AppController.prototype, "getHello", null);
+exports.AppController = AppController = __decorate([
+    (0, common_1.Controller)()
+], AppController);
+
+
+/***/ }),
+/* 420 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -20103,7 +20037,7 @@ exports.AppValidationPipe = AppValidationPipe = __decorate([
 
 
 /***/ }),
-/* 419 */
+/* 421 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -20111,7 +20045,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.appCorsOptions = void 0;
 exports.appCorsOptions = {
     origin: [
-        'https://medex2b.com',
+        'https://www.medex2b.com',
         'http://medex2b.com',
         'http://admin.medex2b.com',
         'https://admin.medex2b.com',
@@ -20142,7 +20076,7 @@ exports.appCorsOptions = {
 
 
 /***/ }),
-/* 420 */
+/* 422 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -20221,7 +20155,7 @@ class ProblemDetails {
 
 
 /***/ }),
-/* 421 */
+/* 423 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/platform-socket.io");
@@ -20263,18 +20197,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(1);
 const app_module_1 = __webpack_require__(2);
 const app_logger_service_1 = __webpack_require__(4);
-const app_validation_pipe_1 = __webpack_require__(418);
+const app_validation_pipe_1 = __webpack_require__(420);
 const app_configs_service_1 = __webpack_require__(7);
-const app_cors_options_1 = __webpack_require__(419);
-const app_global_exception_filter_1 = __webpack_require__(420);
+const app_cors_options_1 = __webpack_require__(421);
+const app_global_exception_filter_1 = __webpack_require__(422);
 const common_1 = __webpack_require__(3);
-const protected_files_middleware_1 = __webpack_require__(242);
-const requests_logger_middleware_1 = __webpack_require__(243);
+const protected_files_middleware_1 = __webpack_require__(243);
+const requests_logger_middleware_1 = __webpack_require__(244);
 const miedas_functions_1 = __webpack_require__(148);
 const medias_constants_1 = __webpack_require__(147);
 const jwt_provider_service_1 = __webpack_require__(43);
 const mongoose_1 = __webpack_require__(25);
-const platform_socket_io_1 = __webpack_require__(421);
+const platform_socket_io_1 = __webpack_require__(423);
 async function bootstrap() {
     const app = await core_1.NestFactory
         .create(app_module_1.AppModule, {
