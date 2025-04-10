@@ -19,7 +19,7 @@ import { TendersRepository } from '../tenders/persistence/repositories/tenders.r
 import { TendersModule } from '../tenders/tenders.module';
 import { CompaniesModule } from '../companies/companies.module';
 import { NotificationModule } from '../notifications/notification.module';
-import { UserModule } from '../users/user.module';
+// import { UserModule } from '../users/user.module';
 import { CompanyService } from '../companies/application/services/getCompanyById';
 
 
@@ -35,7 +35,7 @@ import { CompanyService } from '../companies/application/services/getCompanyById
     TendersModule, // Import TendersModule to access shared resources
     CompaniesModule,
     NotificationModule,
-    UserModule   
+    // UserModule   
   ],
   providers: [
     OrdersRepository,

@@ -16,6 +16,8 @@ export class UsersUpsertRequest {
   @IsEmail()
   public readonly email: string;
 
+  // whay password is removed
+
   @IsString()
   public readonly phoneNumber: string;
 

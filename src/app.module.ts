@@ -29,7 +29,7 @@ import { OrdersModule } from './app/features/orders/orders.module';
 import { ItemsModule } from './app/features/items/items.module';
 import { HelpModule } from './app/features/help/help.module';
 import { NotificationModule } from './app/features/notifications/notification.module';
-import { UserModule } from './app/features/users/user.module';
+// import { UserModule } from './app/features/users/user.module';
 import { TransformsModule } from './app/features/transformation/transforms.module';
 import { PaymentModule } from './app/features/payment/payment.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -66,7 +66,7 @@ import { AppController } from './app.controller';
     HelpModule, // Ensure the correct path or create the module if it does not exist
     PaymentModule,
     NotificationModule,
-    UserModule,
+    // UserModule,
     TransformsModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],

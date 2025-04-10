@@ -23,7 +23,6 @@ import { S3UploadService } from 'src/app/@core/shared/application/services/s3-up
 import { S3_BUCKET, s3Client } from 'src/app/@core/configs/s3.config';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { ItemsRepository } from '../../persistence/repositories/items.repository';
-import { v4 as uuidv4 } from "uuid";
 import { isEmpty } from 'class-validator';
 
 @Controller({

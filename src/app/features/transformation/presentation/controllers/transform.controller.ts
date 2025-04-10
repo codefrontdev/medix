@@ -56,7 +56,6 @@ export class TransformsController {
     private readonly commandBus: CommandBus,
     private readonly transformsRepository: TransformsRepository,
   ) {
-    console.log('QueryBus in Module:', queryBus);
   }
 
   @UseGuards(JwtAuthGuard)

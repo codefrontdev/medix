@@ -41,7 +41,7 @@ import { TendersGetResult } from "src/app/features/tenders/application/results/t
 import { NotificationsRepository } from "src/app/features/notifications/persistence/repositories/notifications.repository";
 import { NotificationFactory } from "src/app/features/notifications/application/factories/notification.factory";
 import { UserCompaniesService } from "src/app/features/companies/application/services/user-companies.service";
-import { UserService } from "src/app/features/users/user.service";
+// import { UserService } from "src/app/features/users/user.service";
 import { OrderTypeEnum } from "../../domain/constants/enum/order-type.enum";
 import puppeteer from "puppeteer";
 import * as fs from "fs";
@@ -58,7 +58,7 @@ export class OrdersController {
     private readonly commandBus: CommandBus,
     private readonly notificationsRepository: NotificationsRepository,
     private readonly userCompaniesService: UserCompaniesService,
-    private readonly userService: UserService,
+    // private readonly userService: UserService,
     private readonly companyService: CompanyService
   ) {}
 
@@ -243,39 +243,39 @@ export class OrdersController {
     }
     if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Accepted") {
       const factory = new NotificationFactory(this.notificationsRepository);
-      const users = await this.userService.findById(userId);
+      // const users = await this.userService.findById(userId);
 
       await factory.save(
         null, // No ID for new notification
         ordersUpsertRequest.userId, // Notification for the current user
         "INFO", // Notification type
-        `${users?.nickName} قبول الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, // Custom message in Arabic
+        `${"users?.nickName"} قبول الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, // Custom message in Arabic
         false, // Not read
         new Date() // Current timestamp
       );
     }
     if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Sending") {
       const factory = new NotificationFactory(this.notificationsRepository);
-      const users = await this.userService.findById(userId);
+      // const users = await this.userService.findById(userId);
 
       await factory.save(
         null, // No ID for new notification
         ordersUpsertRequest.userId, // Notification for the current user
         "INFO", // Notification type
-        `${users?.nickName} شحن الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, // Custom message in Arabic
+        `${"users?.nickName"} شحن الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, // Custom message in Arabic
         false, // Not read
         new Date() // Current timestamp
       );
     }
     if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Canceled") {
       const factory = new NotificationFactory(this.notificationsRepository);
-      const users = await this.userService.findById(userId);
+      // const users = await this.userService.findById(userId);
       
       await factory.save(
         null, // No ID for new notification
         ordersUpsertRequest.userId, // Notification for the current user
         "INFO", // Notification type
-        `${users?.nickName} رفض الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, // Custom message in Arabic
+        `${"users?.nickName"} رفض الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, // Custom message in Arabic
         false, // Not read
         new Date() // Current timestamp
       );

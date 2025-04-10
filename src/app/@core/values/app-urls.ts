@@ -1,4 +1,4 @@
-export const domainUrl = "http://localhost:3000";
+export const domainUrl = "https://www.medex2b.com";
 
 export default {
   auth: {

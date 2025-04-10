@@ -45,14 +45,13 @@ const mailer_1 = __webpack_require__(61);
 const handlebars_adapter_1 = __webpack_require__(245);
 const tenders_module_1 = __webpack_require__(246);
 const orders_module_1 = __webpack_require__(310);
-const items_module_1 = __webpack_require__(354);
-const help_module_1 = __webpack_require__(380);
-const notification_module_1 = __webpack_require__(347);
-const user_module_1 = __webpack_require__(353);
-const transforms_module_1 = __webpack_require__(383);
-const payment_module_1 = __webpack_require__(415);
+const items_module_1 = __webpack_require__(352);
+const help_module_1 = __webpack_require__(378);
+const notification_module_1 = __webpack_require__(346);
+const transforms_module_1 = __webpack_require__(381);
+const payment_module_1 = __webpack_require__(413);
 const config_1 = __webpack_require__(8);
-const app_controller_1 = __webpack_require__(419);
+const app_controller_1 = __webpack_require__(417);
 let AppModule = class AppModule {
     configure(consumer) {
     }
@@ -84,7 +83,6 @@ exports.AppModule = AppModule = __decorate([
             help_module_1.HelpModule,
             payment_module_1.PaymentModule,
             notification_module_1.NotificationModule,
-            user_module_1.UserModule,
             transforms_module_1.TransformsModule,
             mailer_1.MailerModule.forRootAsync({
                 imports: [config_1.ConfigModule],
@@ -2449,7 +2447,7 @@ exports["default"] = {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.domainUrl = void 0;
-exports.domainUrl = "http://localhost:3000";
+exports.domainUrl = "https://www.medex2b.com";
 exports["default"] = {
     auth: {
         confirm: `${exports.domainUrl}/auth/confirm?code=`,
@@ -2576,60 +2574,45 @@ let UsersController = class UsersController {
     }
     async upsert(usersUpsertRequest) {
         const command = new users_upsert_command_1.UsersUpsertCommand(usersUpsertRequest.id, usersUpsertRequest.nickName, usersUpsertRequest.email, usersUpsertRequest.phoneNumber, usersUpsertRequest.role, usersUpsertRequest.gender, usersUpsertRequest.accountType, usersUpsertRequest.region, usersUpsertRequest.city, usersUpsertRequest.address, usersUpsertRequest.identityType, usersUpsertRequest.identityNo, usersUpsertRequest.residenceNo, usersUpsertRequest.dateOfBirth);
-        const result = await this
-            .commandBus
-            .execute(command);
-        const response = app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, result.data, null, result.error);
+        const result = await this.commandBus.execute(command);
+        const response = app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, null, result.error);
         return response;
     }
     async verify(usersVerifyRequest) {
         const command = new users_verify_command_1.UsersVerifyCommand(usersVerifyRequest.id, usersVerifyRequest.isVerified);
-        const result = await this
-            .commandBus
-            .execute(command);
-        const response = app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, null, null, result.error);
+        const result = await this.commandBus.execute(command);
+        const response = app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, null, null, result.error);
         return response;
     }
     async delete(usersDeleteRequest) {
         const command = new users_delete_command_1.UsersDeleteCommand(usersDeleteRequest.id);
-        const result = await this
-            .commandBus
-            .execute(command);
-        const response = app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, null, null, result.error);
+        const result = await this.commandBus.execute(command);
+        const response = app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, null, null, result.error);
         return response;
     }
     async get(usersGetRequest, req) {
+        console.log(usersGetRequest);
         const { userId, roles } = req.user;
-        const isAdmin = roles
-            .includes(role_enum_1.RoleEnum.ADMIN);
+        const isAdmin = roles.includes(role_enum_1.RoleEnum.ADMIN);
         if (!isAdmin && userId != usersGetRequest.id) {
             throw new common_1.ForbiddenException();
         }
         const query = new users_get_query_1.UsersGetQuery(usersGetRequest.id);
-        const result = await this
-            .queryBus
-            .execute(query);
-        const response = app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, result.data, null, result.error);
+        const result = await this.queryBus.execute(query);
+        const response = app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, null, result.error);
         return response;
     }
     async getAll(usersGetAllRequest) {
         const query = new users_get_all_query_1.UsersGetAllQuery(usersGetAllRequest.pageSize, usersGetAllRequest.pageNumber, usersGetAllRequest.withPaging, usersGetAllRequest.search, usersGetAllRequest.role);
-        const result = await this
-            .queryBus
-            .execute(query);
-        const response = app_response_1.AppResponse
-            .create(result.isSuccess, result.key, result.message, result.data, result.paging, result.error);
+        const result = await this.queryBus.execute(query);
+        const response = app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, result.paging, result.error);
         return response;
     }
 };
 exports.UsersController = UsersController;
 __decorate([
     (0, roles_decorator_1.Roles)(role_enum_1.RoleEnum.ADMIN),
-    (0, common_1.Post)('upsert'),
+    (0, common_1.Post)("upsert"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [typeof (_c = typeof users_upsert_request_1.UsersUpsertRequest !== "undefined" && users_upsert_request_1.UsersUpsertRequest) === "function" ? _c : Object]),
@@ -2637,7 +2620,7 @@ __decorate([
 ], UsersController.prototype, "upsert", null);
 __decorate([
     (0, roles_decorator_1.Roles)(role_enum_1.RoleEnum.ADMIN),
-    (0, common_1.Post)('verify'),
+    (0, common_1.Post)("verify"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [typeof (_e = typeof users_verify_request_1.UsersVerifyRequest !== "undefined" && users_verify_request_1.UsersVerifyRequest) === "function" ? _e : Object]),
@@ -2645,14 +2628,14 @@ __decorate([
 ], UsersController.prototype, "verify", null);
 __decorate([
     (0, roles_decorator_1.Roles)(role_enum_1.RoleEnum.ADMIN),
-    (0, common_1.Delete)('delete'),
+    (0, common_1.Delete)("delete"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [typeof (_g = typeof users_delete_request_1.UsersDeleteRequest !== "undefined" && users_delete_request_1.UsersDeleteRequest) === "function" ? _g : Object]),
     __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
 ], UsersController.prototype, "delete", null);
 __decorate([
-    (0, common_1.Get)('get'),
+    (0, common_1.Get)("get"),
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -2661,7 +2644,7 @@ __decorate([
 ], UsersController.prototype, "get", null);
 __decorate([
     (0, roles_decorator_1.Roles)(role_enum_1.RoleEnum.ADMIN),
-    (0, common_1.Get)('getAll'),
+    (0, common_1.Get)("getAll"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [typeof (_l = typeof users_get_all_request_1.UsersGetAllRequest !== "undefined" && users_get_all_request_1.UsersGetAllRequest) === "function" ? _l : Object]),
@@ -2670,7 +2653,7 @@ __decorate([
 exports.UsersController = UsersController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Controller)({
-        path: 'web/users',
+        path: "web/users",
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _b : Object])
 ], UsersController);
@@ -3138,22 +3121,13 @@ let RolesGuard = class RolesGuard {
         this.reflector = reflector;
     }
     canActivate(context) {
-        const requiredRoles = this
-            .reflector
-            .getAllAndOverride(roles_decorator_1.ROLES_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
+        const requiredRoles = this.reflector.getAllAndOverride(roles_decorator_1.ROLES_KEY, [context.getHandler(), context.getClass()]);
         if (!requiredRoles) {
             return true;
         }
-        const { user } = context
-            .switchToHttp()
-            .getRequest();
-        return requiredRoles
-            .some((role) => user
-            ?.roles
-            ?.includes(role));
+        const { user } = context.switchToHttp().getRequest();
+        console.log("requiredRoles", user);
+        return requiredRoles.some((role) => user?.roles?.includes(role));
     }
 };
 exports.RolesGuard = RolesGuard;
@@ -14101,15 +14075,14 @@ const orders_repository_1 = __webpack_require__(314);
 const order_schema_1 = __webpack_require__(315);
 const order_schema_factory_1 = __webpack_require__(317);
 const orders_controller_1 = __webpack_require__(318);
-const tenders_upsert_handler_1 = __webpack_require__(339);
-const orders_delete_handler_1 = __webpack_require__(341);
-const orders_get_handler_1 = __webpack_require__(342);
-const orders_get_all_handler_1 = __webpack_require__(343);
-const orders_change_status_handler_1 = __webpack_require__(345);
+const tenders_upsert_handler_1 = __webpack_require__(338);
+const orders_delete_handler_1 = __webpack_require__(340);
+const orders_get_handler_1 = __webpack_require__(341);
+const orders_get_all_handler_1 = __webpack_require__(342);
+const orders_change_status_handler_1 = __webpack_require__(344);
 const tenders_module_1 = __webpack_require__(246);
 const companies_module_1 = __webpack_require__(207);
-const notification_module_1 = __webpack_require__(347);
-const user_module_1 = __webpack_require__(353);
+const notification_module_1 = __webpack_require__(346);
 const getCompanyById_1 = __webpack_require__(268);
 let OrdersModule = class OrdersModule {
 };
@@ -14127,7 +14100,6 @@ exports.OrdersModule = OrdersModule = __decorate([
             tenders_module_1.TendersModule,
             companies_module_1.CompaniesModule,
             notification_module_1.NotificationModule,
-            user_module_1.UserModule
         ],
         providers: [
             orders_repository_1.OrdersRepository,
@@ -14677,7 +14649,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersController = void 0;
 const common_1 = __webpack_require__(3);
@@ -14703,19 +14675,17 @@ const tenders_get_query_1 = __webpack_require__(262);
 const notifications_repository_1 = __webpack_require__(332);
 const notification_factory_1 = __webpack_require__(336);
 const user_companies_service_1 = __webpack_require__(234);
-const user_service_1 = __webpack_require__(337);
 const order_type_enum_1 = __webpack_require__(316);
-const puppeteer_1 = __webpack_require__(338);
+const puppeteer_1 = __webpack_require__(337);
 const fs = __webpack_require__(144);
 const getCompanyById_1 = __webpack_require__(268);
 const s3_upload_service_1 = __webpack_require__(238);
 let OrdersController = class OrdersController {
-    constructor(queryBus, commandBus, notificationsRepository, userCompaniesService, userService, companyService) {
+    constructor(queryBus, commandBus, notificationsRepository, userCompaniesService, companyService) {
         this.queryBus = queryBus;
         this.commandBus = commandBus;
         this.notificationsRepository = notificationsRepository;
         this.userCompaniesService = userCompaniesService;
-        this.userService = userService;
         this.companyService = companyService;
     }
     async upsert(ordersUpsertRequest, req) {
@@ -14814,18 +14784,15 @@ let OrdersController = class OrdersController {
         }
         if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Accepted") {
             const factory = new notification_factory_1.NotificationFactory(this.notificationsRepository);
-            const users = await this.userService.findById(userId);
-            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${users?.nickName} قبول الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
+            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${"users?.nickName"} قبول الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
         }
         if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Sending") {
             const factory = new notification_factory_1.NotificationFactory(this.notificationsRepository);
-            const users = await this.userService.findById(userId);
-            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${users?.nickName} شحن الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
+            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${"users?.nickName"} شحن الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
         }
         if (ordersUpsertRequest.id && ordersUpsertRequest.status === "Canceled") {
             const factory = new notification_factory_1.NotificationFactory(this.notificationsRepository);
-            const users = await this.userService.findById(userId);
-            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${users?.nickName} رفض الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
+            await factory.save(null, ordersUpsertRequest.userId, "INFO", `${"users?.nickName"} رفض الطلب برقم ${ordersUpsertRequest.OrderNr ? ordersUpsertRequest.OrderNr : 0}!`, false, new Date());
         }
         return app_response_1.AppResponse.create(result.isSuccess, result.key, result.message, result.data, null, result.error);
     }
@@ -15062,8 +15029,8 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_g = typeof orders_upsert_request_1.OrdersUpsertRequest !== "undefined" && orders_upsert_request_1.OrdersUpsertRequest) === "function" ? _g : Object, Object]),
-    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+    __metadata("design:paramtypes", [typeof (_f = typeof orders_upsert_request_1.OrdersUpsertRequest !== "undefined" && orders_upsert_request_1.OrdersUpsertRequest) === "function" ? _f : Object, Object]),
+    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
 ], OrdersController.prototype, "upsert", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -15071,8 +15038,8 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_j = typeof orders_change_status_request_1.OrdersChangeStatusRequest !== "undefined" && orders_change_status_request_1.OrdersChangeStatusRequest) === "function" ? _j : Object, Object]),
-    __metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
+    __metadata("design:paramtypes", [typeof (_h = typeof orders_change_status_request_1.OrdersChangeStatusRequest !== "undefined" && orders_change_status_request_1.OrdersChangeStatusRequest) === "function" ? _h : Object, Object]),
+    __metadata("design:returntype", typeof (_j = typeof Promise !== "undefined" && Promise) === "function" ? _j : Object)
 ], OrdersController.prototype, "changeStatus", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -15080,31 +15047,31 @@ __decorate([
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_l = typeof orders_delete_request_1.OrdersDeleteRequest !== "undefined" && orders_delete_request_1.OrdersDeleteRequest) === "function" ? _l : Object, Object]),
-    __metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
+    __metadata("design:paramtypes", [typeof (_k = typeof orders_delete_request_1.OrdersDeleteRequest !== "undefined" && orders_delete_request_1.OrdersDeleteRequest) === "function" ? _k : Object, Object]),
+    __metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
 ], OrdersController.prototype, "delete", null);
 __decorate([
     (0, common_1.Get)("get"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_o = typeof orders_get_request_1.OrdersGetRequest !== "undefined" && orders_get_request_1.OrdersGetRequest) === "function" ? _o : Object]),
-    __metadata("design:returntype", typeof (_p = typeof Promise !== "undefined" && Promise) === "function" ? _p : Object)
+    __metadata("design:paramtypes", [typeof (_m = typeof orders_get_request_1.OrdersGetRequest !== "undefined" && orders_get_request_1.OrdersGetRequest) === "function" ? _m : Object]),
+    __metadata("design:returntype", typeof (_o = typeof Promise !== "undefined" && Promise) === "function" ? _o : Object)
 ], OrdersController.prototype, "get", null);
 __decorate([
     (0, common_1.Get)("getAll"),
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_q = typeof orders_get_all_request_1.OrdersGetAllRequest !== "undefined" && orders_get_all_request_1.OrdersGetAllRequest) === "function" ? _q : Object, Object]),
-    __metadata("design:returntype", typeof (_r = typeof Promise !== "undefined" && Promise) === "function" ? _r : Object)
+    __metadata("design:paramtypes", [typeof (_p = typeof orders_get_all_request_1.OrdersGetAllRequest !== "undefined" && orders_get_all_request_1.OrdersGetAllRequest) === "function" ? _p : Object, Object]),
+    __metadata("design:returntype", typeof (_q = typeof Promise !== "undefined" && Promise) === "function" ? _q : Object)
 ], OrdersController.prototype, "getAll", null);
 __decorate([
     (0, common_1.Get)("getAllBuyer"),
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_s = typeof orders_get_all_request_1.OrdersGetAllRequest !== "undefined" && orders_get_all_request_1.OrdersGetAllRequest) === "function" ? _s : Object, Object]),
-    __metadata("design:returntype", typeof (_t = typeof Promise !== "undefined" && Promise) === "function" ? _t : Object)
+    __metadata("design:paramtypes", [typeof (_r = typeof orders_get_all_request_1.OrdersGetAllRequest !== "undefined" && orders_get_all_request_1.OrdersGetAllRequest) === "function" ? _r : Object, Object]),
+    __metadata("design:returntype", typeof (_s = typeof Promise !== "undefined" && Promise) === "function" ? _s : Object)
 ], OrdersController.prototype, "getAllBuyer", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -15112,8 +15079,8 @@ __decorate([
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_u = typeof orders_get_all_request_1.OrdersGetAllRequest !== "undefined" && orders_get_all_request_1.OrdersGetAllRequest) === "function" ? _u : Object, Object]),
-    __metadata("design:returntype", typeof (_v = typeof Promise !== "undefined" && Promise) === "function" ? _v : Object)
+    __metadata("design:paramtypes", [typeof (_t = typeof orders_get_all_request_1.OrdersGetAllRequest !== "undefined" && orders_get_all_request_1.OrdersGetAllRequest) === "function" ? _t : Object, Object]),
+    __metadata("design:returntype", typeof (_u = typeof Promise !== "undefined" && Promise) === "function" ? _u : Object)
 ], OrdersController.prototype, "getMyAll", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -15121,7 +15088,7 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", typeof (_w = typeof Promise !== "undefined" && Promise) === "function" ? _w : Object)
+    __metadata("design:returntype", typeof (_v = typeof Promise !== "undefined" && Promise) === "function" ? _v : Object)
 ], OrdersController.prototype, "getAllTotal", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -15129,13 +15096,13 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", typeof (_x = typeof Promise !== "undefined" && Promise) === "function" ? _x : Object)
+    __metadata("design:returntype", typeof (_w = typeof Promise !== "undefined" && Promise) === "function" ? _w : Object)
 ], OrdersController.prototype, "getAllTotalByStatus", null);
 exports.OrdersController = OrdersController = __decorate([
     (0, common_1.Controller)({
         path: "web/orders",
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _b : Object, typeof (_c = typeof notifications_repository_1.NotificationsRepository !== "undefined" && notifications_repository_1.NotificationsRepository) === "function" ? _c : Object, typeof (_d = typeof user_companies_service_1.UserCompaniesService !== "undefined" && user_companies_service_1.UserCompaniesService) === "function" ? _d : Object, typeof (_e = typeof user_service_1.UserService !== "undefined" && user_service_1.UserService) === "function" ? _e : Object, typeof (_f = typeof getCompanyById_1.CompanyService !== "undefined" && getCompanyById_1.CompanyService) === "function" ? _f : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof cqrs_1.QueryBus !== "undefined" && cqrs_1.QueryBus) === "function" ? _a : Object, typeof (_b = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _b : Object, typeof (_c = typeof notifications_repository_1.NotificationsRepository !== "undefined" && notifications_repository_1.NotificationsRepository) === "function" ? _c : Object, typeof (_d = typeof user_companies_service_1.UserCompaniesService !== "undefined" && user_companies_service_1.UserCompaniesService) === "function" ? _d : Object, typeof (_e = typeof getCompanyById_1.CompanyService !== "undefined" && getCompanyById_1.CompanyService) === "function" ? _e : Object])
 ], OrdersController);
 
 
@@ -15979,46 +15946,12 @@ exports.NotificationFactory = NotificationFactory = __decorate([
 
 /***/ }),
 /* 337 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserService = void 0;
-const common_1 = __webpack_require__(3);
-const users_repository_1 = __webpack_require__(45);
-let UserService = class UserService {
-    constructor(userRepository) {
-        this.userRepository = userRepository;
-    }
-    async findById(userId) {
-        return this.userRepository.getById(userId);
-    }
-};
-exports.UserService = UserService;
-exports.UserService = UserService = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof users_repository_1.UsersRepository !== "undefined" && users_repository_1.UsersRepository) === "function" ? _a : Object])
-], UserService);
-
-
-/***/ }),
-/* 338 */
 /***/ ((module) => {
 
 module.exports = require("puppeteer");
 
 /***/ }),
-/* 339 */
+/* 338 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16040,7 +15973,7 @@ const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
 const orders_repository_1 = __webpack_require__(314);
 const order_factory_1 = __webpack_require__(311);
-const orders_get_result_1 = __webpack_require__(340);
+const orders_get_result_1 = __webpack_require__(339);
 const companies_repository_1 = __webpack_require__(210);
 const tenders_quatation_update_status_query_1 = __webpack_require__(292);
 const tender_status_enum_1 = __webpack_require__(250);
@@ -16098,7 +16031,7 @@ exports.OrdersUpsertHandler = OrdersUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 340 */
+/* 339 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -16145,7 +16078,7 @@ exports.OrdersGetResult = OrdersGetResult;
 
 
 /***/ }),
-/* 341 */
+/* 340 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16202,7 +16135,7 @@ exports.OrdersDeleteHandler = OrdersDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 342 */
+/* 341 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16222,7 +16155,7 @@ const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
 const orders_get_query_1 = __webpack_require__(325);
-const orders_get_result_1 = __webpack_require__(340);
+const orders_get_result_1 = __webpack_require__(339);
 const orders_repository_1 = __webpack_require__(314);
 let OrdersGetHandler = class OrdersGetHandler {
     constructor(ordersRepository) {
@@ -16250,7 +16183,7 @@ exports.OrdersGetHandler = OrdersGetHandler = __decorate([
 
 
 /***/ }),
-/* 343 */
+/* 342 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16271,7 +16204,7 @@ const app_result_1 = __webpack_require__(27);
 const orders_get_all_query_1 = __webpack_require__(326);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const orders_get_all_result_1 = __webpack_require__(344);
+const orders_get_all_result_1 = __webpack_require__(343);
 const orders_repository_1 = __webpack_require__(314);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
@@ -16338,7 +16271,7 @@ exports.OrdersGetAllHandler = OrdersGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 344 */
+/* 343 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -16375,7 +16308,7 @@ exports.OrdersGetAllResult = OrdersGetAllResult;
 
 
 /***/ }),
-/* 345 */
+/* 344 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16397,9 +16330,9 @@ const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
 const orders_repository_1 = __webpack_require__(314);
 const order_factory_1 = __webpack_require__(311);
-const orders_get_result_1 = __webpack_require__(340);
+const orders_get_result_1 = __webpack_require__(339);
 const order_status_enum_1 = __webpack_require__(313);
-const orders_error_1 = __webpack_require__(346);
+const orders_error_1 = __webpack_require__(345);
 let OrdersChangeStatusHandler = class OrdersChangeStatusHandler {
     constructor(ordersRepository, orderFactory, eventPublisher) {
         this.ordersRepository = ordersRepository;
@@ -16445,7 +16378,7 @@ exports.OrdersChangeStatusHandler = OrdersChangeStatusHandler = __decorate([
 
 
 /***/ }),
-/* 346 */
+/* 345 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -16467,7 +16400,7 @@ exports.OrdersError = OrdersError;
 
 
 /***/ }),
-/* 347 */
+/* 346 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16481,13 +16414,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationModule = void 0;
 const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
-const notification_gateway_1 = __webpack_require__(348);
+const notification_gateway_1 = __webpack_require__(347);
 const notifications_repository_1 = __webpack_require__(332);
 const notification_schema_1 = __webpack_require__(333);
 const category_schema_factory_1 = __webpack_require__(334);
 const notification_factory_1 = __webpack_require__(336);
-const notifications_controller_1 = __webpack_require__(351);
-const notification_service_1 = __webpack_require__(352);
+const notifications_controller_1 = __webpack_require__(350);
+const notification_service_1 = __webpack_require__(351);
 let NotificationModule = class NotificationModule {
 };
 exports.NotificationModule = NotificationModule;
@@ -16515,7 +16448,7 @@ exports.NotificationModule = NotificationModule = __decorate([
 
 
 /***/ }),
-/* 348 */
+/* 347 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16531,8 +16464,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationGateway = void 0;
-const websockets_1 = __webpack_require__(349);
-const socket_io_1 = __webpack_require__(350);
+const websockets_1 = __webpack_require__(348);
+const socket_io_1 = __webpack_require__(349);
 let NotificationGateway = class NotificationGateway {
     handleConnection(client) {
         console.log(`Client connected: ${client.id}`);
@@ -16555,19 +16488,19 @@ exports.NotificationGateway = NotificationGateway = __decorate([
 
 
 /***/ }),
-/* 349 */
+/* 348 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/websockets");
 
 /***/ }),
-/* 350 */
+/* 349 */
 /***/ ((module) => {
 
 module.exports = require("socket.io");
 
 /***/ }),
-/* 351 */
+/* 350 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16588,7 +16521,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationsController = void 0;
 const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
-const notification_service_1 = __webpack_require__(352);
+const notification_service_1 = __webpack_require__(351);
 let NotificationsController = class NotificationsController {
     constructor(notificationService) {
         this.notificationService = notificationService;
@@ -16651,7 +16584,7 @@ exports.NotificationsController = NotificationsController = __decorate([
 
 
 /***/ }),
-/* 352 */
+/* 351 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16670,7 +16603,7 @@ exports.NotificationService = void 0;
 const common_1 = __webpack_require__(3);
 const notifications_repository_1 = __webpack_require__(332);
 const notification_1 = __webpack_require__(335);
-const notification_gateway_1 = __webpack_require__(348);
+const notification_gateway_1 = __webpack_require__(347);
 const mongodb_1 = __webpack_require__(30);
 let NotificationService = class NotificationService {
     constructor(notificationsRepository, notificationGateway) {
@@ -16707,54 +16640,7 @@ exports.NotificationService = NotificationService = __decorate([
 
 
 /***/ }),
-/* 353 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserModule = void 0;
-const common_1 = __webpack_require__(3);
-const user_service_1 = __webpack_require__(337);
-const users_repository_1 = __webpack_require__(45);
-const cqrs_1 = __webpack_require__(41);
-const mongoose_1 = __webpack_require__(24);
-const user_schema_1 = __webpack_require__(36);
-const user_schema_factory_1 = __webpack_require__(46);
-const user_factory_1 = __webpack_require__(89);
-let UserModule = class UserModule {
-};
-exports.UserModule = UserModule;
-exports.UserModule = UserModule = __decorate([
-    (0, common_1.Module)({
-        imports: [
-            cqrs_1.CqrsModule,
-            mongoose_1.MongooseModule.forFeature([
-                {
-                    name: user_schema_1.UserSchema.name,
-                    schema: mongoose_1.SchemaFactory
-                        .createForClass(user_schema_1.UserSchema),
-                },
-            ]),
-        ],
-        providers: [
-            user_service_1.UserService,
-            users_repository_1.UsersRepository,
-            user_schema_factory_1.UserSchemaFactory,
-            user_factory_1.UserFactory,
-        ],
-        exports: [user_service_1.UserService],
-    })
-], UserModule);
-
-
-/***/ }),
-/* 354 */
+/* 352 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16769,16 +16655,16 @@ exports.ItemsModule = void 0;
 const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
-const items_repository_1 = __webpack_require__(355);
+const items_repository_1 = __webpack_require__(353);
 const item_schema_1 = __webpack_require__(274);
-const item_schema_factory_1 = __webpack_require__(356);
-const item_factory_1 = __webpack_require__(359);
-const items_upsert_handler_1 = __webpack_require__(360);
-const items_change_status_handler_1 = __webpack_require__(363);
-const items_delete_handler_1 = __webpack_require__(366);
-const items_get_handler_1 = __webpack_require__(368);
-const items_get_all_handler_1 = __webpack_require__(370);
-const items_controller_1 = __webpack_require__(373);
+const item_schema_factory_1 = __webpack_require__(354);
+const item_factory_1 = __webpack_require__(357);
+const items_upsert_handler_1 = __webpack_require__(358);
+const items_change_status_handler_1 = __webpack_require__(361);
+const items_delete_handler_1 = __webpack_require__(364);
+const items_get_handler_1 = __webpack_require__(366);
+const items_get_all_handler_1 = __webpack_require__(368);
+const items_controller_1 = __webpack_require__(371);
 const companies_module_1 = __webpack_require__(207);
 let ItemsModule = class ItemsModule {
 };
@@ -16812,7 +16698,7 @@ exports.ItemsModule = ItemsModule = __decorate([
 
 
 /***/ }),
-/* 355 */
+/* 353 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16836,7 +16722,7 @@ const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
 const item_schema_1 = __webpack_require__(274);
-const item_schema_factory_1 = __webpack_require__(356);
+const item_schema_factory_1 = __webpack_require__(354);
 let ItemsRepository = class ItemsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -16853,7 +16739,7 @@ exports.ItemsRepository = ItemsRepository = __decorate([
 
 
 /***/ }),
-/* 356 */
+/* 354 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16866,9 +16752,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const item_1 = __webpack_require__(357);
+const item_1 = __webpack_require__(355);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(358);
+const attachment_1 = __webpack_require__(356);
 let ItemSchemaFactory = class ItemSchemaFactory {
     create(entity) {
         return {
@@ -16918,7 +16804,7 @@ exports.ItemSchemaFactory = ItemSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 357 */
+/* 355 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -16967,7 +16853,7 @@ exports.Item = Item;
 
 
 /***/ }),
-/* 358 */
+/* 356 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -16985,7 +16871,7 @@ exports.Attachment = Attachment;
 
 
 /***/ }),
-/* 359 */
+/* 357 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17002,10 +16888,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemFactory = void 0;
 const common_1 = __webpack_require__(3);
-const item_1 = __webpack_require__(357);
-const items_repository_1 = __webpack_require__(355);
+const item_1 = __webpack_require__(355);
+const items_repository_1 = __webpack_require__(353);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(358);
+const attachment_1 = __webpack_require__(356);
 const class_validator_1 = __webpack_require__(55);
 let ItemFactory = class ItemFactory {
     constructor(itemsRepository) {
@@ -17055,7 +16941,7 @@ exports.ItemFactory = ItemFactory = __decorate([
 
 
 /***/ }),
-/* 360 */
+/* 358 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17072,12 +16958,12 @@ var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_upsert_command_1 = __webpack_require__(361);
+const items_upsert_command_1 = __webpack_require__(359);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(355);
-const item_factory_1 = __webpack_require__(359);
-const items_get_result_1 = __webpack_require__(362);
+const items_repository_1 = __webpack_require__(353);
+const item_factory_1 = __webpack_require__(357);
+const items_get_result_1 = __webpack_require__(360);
 const companies_repository_1 = __webpack_require__(210);
 let ItemsUpsertHandler = class ItemsUpsertHandler {
     constructor(itemsRepository, itemFactory, eventPublisher, companiesRepository) {
@@ -17115,7 +17001,7 @@ exports.ItemsUpsertHandler = ItemsUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 361 */
+/* 359 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17149,7 +17035,7 @@ exports.ItemsUpsertCommand = ItemsUpsertCommand;
 
 
 /***/ }),
-/* 362 */
+/* 360 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17194,7 +17080,7 @@ exports.ItemsGetResult = ItemsGetResult;
 
 
 /***/ }),
-/* 363 */
+/* 361 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17211,14 +17097,14 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_change_status_command_1 = __webpack_require__(364);
+const items_change_status_command_1 = __webpack_require__(362);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(355);
-const item_factory_1 = __webpack_require__(359);
-const items_get_result_1 = __webpack_require__(362);
+const items_repository_1 = __webpack_require__(353);
+const item_factory_1 = __webpack_require__(357);
+const items_get_result_1 = __webpack_require__(360);
 const item_status_enum_1 = __webpack_require__(275);
-const items_error_1 = __webpack_require__(365);
+const items_error_1 = __webpack_require__(363);
 let ItemsChangeStatusHandler = class ItemsChangeStatusHandler {
     constructor(itemsRepository, itemFactory, eventPublisher) {
         this.itemsRepository = itemsRepository;
@@ -17260,7 +17146,7 @@ exports.ItemsChangeStatusHandler = ItemsChangeStatusHandler = __decorate([
 
 
 /***/ }),
-/* 364 */
+/* 362 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17277,7 +17163,7 @@ exports.ItemsChangeStatusCommand = ItemsChangeStatusCommand;
 
 
 /***/ }),
-/* 365 */
+/* 363 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -17314,7 +17200,7 @@ exports.ItemsError = ItemsError;
 
 
 /***/ }),
-/* 366 */
+/* 364 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17331,10 +17217,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_delete_command_1 = __webpack_require__(367);
+const items_delete_command_1 = __webpack_require__(365);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(355);
+const items_repository_1 = __webpack_require__(353);
 let ItemsDeleteHandler = class ItemsDeleteHandler {
     constructor(itemsRepository) {
         this.itemsRepository = itemsRepository;
@@ -17359,7 +17245,7 @@ exports.ItemsDeleteHandler = ItemsDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 367 */
+/* 365 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17374,7 +17260,7 @@ exports.ItemsDeleteCommand = ItemsDeleteCommand;
 
 
 /***/ }),
-/* 368 */
+/* 366 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17393,9 +17279,9 @@ exports.ItemsGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_get_query_1 = __webpack_require__(369);
-const items_get_result_1 = __webpack_require__(362);
-const items_repository_1 = __webpack_require__(355);
+const items_get_query_1 = __webpack_require__(367);
+const items_get_result_1 = __webpack_require__(360);
+const items_repository_1 = __webpack_require__(353);
 let ItemsGetHandler = class ItemsGetHandler {
     constructor(itemsRepository) {
         this.itemsRepository = itemsRepository;
@@ -17417,7 +17303,7 @@ exports.ItemsGetHandler = ItemsGetHandler = __decorate([
 
 
 /***/ }),
-/* 369 */
+/* 367 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17432,7 +17318,7 @@ exports.ItemsGetQuery = ItemsGetQuery;
 
 
 /***/ }),
-/* 370 */
+/* 368 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17450,11 +17336,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const items_get_all_query_1 = __webpack_require__(371);
+const items_get_all_query_1 = __webpack_require__(369);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const items_get_all_result_1 = __webpack_require__(372);
-const items_repository_1 = __webpack_require__(355);
+const items_get_all_result_1 = __webpack_require__(370);
+const items_repository_1 = __webpack_require__(353);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
 let ItemsGetAllHandler = class ItemsGetAllHandler {
@@ -17507,7 +17393,7 @@ exports.ItemsGetAllHandler = ItemsGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 371 */
+/* 369 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17529,7 +17415,7 @@ exports.ItemsGetAllQuery = ItemsGetAllQuery;
 
 
 /***/ }),
-/* 372 */
+/* 370 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17565,7 +17451,7 @@ exports.ItemsGetAllResult = ItemsGetAllResult;
 
 
 /***/ }),
-/* 373 */
+/* 371 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17587,23 +17473,23 @@ exports.ItemsController = void 0;
 const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const cqrs_1 = __webpack_require__(41);
-const items_get_all_response_1 = __webpack_require__(374);
-const items_get_request_1 = __webpack_require__(375);
-const items_get_all_request_1 = __webpack_require__(376);
-const items_delete_request_1 = __webpack_require__(378);
-const items_change_status_request_1 = __webpack_require__(379);
+const items_get_all_response_1 = __webpack_require__(372);
+const items_get_request_1 = __webpack_require__(373);
+const items_get_all_request_1 = __webpack_require__(374);
+const items_delete_request_1 = __webpack_require__(376);
+const items_change_status_request_1 = __webpack_require__(377);
 const app_response_1 = __webpack_require__(87);
-const items_upsert_command_1 = __webpack_require__(361);
-const items_change_status_command_1 = __webpack_require__(364);
-const items_delete_command_1 = __webpack_require__(367);
-const items_get_query_1 = __webpack_require__(369);
-const items_get_all_query_1 = __webpack_require__(371);
+const items_upsert_command_1 = __webpack_require__(359);
+const items_change_status_command_1 = __webpack_require__(362);
+const items_delete_command_1 = __webpack_require__(365);
+const items_get_query_1 = __webpack_require__(367);
+const items_get_all_query_1 = __webpack_require__(369);
 const platform_express_1 = __webpack_require__(174);
 const multer_config_1 = __webpack_require__(236);
 const s3_upload_service_1 = __webpack_require__(238);
 const s3_config_1 = __webpack_require__(240);
 const client_s3_1 = __webpack_require__(239);
-const items_repository_1 = __webpack_require__(355);
+const items_repository_1 = __webpack_require__(353);
 const class_validator_1 = __webpack_require__(55);
 let ItemsController = class ItemsController {
     constructor(queryBus, commandBus, itemsRepository) {
@@ -17744,7 +17630,7 @@ exports.ItemsController = ItemsController = __decorate([
 
 
 /***/ }),
-/* 374 */
+/* 372 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17780,7 +17666,7 @@ exports.ItemsGetAllResponse = ItemsGetAllResponse;
 
 
 /***/ }),
-/* 375 */
+/* 373 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17806,7 +17692,7 @@ __decorate([
 
 
 /***/ }),
-/* 376 */
+/* 374 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17827,7 +17713,7 @@ const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
 const item_status_enum_1 = __webpack_require__(275);
-const item_type_enum_1 = __webpack_require__(377);
+const item_type_enum_1 = __webpack_require__(375);
 class ItemsGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -17872,7 +17758,7 @@ __decorate([
 
 
 /***/ }),
-/* 377 */
+/* 375 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17887,7 +17773,7 @@ var ItemTypeEnum;
 
 
 /***/ }),
-/* 378 */
+/* 376 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17913,7 +17799,7 @@ __decorate([
 
 
 /***/ }),
-/* 379 */
+/* 377 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17952,7 +17838,7 @@ __decorate([
 
 
 /***/ }),
-/* 380 */
+/* 378 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17965,9 +17851,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HelpModule = void 0;
 const common_1 = __webpack_require__(3);
-const help_controller_1 = __webpack_require__(381);
-const help_service_1 = __webpack_require__(382);
-const user_service_1 = __webpack_require__(337);
+const help_controller_1 = __webpack_require__(379);
+const help_service_1 = __webpack_require__(380);
 const users_module_1 = __webpack_require__(67);
 let HelpModule = class HelpModule {
 };
@@ -17976,13 +17861,14 @@ exports.HelpModule = HelpModule = __decorate([
     (0, common_1.Module)({
         imports: [users_module_1.UsersModule],
         controllers: [help_controller_1.HelpController],
-        providers: [help_service_1.HelpService, user_service_1.UserService],
+        providers: [help_service_1.HelpService,
+        ],
     })
 ], HelpModule);
 
 
 /***/ }),
-/* 381 */
+/* 379 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17998,32 +17884,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e;
+var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HelpController = void 0;
 const common_1 = __webpack_require__(3);
 const platform_express_1 = __webpack_require__(174);
-const help_service_1 = __webpack_require__(382);
+const help_service_1 = __webpack_require__(380);
 const express_1 = __webpack_require__(180);
 const jwt_auth_guard_1 = __webpack_require__(69);
-const user_service_1 = __webpack_require__(337);
 let HelpController = class HelpController {
-    constructor(helpService, userService) {
+    constructor(helpService) {
         this.helpService = helpService;
-        this.userService = userService;
     }
     async sendHelpRequest(question, attachment, req) {
-        const user = await this.userService.findById(req.user?.userId);
-        const userName = user.nickName;
-        const userEmail = user.email;
-        const attachmentFileName = attachment ? attachment : null;
-        try {
-            await this.helpService.sendHelpRequest(question, attachmentFileName, userName, userEmail);
-            return { success: true, message: 'Help request sent successfully' };
-        }
-        catch (error) {
-            return { success: false, message: 'Failed to send help request', error: error.message };
-        }
     }
 };
 exports.HelpController = HelpController;
@@ -18035,19 +17908,19 @@ __decorate([
     __param(1, (0, common_1.UploadedFile)()),
     __param(2, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_d = typeof Express !== "undefined" && (_c = Express.Multer) !== void 0 && _c.File) === "function" ? _d : Object, typeof (_e = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _e : Object]),
+    __metadata("design:paramtypes", [String, typeof (_c = typeof Express !== "undefined" && (_b = Express.Multer) !== void 0 && _b.File) === "function" ? _c : Object, typeof (_d = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _d : Object]),
     __metadata("design:returntype", Promise)
 ], HelpController.prototype, "sendHelpRequest", null);
 exports.HelpController = HelpController = __decorate([
     (0, common_1.Controller)({
         path: 'web/help',
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof help_service_1.HelpService !== "undefined" && help_service_1.HelpService) === "function" ? _a : Object, typeof (_b = typeof user_service_1.UserService !== "undefined" && user_service_1.UserService) === "function" ? _b : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof help_service_1.HelpService !== "undefined" && help_service_1.HelpService) === "function" ? _a : Object])
 ], HelpController);
 
 
 /***/ }),
-/* 382 */
+/* 380 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18099,7 +17972,7 @@ exports.HelpService = HelpService = __decorate([
 
 
 /***/ }),
-/* 383 */
+/* 381 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18115,20 +17988,19 @@ const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
 const companies_module_1 = __webpack_require__(207);
-const transforms_upsert_handler_1 = __webpack_require__(384);
-const transforms_change_status_handler_1 = __webpack_require__(395);
-const transforms_delete_handler_1 = __webpack_require__(398);
-const transforms_get_handler_1 = __webpack_require__(400);
-const notification_module_1 = __webpack_require__(347);
-const user_module_1 = __webpack_require__(353);
+const transforms_upsert_handler_1 = __webpack_require__(382);
+const transforms_change_status_handler_1 = __webpack_require__(393);
+const transforms_delete_handler_1 = __webpack_require__(396);
+const transforms_get_handler_1 = __webpack_require__(398);
+const notification_module_1 = __webpack_require__(346);
 const orders_module_1 = __webpack_require__(310);
-const transforms_get_all_handler_1 = __webpack_require__(402);
-const transform_controller_1 = __webpack_require__(405);
-const stransforms_repository_1 = __webpack_require__(391);
-const stransform_schema_1 = __webpack_require__(393);
-const transform_factory_1 = __webpack_require__(387);
-const transform_schema_factory_1 = __webpack_require__(392);
-const transforms_get_all_admin_handler_1 = __webpack_require__(413);
+const transforms_get_all_handler_1 = __webpack_require__(400);
+const transform_controller_1 = __webpack_require__(403);
+const stransforms_repository_1 = __webpack_require__(389);
+const stransform_schema_1 = __webpack_require__(391);
+const transform_factory_1 = __webpack_require__(385);
+const transform_schema_factory_1 = __webpack_require__(390);
+const transforms_get_all_admin_handler_1 = __webpack_require__(411);
 let TransformsModule = class TransformsModule {
 };
 exports.TransformsModule = TransformsModule;
@@ -18145,7 +18017,6 @@ exports.TransformsModule = TransformsModule = __decorate([
             companies_module_1.CompaniesModule,
             orders_module_1.OrdersModule,
             notification_module_1.NotificationModule,
-            user_module_1.UserModule,
         ],
         providers: [
             stransforms_repository_1.TransformsRepository,
@@ -18168,7 +18039,7 @@ exports.TransformsModule = TransformsModule = __decorate([
 
 
 /***/ }),
-/* 384 */
+/* 382 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18187,10 +18058,10 @@ exports.TransformsUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_upsert_command_1 = __webpack_require__(385);
-const transforms_get_result_1 = __webpack_require__(386);
-const transform_factory_1 = __webpack_require__(387);
-const stransforms_repository_1 = __webpack_require__(391);
+const transforms_upsert_command_1 = __webpack_require__(383);
+const transforms_get_result_1 = __webpack_require__(384);
+const transform_factory_1 = __webpack_require__(385);
+const stransforms_repository_1 = __webpack_require__(389);
 let TransformsUpsertHandler = class TransformsUpsertHandler {
     constructor(transformsRepository, transformFactory, eventPublisher) {
         this.transformsRepository = transformsRepository;
@@ -18221,7 +18092,7 @@ exports.TransformsUpsertHandler = TransformsUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 385 */
+/* 383 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18249,7 +18120,7 @@ exports.TransformsUpsertCommand = TransformsUpsertCommand;
 
 
 /***/ }),
-/* 386 */
+/* 384 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18281,7 +18152,7 @@ exports.TransformsGetResult = TransformsGetResult;
 
 
 /***/ }),
-/* 387 */
+/* 385 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18298,11 +18169,11 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformFactory = void 0;
 const common_1 = __webpack_require__(3);
-const transform_1 = __webpack_require__(388);
+const transform_1 = __webpack_require__(386);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(358);
-const bank_1 = __webpack_require__(390);
-const stransforms_repository_1 = __webpack_require__(391);
+const attachment_1 = __webpack_require__(356);
+const bank_1 = __webpack_require__(388);
+const stransforms_repository_1 = __webpack_require__(389);
 let TransformFactory = class TransformFactory {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -18346,7 +18217,7 @@ exports.TransformFactory = TransformFactory = __decorate([
 
 
 /***/ }),
-/* 388 */
+/* 386 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -18354,7 +18225,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Transform = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const transform_status_enum_1 = __webpack_require__(389);
+const transform_status_enum_1 = __webpack_require__(387);
 class Transform extends cqrs_1.AggregateRoot {
     constructor(_id, title, status = transform_status_enum_1.TransformStatusEnum.PENDING, buyerId, sellerId, userId, orderId, type, products = [], totalPrice, transformRequest = false, transformDoc = [], withdrawRequest = false, bankAccount = [], createdAt, updatedAt, displayOrder, isVisible, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -18389,7 +18260,7 @@ exports.Transform = Transform;
 
 
 /***/ }),
-/* 389 */
+/* 387 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18404,7 +18275,7 @@ var TransformStatusEnum;
 
 
 /***/ }),
-/* 390 */
+/* 388 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18422,7 +18293,7 @@ exports.Bank = Bank;
 
 
 /***/ }),
-/* 391 */
+/* 389 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18445,8 +18316,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const transform_schema_factory_1 = __webpack_require__(392);
-const stransform_schema_1 = __webpack_require__(393);
+const transform_schema_factory_1 = __webpack_require__(390);
+const stransform_schema_1 = __webpack_require__(391);
 let TransformsRepository = class TransformsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -18463,7 +18334,7 @@ exports.TransformsRepository = TransformsRepository = __decorate([
 
 
 /***/ }),
-/* 392 */
+/* 390 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18479,10 +18350,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const transform_1 = __webpack_require__(388);
+const transform_1 = __webpack_require__(386);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(358);
-const bank_1 = __webpack_require__(390);
+const attachment_1 = __webpack_require__(356);
+const bank_1 = __webpack_require__(388);
 let TransformSchemaFactory = class TransformSchemaFactory {
     constructor() {
         console.log('TransformSchemaFactory is initialized');
@@ -18559,7 +18430,7 @@ exports.TransformSchemaFactory = TransformSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 393 */
+/* 391 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18582,9 +18453,9 @@ const schemas_names_1 = __webpack_require__(34);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
 const base_with_Info_schema_1 = __webpack_require__(37);
-const transform_status_enum_1 = __webpack_require__(389);
+const transform_status_enum_1 = __webpack_require__(387);
 const order_schema_1 = __webpack_require__(315);
-const transform_type_enum_1 = __webpack_require__(394);
+const transform_type_enum_1 = __webpack_require__(392);
 let TransformSchema = class TransformSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.TransformSchema = TransformSchema;
@@ -18716,7 +18587,7 @@ exports.CreatedTransformSchema.set("toObject", { virtuals: true });
 
 
 /***/ }),
-/* 394 */
+/* 392 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18731,7 +18602,7 @@ var TransformTypeEnum;
 
 
 /***/ }),
-/* 395 */
+/* 393 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18750,12 +18621,12 @@ exports.TransformsChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_change_status_command_1 = __webpack_require__(396);
-const transforms_get_result_1 = __webpack_require__(386);
-const transform_status_enum_1 = __webpack_require__(389);
-const transforms_error_1 = __webpack_require__(397);
-const transform_factory_1 = __webpack_require__(387);
-const stransforms_repository_1 = __webpack_require__(391);
+const transforms_change_status_command_1 = __webpack_require__(394);
+const transforms_get_result_1 = __webpack_require__(384);
+const transform_status_enum_1 = __webpack_require__(387);
+const transforms_error_1 = __webpack_require__(395);
+const transform_factory_1 = __webpack_require__(385);
+const stransforms_repository_1 = __webpack_require__(389);
 let TransformsChangeStatusHandler = class TransformsChangeStatusHandler {
     constructor(transformsRepository, transformFactory, eventPublisher) {
         this.transformsRepository = transformsRepository;
@@ -18787,7 +18658,7 @@ exports.TransformsChangeStatusHandler = TransformsChangeStatusHandler = __decora
 
 
 /***/ }),
-/* 396 */
+/* 394 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18805,7 +18676,7 @@ exports.TransformsChangeStatusCommand = TransformsChangeStatusCommand;
 
 
 /***/ }),
-/* 397 */
+/* 395 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -18845,7 +18716,7 @@ exports.TransformsError = TransformsError;
 
 
 /***/ }),
-/* 398 */
+/* 396 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18864,8 +18735,8 @@ exports.TransformsDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_delete_command_1 = __webpack_require__(399);
-const stransforms_repository_1 = __webpack_require__(391);
+const transforms_delete_command_1 = __webpack_require__(397);
+const stransforms_repository_1 = __webpack_require__(389);
 let TransformsDeleteHandler = class TransformsDeleteHandler {
     constructor(TransformsRepository) {
         this.TransformsRepository = TransformsRepository;
@@ -18890,7 +18761,7 @@ exports.TransformsDeleteHandler = TransformsDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 399 */
+/* 397 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18905,7 +18776,7 @@ exports.TransformsDeleteCommand = TransformsDeleteCommand;
 
 
 /***/ }),
-/* 400 */
+/* 398 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18924,9 +18795,9 @@ exports.TransformsGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_get_query_1 = __webpack_require__(401);
-const transforms_get_result_1 = __webpack_require__(386);
-const stransforms_repository_1 = __webpack_require__(391);
+const transforms_get_query_1 = __webpack_require__(399);
+const transforms_get_result_1 = __webpack_require__(384);
+const stransforms_repository_1 = __webpack_require__(389);
 let TransformsGetHandler = class TransformsGetHandler {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -18948,7 +18819,7 @@ exports.TransformsGetHandler = TransformsGetHandler = __decorate([
 
 
 /***/ }),
-/* 401 */
+/* 399 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18963,7 +18834,7 @@ exports.TransfromsGetQuery = TransfromsGetQuery;
 
 
 /***/ }),
-/* 402 */
+/* 400 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18983,9 +18854,9 @@ const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const transforms_get_all_result_1 = __webpack_require__(403);
-const stransforms_get_all_query_1 = __webpack_require__(404);
-const stransforms_repository_1 = __webpack_require__(391);
+const transforms_get_all_result_1 = __webpack_require__(401);
+const stransforms_get_all_query_1 = __webpack_require__(402);
+const stransforms_repository_1 = __webpack_require__(389);
 let TransformsGetAllHandler = class TransformsGetAllHandler {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -19023,7 +18894,7 @@ exports.TransformsGetAllHandler = TransformsGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 403 */
+/* 401 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19056,7 +18927,7 @@ exports.TransformsGetAllResult = TransformsGetAllResult;
 
 
 /***/ }),
-/* 404 */
+/* 402 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19080,7 +18951,7 @@ exports.TransformsGetAllQuery = TransformsGetAllQuery;
 
 
 /***/ }),
-/* 405 */
+/* 403 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19106,29 +18977,28 @@ const app_response_1 = __webpack_require__(87);
 const platform_express_1 = __webpack_require__(174);
 const multer_config_1 = __webpack_require__(236);
 const s3_upload_service_1 = __webpack_require__(238);
-const transforms_upsert_command_1 = __webpack_require__(385);
-const transforms_change_status_command_1 = __webpack_require__(396);
-const transforms_delete_command_1 = __webpack_require__(399);
-const transforms_get_query_1 = __webpack_require__(401);
-const stransforms_get_all_query_1 = __webpack_require__(404);
-const stransforms_repository_1 = __webpack_require__(391);
-const transforms_get_all_response_1 = __webpack_require__(406);
-const transforms_get_all_request_1 = __webpack_require__(407);
-const transforms_change_status_request_1 = __webpack_require__(408);
-const transforms_delete_request_1 = __webpack_require__(409);
-const transforms_get_request_1 = __webpack_require__(410);
-const transform_type_enum_1 = __webpack_require__(394);
+const transforms_upsert_command_1 = __webpack_require__(383);
+const transforms_change_status_command_1 = __webpack_require__(394);
+const transforms_delete_command_1 = __webpack_require__(397);
+const transforms_get_query_1 = __webpack_require__(399);
+const stransforms_get_all_query_1 = __webpack_require__(402);
+const stransforms_repository_1 = __webpack_require__(389);
+const transforms_get_all_response_1 = __webpack_require__(404);
+const transforms_get_all_request_1 = __webpack_require__(405);
+const transforms_change_status_request_1 = __webpack_require__(406);
+const transforms_delete_request_1 = __webpack_require__(407);
+const transforms_get_request_1 = __webpack_require__(408);
+const transform_type_enum_1 = __webpack_require__(392);
 const roles_decorator_1 = __webpack_require__(86);
 const roles_guard_1 = __webpack_require__(85);
-const transforms_get_admin_all_response_1 = __webpack_require__(411);
-const stransforms_get_all_admin_query_1 = __webpack_require__(412);
-const attachment_1 = __webpack_require__(358);
+const transforms_get_admin_all_response_1 = __webpack_require__(409);
+const stransforms_get_all_admin_query_1 = __webpack_require__(410);
+const attachment_1 = __webpack_require__(356);
 let TransformsController = class TransformsController {
     constructor(queryBus, commandBus, transformsRepository) {
         this.queryBus = queryBus;
         this.commandBus = commandBus;
         this.transformsRepository = transformsRepository;
-        console.log('QueryBus in Module:', queryBus);
     }
     async upsert(body, files, req) {
         const { userId } = req.user;
@@ -19283,7 +19153,7 @@ exports.TransformsController = TransformsController = __decorate([
 
 
 /***/ }),
-/* 406 */
+/* 404 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19316,7 +19186,7 @@ exports.TransformsGetAllResponse = TransformsGetAllResponse;
 
 
 /***/ }),
-/* 407 */
+/* 405 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19336,7 +19206,7 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const transform_status_enum_1 = __webpack_require__(389);
+const transform_status_enum_1 = __webpack_require__(387);
 class TransformsGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -19385,7 +19255,7 @@ __decorate([
 
 
 /***/ }),
-/* 408 */
+/* 406 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19402,7 +19272,7 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformsChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const transform_status_enum_1 = __webpack_require__(389);
+const transform_status_enum_1 = __webpack_require__(387);
 class TransformsChangeStatusRequest {
 }
 exports.TransformsChangeStatusRequest = TransformsChangeStatusRequest;
@@ -19437,7 +19307,7 @@ __decorate([
 
 
 /***/ }),
-/* 409 */
+/* 407 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19463,7 +19333,7 @@ __decorate([
 
 
 /***/ }),
-/* 410 */
+/* 408 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19489,7 +19359,7 @@ __decorate([
 
 
 /***/ }),
-/* 411 */
+/* 409 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19524,7 +19394,7 @@ exports.TransformsGetAllAdminResponse = TransformsGetAllAdminResponse;
 
 
 /***/ }),
-/* 412 */
+/* 410 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19548,7 +19418,7 @@ exports.TransformsGetAllAdminQuery = TransformsGetAllAdminQuery;
 
 
 /***/ }),
-/* 413 */
+/* 411 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19565,10 +19435,10 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformsGetAllAdminHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const transforms_get_all_admin_result_1 = __webpack_require__(414);
+const transforms_get_all_admin_result_1 = __webpack_require__(412);
 const companies_repository_1 = __webpack_require__(210);
-const stransforms_get_all_admin_query_1 = __webpack_require__(412);
-const stransforms_repository_1 = __webpack_require__(391);
+const stransforms_get_all_admin_query_1 = __webpack_require__(410);
+const stransforms_repository_1 = __webpack_require__(389);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
 const app_result_1 = __webpack_require__(27);
@@ -19611,7 +19481,7 @@ exports.TransformsGetAllAdminHandler = TransformsGetAllAdminHandler = __decorate
 
 
 /***/ }),
-/* 414 */
+/* 412 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19646,7 +19516,7 @@ exports.TransformsGetAllAdminResult = TransformsGetAllAdminResult;
 
 
 /***/ }),
-/* 415 */
+/* 413 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19659,11 +19529,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentModule = void 0;
 const common_1 = __webpack_require__(3);
-const payment_controller_1 = __webpack_require__(416);
-const payment_service_1 = __webpack_require__(417);
-const user_service_1 = __webpack_require__(337);
+const payment_controller_1 = __webpack_require__(414);
+const payment_service_1 = __webpack_require__(415);
 const users_module_1 = __webpack_require__(67);
-const paylat_request_schema_1 = __webpack_require__(418);
+const paylat_request_schema_1 = __webpack_require__(416);
 const mongoose_1 = __webpack_require__(24);
 let PaymentModule = class PaymentModule {
 };
@@ -19672,16 +19541,20 @@ exports.PaymentModule = PaymentModule = __decorate([
     (0, common_1.Module)({
         imports: [
             users_module_1.UsersModule,
-            mongoose_1.MongooseModule.forFeature([{ name: paylat_request_schema_1.PaylatRequest.name, schema: paylat_request_schema_1.PaylatRequestSchema }]),
+            mongoose_1.MongooseModule.forFeature([
+                { name: paylat_request_schema_1.PaylatRequest.name, schema: paylat_request_schema_1.PaylatRequestSchema },
+            ]),
         ],
         controllers: [payment_controller_1.PaymentController],
-        providers: [payment_service_1.PaymentService, user_service_1.UserService],
+        providers: [
+            payment_service_1.PaymentService,
+        ],
     })
 ], PaymentModule);
 
 
 /***/ }),
-/* 416 */
+/* 414 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19697,18 +19570,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentController = void 0;
 const common_1 = __webpack_require__(3);
-const payment_service_1 = __webpack_require__(417);
+const payment_service_1 = __webpack_require__(415);
 const express_1 = __webpack_require__(180);
 const jwt_auth_guard_1 = __webpack_require__(69);
-const user_service_1 = __webpack_require__(337);
 let PaymentController = class PaymentController {
-    constructor(paymentService, userService) {
+    constructor(paymentService) {
         this.paymentService = paymentService;
-        this.userService = userService;
     }
     async sendPaylatRequest(body, req) {
         try {
@@ -19753,7 +19624,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, typeof (_c = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _c : Object]),
+    __metadata("design:paramtypes", [Object, typeof (_b = typeof express_1.Request !== "undefined" && express_1.Request) === "function" ? _b : Object]),
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "sendPaylatRequest", null);
 __decorate([
@@ -19780,12 +19651,12 @@ __decorate([
 ], PaymentController.prototype, "refusePaylat", null);
 exports.PaymentController = PaymentController = __decorate([
     (0, common_1.Controller)('web/paylat'),
-    __metadata("design:paramtypes", [typeof (_a = typeof payment_service_1.PaymentService !== "undefined" && payment_service_1.PaymentService) === "function" ? _a : Object, typeof (_b = typeof user_service_1.UserService !== "undefined" && user_service_1.UserService) === "function" ? _b : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof payment_service_1.PaymentService !== "undefined" && payment_service_1.PaymentService) === "function" ? _a : Object])
 ], PaymentController);
 
 
 /***/ }),
-/* 417 */
+/* 415 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19808,7 +19679,7 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const mailer_1 = __webpack_require__(61);
-const paylat_request_schema_1 = __webpack_require__(418);
+const paylat_request_schema_1 = __webpack_require__(416);
 let PaymentService = class PaymentService {
     constructor(mailerService, paylatRequestModel) {
         this.mailerService = mailerService;
@@ -19896,7 +19767,7 @@ exports.PaymentService = PaymentService = __decorate([
 
 
 /***/ }),
-/* 418 */
+/* 416 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19947,7 +19818,7 @@ exports.PaylatRequestSchema = mongoose_1.SchemaFactory.createForClass(PaylatRequ
 
 
 /***/ }),
-/* 419 */
+/* 417 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19981,7 +19852,7 @@ exports.AppController = AppController = __decorate([
 
 
 /***/ }),
-/* 420 */
+/* 418 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -20037,7 +19908,7 @@ exports.AppValidationPipe = AppValidationPipe = __decorate([
 
 
 /***/ }),
-/* 421 */
+/* 419 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -20076,7 +19947,7 @@ exports.appCorsOptions = {
 
 
 /***/ }),
-/* 422 */
+/* 420 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -20155,7 +20026,7 @@ class ProblemDetails {
 
 
 /***/ }),
-/* 423 */
+/* 421 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/platform-socket.io");
@@ -20197,10 +20068,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(1);
 const app_module_1 = __webpack_require__(2);
 const app_logger_service_1 = __webpack_require__(4);
-const app_validation_pipe_1 = __webpack_require__(420);
+const app_validation_pipe_1 = __webpack_require__(418);
 const app_configs_service_1 = __webpack_require__(7);
-const app_cors_options_1 = __webpack_require__(421);
-const app_global_exception_filter_1 = __webpack_require__(422);
+const app_cors_options_1 = __webpack_require__(419);
+const app_global_exception_filter_1 = __webpack_require__(420);
 const common_1 = __webpack_require__(3);
 const protected_files_middleware_1 = __webpack_require__(243);
 const requests_logger_middleware_1 = __webpack_require__(244);
@@ -20208,7 +20079,7 @@ const miedas_functions_1 = __webpack_require__(148);
 const medias_constants_1 = __webpack_require__(147);
 const jwt_provider_service_1 = __webpack_require__(43);
 const mongoose_1 = __webpack_require__(25);
-const platform_socket_io_1 = __webpack_require__(423);
+const platform_socket_io_1 = __webpack_require__(421);
 async function bootstrap() {
     const app = await core_1.NestFactory
         .create(app_module_1.AppModule, {

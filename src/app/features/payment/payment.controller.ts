@@ -10,13 +10,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { PaymentService } from './payment.service';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/application/guards/jwt-auth.guard';
-import { UserService } from '../users/user.service';
+// import { UserService } from '../users/user.service';
 
 @Controller('web/paylat')
 export class PaymentController {
   constructor(
     private readonly paymentService: PaymentService,
-    private readonly userService: UserService,
+    // private readonly userService: UserService,
   ) {}
 
   @Post('request')
