@@ -1,3 +1,5 @@
+/** @format */
+
 import { appMessagesKeys } from "../../../../values/app-messages-keys";
 import { AppError } from "../../../domain/shared/app-error";
 import { AppPagingResponse } from "./app-paging.response";
@@ -8,8 +10,8 @@ export class AppResponse<T> {
     public readonly key?: string,
     public readonly message?: string,
     public readonly data?: T,
-    public readonly paging?: AppPagingResponse,
-  ) { }
+    public readonly paging?: AppPagingResponse
+  ) {}
 
   public static create<T>(
     isSuccess: boolean,
@@ -17,41 +19,28 @@ export class AppResponse<T> {
     message?: string,
     data?: T,
     paging?: AppPagingResponse,
-    error?: AppError,
+    error?: AppError
   ): AppResponse<T> {
-    const processedKey = AppResponse.getKey(
-      key,
-      error
-    );
+    const processedKey = AppResponse.getKey(key, error);
 
-    const processedMessage = AppResponse.getMessage(
-      message,
-      error
-    );
+    const processedMessage = AppResponse.getMessage(message, error);
 
     return new AppResponse(
       isSuccess,
       processedKey ?? null,
       processedMessage ?? null,
       data,
-      paging,
+      paging
     );
   }
-  private static getKey(
-    key?: string,
-    error?: AppError,
-  ): string | null {
-    var isKeyEmpty =
-      key == null
-      ||
-      key == '';
+  private static getKey(key?: string, error?: AppError): string | null {
+    var isKeyEmpty = key == null || key == "";
 
     if (!isKeyEmpty) {
       return key;
     }
 
-    var hasError =
-      error != null;
+    var hasError = error != null;
 
     if (!hasError) {
       return appMessagesKeys.operationSucceeded;
@@ -60,21 +49,14 @@ export class AppResponse<T> {
     return error.code;
   }
 
-  private static getMessage(
-    message?: string,
-    error?: AppError,
-  ): string | null {
-    var isMessageEmpty =
-      message == null
-      ||
-      message == '';
+  private static getMessage(message?: string, error?: AppError): string | null {
+    var isMessageEmpty = message == null || message == "";
 
     if (!isMessageEmpty) {
       return message;
     }
 
-    var hasError =
-      error != null;
+    var hasError = error != null;
 
     if (!hasError) {
       return appMessagesKeys.operationSucceeded;
@@ -83,6 +65,3 @@ export class AppResponse<T> {
     return error?.message;
   }
 }
-
-
-

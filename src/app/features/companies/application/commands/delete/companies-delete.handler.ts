@@ -24,7 +24,7 @@ export class CompaniesDeleteHandler
         );
 
     if (entity === null) {
-      return AppResult
+      throw AppResult
         .createError(
           AppErrors
             .nullValue(
@@ -34,10 +34,7 @@ export class CompaniesDeleteHandler
     }
 
     if (command.userId != entity.userId) {
-      return AppResult
-        .createError(
-          AppErrors.notRelateToYourAccount(),
-        );
+      throw AppResult.createError(AppErrors.notRelateToYourAccount());
     }
 
     const isDeleted =
@@ -48,10 +45,7 @@ export class CompaniesDeleteHandler
         );
 
     if (!isDeleted) {
-      return AppResult
-        .createError(
-          AppErrors.operationFailed(),
-        );
+      throw AppResult.createError(AppErrors.operationFailed());
     }
 
     return AppResult

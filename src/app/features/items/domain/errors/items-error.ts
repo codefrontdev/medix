@@ -15,12 +15,14 @@ export class ItemsError extends AppError {
     return new AppError(
       appMessagesKeys.invalidStockOperation,
       `Stock must be zero to mark the item as OutOfStock.`,
+
     );
   }
   public static stockMustBeGreaterThanZero(): AppError {
     return new AppError(
       appMessagesKeys.invalidStock,
       `Stock must be greater than zero for this operation.`,
+      400
     );
   }
 
@@ -28,6 +30,7 @@ export class ItemsError extends AppError {
     return new AppError(
       appMessagesKeys.invalidType,
       `The item type provided is invalid.`,
+      400
     );
   }
 
@@ -35,6 +38,7 @@ export class ItemsError extends AppError {
     return new AppError(
       appMessagesKeys.notFound,
       `The requested item could not be found.`,
+      404
     );
   }
 
@@ -42,6 +46,7 @@ export class ItemsError extends AppError {
     return new AppError(
       appMessagesKeys.notRelateToYourAccount,
       `You are not authorized to perform this action.`,
+      403
     );
   }
 
@@ -49,6 +54,7 @@ export class ItemsError extends AppError {
     return new AppError(
       appMessagesKeys.requiredField,
       `The field '${fieldName}' is required.`,
+      400
     );
   }
 }

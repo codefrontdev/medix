@@ -8,7 +8,7 @@ import {
   IsMongoId,
   IsUrl,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { CompanyOwnerTypeEnum } from '../../../domain/constants/enums/company-owner-type.enum';
 import { CompanyTypeEnum } from '../../../domain/constants/enums/company-type.enum';
 
@@ -46,17 +46,21 @@ export class CompaniesUpsertRequest {
   @IsEnum(CompanyOwnerTypeEnum)
   public readonly ownerType: string;
 
-  @IsUrl()
+  @IsString()
   @IsOptional()
   public readonly stampedAuthorizationFormUrl?: string; // Updated field
 
-  @IsUrl()
+  @IsString()
   @IsOptional()
   public readonly authorizationFileUrl?: string; // New field
 
-  @IsUrl()
+  @IsString()
   @IsOptional()
   public readonly registeringFileUrl?: string; // New field
+
+  @IsString()
+  @IsOptional()
+  public readonly logoMedia?: string; // Updated field
 
   @IsDate()
   @Type(() => Date)
@@ -74,6 +78,7 @@ export class CompaniesUpsertRequest {
 
   @IsNumber()
   @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
   public readonly turnover?: number;
 
   @IsEnum(CompanyTypeEnum)
@@ -87,10 +92,6 @@ export class CompaniesUpsertRequest {
   @IsMongoId({ each: true })
   @IsOptional()
   public readonly categoriesIds?: string[];
-
-  @IsUrl()
-  @IsOptional()
-  public readonly logoMedia?: string; // Updated field
 
   @IsString()
   @IsOptional()
@@ -106,20 +107,26 @@ export class CompaniesUpsertRequest {
 
   @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   public readonly employeesNumber?: number; // New field
   @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   public readonly itemNr?: number; // New field
   @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   public readonly orderNr?: number; // New field
   @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   public readonly TenderNr?: number; // New field
   @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   public readonly OpportunityNr?: number; // New field
   @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   public readonly CompanyNr?: string; // New field
 }

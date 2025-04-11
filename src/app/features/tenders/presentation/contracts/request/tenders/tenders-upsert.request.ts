@@ -1,9 +1,20 @@
-import { IsString, IsOptional, IsDate, IsEnum, IsNumber, IsArray, IsMongoId, IsBoolean } from 'class-validator';
-import { Type } from 'class-transformer';
-import { TenderTypeEnum } from '../../../../domain/constants/enums/tender-type.enum';
-import { TenderStatusEnum } from '../../../../domain/constants/enums/tender-status.enum';
-import { ReceiveDocumentsTypeEnum } from '../../../../domain/constants/enums/receive-documents-type.enum';
-import { PaylaterTypeEnum } from 'src/app/features/tenders/domain/constants/enums/Paylater-type.enum';
+/** @format */
+
+import {
+  IsString,
+  IsOptional,
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsArray,
+  IsMongoId,
+  IsBoolean,
+} from "class-validator";
+import { Type } from "class-transformer";
+import { TenderTypeEnum } from "../../../../domain/constants/enums/tender-type.enum";
+import { TenderStatusEnum } from "../../../../domain/constants/enums/tender-status.enum";
+import { ReceiveDocumentsTypeEnum } from "../../../../domain/constants/enums/receive-documents-type.enum";
+import { PaylaterTypeEnum } from "src/app/features/tenders/domain/constants/enums/Paylater-type.enum";
 
 class Product {
   @IsString()
@@ -27,7 +38,7 @@ export class TendersUpsertRequest {
 
   @IsString()
   public readonly title: string;
- 
+
   @IsNumber()
   public readonly minValue: number;
 
@@ -50,11 +61,9 @@ export class TendersUpsertRequest {
   public readonly status?: TenderStatusEnum;
 
   @IsArray()
-  @IsMongoId(
-    {
-      each: true,
-    },
-  )
+  @IsMongoId({
+    each: true,
+  })
   @IsOptional()
   public readonly categoriesIds?: string[];
 
@@ -110,9 +119,9 @@ export class TendersUpsertRequest {
   @IsMongoId()
   @IsOptional()
   public readonly companyId?: string;
-  
-  @IsArray() 
-  @Type(() => Product) 
+
+  @IsArray()
+  @Type(() => Product)
   public readonly products: Product[];
   @IsNumber()
   public readonly TenderNr: number;

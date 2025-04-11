@@ -25,12 +25,12 @@ export class ItemsChangeStatusHandler
 
     // Check if item exists
     if (foundItemEntity === null) {
-      return AppResult.createError(AppErrors.nullValue("item"));
+      throw AppResult.createError(AppErrors.nullValue("item"));
     }
 
     // Verify that the user performing the change is authorized
     if (command.userId !== foundItemEntity.userId) {
-      return AppResult.createError(AppErrors.notRelateToYourAccount());
+      throw AppResult.createError(AppErrors.notRelateToYourAccount());
     }
 
     // Check for business rule violations (e.g., specific status logic)
@@ -38,7 +38,7 @@ export class ItemsChangeStatusHandler
       command.status === ItemStatusEnum.OUT_OF_STOCK &&
       foundItemEntity.stock > 0
     ) {
-      return AppResult.createError(ItemsError.stockMustBeZeroForOutOfStock());
+      throw AppResult.createError(ItemsError.stockMustBeZeroForOutOfStock());
     }
 
     // Update the item entity with the new status

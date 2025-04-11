@@ -31,7 +31,7 @@ export class TransformsChangeStatusHandler
 
     // Check if the transform exists
     if (!foundTransformEntity) {
-      return AppResult.createError(AppErrors.nullValue("transform"));
+      throw AppResult.createError(AppErrors.nullValue("transform"));
     }
 
     
@@ -41,7 +41,7 @@ export class TransformsChangeStatusHandler
       command.status === TransformStatusEnum.REFUSED &&
       foundTransformEntity.status === TransformStatusEnum.ACCEPTED
     ) {
-      return AppResult.createError(
+      throw AppResult.createError(
         TransformsError.invalidStatusTransition("Cannot refuse an already accepted transform")
       );
     }

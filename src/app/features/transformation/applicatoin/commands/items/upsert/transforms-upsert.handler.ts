@@ -31,12 +31,12 @@ export class TransformsUpsertHandler
       const foundEntity = await this.transformsRepository.getById(command.id);
 
       if (foundEntity === null) {
-        return AppResult.createError(AppErrors.nullValue("Transform"));
+        throw AppResult.createError(AppErrors.nullValue("Transform"));
       }
 
       /*// Verify the user is authorized to update the Transform
       if (command.userId !== foundEntity.userId) {
-        return AppResult.createError(AppErrors.notRelateToYourAccount());
+        throw AppResult.createError(AppErrors.notRelateToYourAccount());
       }*/
     } 
     

@@ -15,5 +15,6 @@ export class CompaniesError extends AppError {
   public static readonly duplicateRegistrationNumber = new AppError(
     appMessagesKeys.duplicateRegistrationNumber,
     'Duplicate registration number',
+    409
   );
 }

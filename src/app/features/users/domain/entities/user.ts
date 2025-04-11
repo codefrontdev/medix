@@ -1,3 +1,5 @@
+/** @format */
+
 import { AggregateRoot } from "@nestjs/cqrs";
 import { ObjectId } from "mongodb";
 import { createObjectIdAsString } from "src/app/@core/utils/functions/mongo-functions";
@@ -29,7 +31,7 @@ export class User extends AggregateRoot {
     public readonly deletedAt?: Date,
     public readonly createdBy?: string,
     public readonly updatedBy?: string,
-    public readonly deletedBy?: string,
+    public readonly deletedBy?: string
   ) {
     super();
   }
@@ -58,12 +60,10 @@ export class User extends AggregateRoot {
     deletedAt: Date = null,
     createdBy: string = null,
     updatedBy: string = null,
-    deletedBy: string = null,
+    deletedBy: string = null
   ): User {
     return new User(
-      createObjectIdAsString(
-        id,
-      ),
+      createObjectIdAsString(id),
       nickName,
       email,
       phoneNumber,
@@ -88,7 +88,7 @@ export class User extends AggregateRoot {
       deletedAt,
       createdBy,
       updatedBy,
-      deletedBy,
+      deletedBy
     );
   }
 }

@@ -45,85 +45,85 @@ export class Company extends AggregateRoot {
     super();
   }
 
-  public static create(
-    id: string | null,
-    nameAr: string,
-    nameEn: string = null,
-    website: string = null,
-    address: string = null,
-    region: string = null,
-    city: string = null,
-    registrationNumber: string,
-    ownerType: string = null,
-    stampedAuthorizationFormUrl: string = null, // Updated to URL
-    registrationExpirationDate: Date = null,
-    creationDate: Date = null,
-    placeOfIssue: string = null,
-    turnover: number = null,
-    type: string = null,
-    activities: string = null,
-    categoriesIds: string[] = [],
-    logoMedia: string = null, // Updated to URL
-    authorizationFileUrl: string = null, // New field
-    registeringFileUrl: string = null, // New field
-    contactInfo: string = null,
-    userId: string = '',
-    taxInformation: string = null, // New field
-    deliveryAddress: string = null, // New field
-    employeesNumber: number = null, // New field 
-    CompanyNr: string = null, // New field    
-    itemNr: number = null, // New field    
-    orderNr: number = null, // New field    
-    TenderNr: number = null, // New field    
-    OpportunityNr: number = null, // New field           
-    displayOrder: number = 0,
-    isVisible: boolean = true,
-    createdAt: Date = null,
-    updatedAt: Date = null,
-    deletedAt: Date = null,
-    createdBy: string = null,
-    updatedBy: string = null,
-    deletedBy: string = null,
-  ): Company {
-    return new Company(
-      createObjectIdAsString(id),
-      nameAr,
-      nameEn,
-      website,
-      address,
-      region,
-      city,
-      registrationNumber,
-      ownerType,
-      stampedAuthorizationFormUrl, // Updated to URL
-      registrationExpirationDate,
-      creationDate ?? new Date(),
-      placeOfIssue,
-      turnover,
-      type,
-      activities,
-      categoriesIds,
-      logoMedia, // Updated to URL
-      authorizationFileUrl, // New field
-      registeringFileUrl, // New field
-      contactInfo,
-      userId,
-      taxInformation, // New field
-      deliveryAddress, // New field
-      employeesNumber, // New field 
-      CompanyNr, // New field    
-      itemNr, // New field     
-      orderNr, // New field     
-      TenderNr, // New field     
-      OpportunityNr, // New field                
-      displayOrder,
-      isVisible,
-      createdAt,
-      updatedAt,
-      deletedAt,
-      createdBy,
-      updatedBy,
-      deletedBy,
-    );
-  }
+  // public static create(
+  //   id: string | null,
+  //   nameAr: string,
+  //   nameEn: string = null,
+  //   website: string = null,
+  //   address: string = null,
+  //   region: string = null,
+  //   city: string = null,
+  //   registrationNumber: string,
+  //   ownerType: string = null,
+  //   stampedAuthorizationFormUrl: string = null, // Updated to URL
+  //   registrationExpirationDate: Date = null,
+  //   creationDate: Date = null,
+  //   placeOfIssue: string = null,
+  //   turnover: number = null,
+  //   type: string = null,
+  //   activities: string = null,
+  //   categoriesIds: string[] = [],
+  //   logoMedia: string = null, // Updated to URL
+  //   authorizationFileUrl: string = null, // New field
+  //   registeringFileUrl: string = null, // New field
+  //   contactInfo: string = null,
+  //   userId: string = '',
+  //   taxInformation: string = null, // New field
+  //   deliveryAddress: string = null, // New field
+  //   employeesNumber: number = null, // New field 
+  //   CompanyNr: string = null, // New field    
+  //   itemNr: number = null, // New field    
+  //   orderNr: number = null, // New field    
+  //   TenderNr: number = null, // New field    
+  //   OpportunityNr: number = null, // New field           
+  //   displayOrder: number = 0,
+  //   isVisible: boolean = true,
+  //   createdAt: Date = null,
+  //   updatedAt: Date = null,
+  //   deletedAt: Date = null,
+  //   createdBy: string = null,
+  //   updatedBy: string = null,
+  //   deletedBy: string = null,
+  // ): Company {
+  //   return new Company(
+  //     id,
+  //     nameAr,
+  //     nameEn,
+  //     website,
+  //     address,
+  //     region,
+  //     city,
+  //     registrationNumber,
+  //     ownerType,
+  //     stampedAuthorizationFormUrl, // Updated to URL
+  //     registrationExpirationDate,
+  //     creationDate ?? new Date(),
+  //     placeOfIssue,
+  //     turnover,
+  //     type,
+  //     activities,
+  //     categoriesIds,
+  //     logoMedia, // Updated to URL
+  //     authorizationFileUrl, // New field
+  //     registeringFileUrl, // New field
+  //     contactInfo,
+  //     userId,
+  //     taxInformation, // New field
+  //     deliveryAddress, // New field
+  //     employeesNumber, // New field 
+  //     CompanyNr, // New field    
+  //     itemNr, // New field     
+  //     orderNr, // New field     
+  //     TenderNr, // New field     
+  //     OpportunityNr, // New field                
+  //     displayOrder,
+  //     isVisible,
+  //     createdAt,
+  //     updatedAt,
+  //     deletedAt,
+  //     createdBy,
+  //     updatedBy,
+  //     deletedBy,
+  //   );
+  // }
 }

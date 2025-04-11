@@ -42,18 +42,18 @@ export class CompanyFactory implements EntityFactory<Company> {
     TenderNr: number = 0, // New field
     OpportunityNr: number = 0, // New field
     
-  ): Promise<Company> {
-    const isInsert = id === null || id === '' || id === 'null';
+  ): Promise<Company | null> {
+    const isInsert = id === null || id === 'null' || id === undefined;
     if (isInsert) {
-      const entity = Company.create(
-        createObjectIdAsString(null),
+      const entity = new Company(
+        createObjectIdAsString(id),
         nameAr,
         nameEn,
         website,
         address,
         region,
         city,
-        registrationNumber,
+        registrationNumber, 
         ownerType,
         stampedAuthorizationFormUrl, // Use URL
         registrationExpirationDate,
@@ -75,16 +75,17 @@ export class CompanyFactory implements EntityFactory<Company> {
         itemNr, // New field
         orderNr, // New field
         TenderNr, // New field
-        OpportunityNr, // New field
-        
+        OpportunityNr // New field
       );
-
+      
+      console.log("CompanyFactory.save(): isInsert:", entity);
       await this.companiesRepository.insert(entity);
-
+      
       return entity;
     }
-
+    
     const foundEntity = await this.companiesRepository.getById(id);
+    console.log("CompanyFactory.save(): isInsert:", foundEntity);
 
     if (foundEntity == null) {
       return null;

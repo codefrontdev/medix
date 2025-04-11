@@ -18,7 +18,7 @@ export class MediasGetHandler
     const entity = await this.mediasRepository.getById(query.id);
 
     if (entity === null) {
-      return AppResult.createError(AppErrors.nullValue('object'));
+      throw AppResult.createError(AppErrors.nullValue('object'));
     }
 
     // Updated to include userId, companyId, source, and sourceType

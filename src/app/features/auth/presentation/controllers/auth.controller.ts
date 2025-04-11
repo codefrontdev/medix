@@ -1,6 +1,14 @@
 /** @format */
 
-import { Controller, Post, Body, UseGuards, Get, Req } from "@nestjs/common";
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Req,
+  Res,
+} from "@nestjs/common";
 import { AuthService } from "../../application/services/auth.service";
 import { AuthLoginRequest } from "../contracts/request/auth-login.request";
 import { AuthDataResponse } from "../contracts/response/auth-data.response";
@@ -32,6 +40,7 @@ import { AuthsUpsertRequest } from "../contracts/request/auth-update.request";
 import { AuthsGetResponse } from "../contracts/response/auth-update.response";
 import { AuthsUpsertCommand } from "../../application/commands/updateme/auth-update.command";
 import { UsersGetResult } from "src/app/features/users/application/results/users-get.result";
+import { Response } from "express";
 
 @Controller({
   path: "web/auth",
@@ -84,6 +93,7 @@ export class AuthController {
       AppResult<AuthDataResult>
     >(command);
 
+    console.log("result", result);
     const response = AppResponse.create<AuthDataResponse>(
       result.isSuccess,
       result.key,

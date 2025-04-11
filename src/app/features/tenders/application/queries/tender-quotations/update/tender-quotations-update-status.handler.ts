@@ -29,7 +29,7 @@ export class TenderQuotationsUpdateStatusHandler
 
       return AppResult.createSuccess(null, 'Tender quotation status updated successfully');
     } catch (error) {
-      return AppResult.createError(error);
+      throw AppResult.createError(error);
     }
   }
 }

@@ -1,3 +1,5 @@
+/** @format */
+
 import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { CompaniesUpsertCommand } from "./companies-upsert.command";
 import { AppResult } from "src/app/@core/shared/domain/shared/app-result";
@@ -7,27 +9,60 @@ import { CompaniesError } from "../../../domain/errors/companies-error";
 import { CompaniesGetResult } from "../../results/companies-get.result";
 import { AppErrors } from "src/app/@core/shared/domain/errors/app-errors";
 import { S3UploadService } from "src/app/@core/shared/application/services/s3-upload.service";
-
+import { createObjectId } from "src/app/@core/utils/functions/mongo-functions";
+import { CategoriesRepository } from "src/app/features/categories/persistence/repositories/categories.repository";
+import { UsersRepository } from "src/app/features/users/persistence/repositories/users.repository";
 
 @CommandHandler(CompaniesUpsertCommand)
 export class CompaniesUpsertHandler
-  implements ICommandHandler<CompaniesUpsertCommand, AppResult<CompaniesGetResult>> {
+  implements
+    ICommandHandler<CompaniesUpsertCommand, AppResult<CompaniesGetResult>>
+{
   public constructor(
     private readonly companiesRepository: CompaniesRepository,
+    private readonly CategoriesRepository: CategoriesRepository,
     private readonly companyFactory: CompanyFactory,
-    private readonly eventPublisher: EventPublisher,
+    private readonly usersRepository: UsersRepository,
+    private readonly eventPublisher: EventPublisher
   ) {}
 
   public async execute(
-    command: CompaniesUpsertCommand,
+    command: CompaniesUpsertCommand
   ): Promise<AppResult<CompaniesGetResult>> {
-    const isInsert = command.id === null || command.id === undefined || command.id === 'null';
-    if (isInsert) {
-      const foundEntity = await this.companiesRepository.getByRegistrationNumber(
-        command.registrationNumber,
+    const isInsert =
+      command.id === null || command.id === undefined || command.id === "null";
+
+    console.log(command.categoriesIds);
+    if (command.categoriesIds) {
+      const uniqueCategoryIds = [...new Set(command.categoriesIds)];
+
+      const categories = await Promise.all(
+        uniqueCategoryIds.map(async (categoryId) => {
+          const category = await this.CategoriesRepository.getById(categoryId);
+          if (category === null) {
+            throw AppResult.createError(AppErrors.nullValue("category"));
+          }
+          return category;
+        })
       );
+
+      command = { ...command, categoriesIds: categories.map((category) => category._id) };
+    }
+    if (command.userId) {
+      const user = await this.usersRepository.getById(command.userId);
+      if (user === null) {
+        throw AppResult.createError(AppErrors.nullValue("user"));
+      }
+    }
+
+
+    if (isInsert) {
+      const foundEntity =
+        await this.companiesRepository.getByRegistrationNumber(
+          command.registrationNumber
+        );
       if (foundEntity !== null) {
-        return AppResult.createError(CompaniesError.duplicateRegistrationNumber);
+        throw AppResult.createError(CompaniesError.duplicateRegistrationNumber);
       }
     }
 
@@ -35,11 +70,11 @@ export class CompaniesUpsertHandler
       const foundEntity = await this.companiesRepository.getById(command.id);
 
       if (foundEntity === null) {
-        return AppResult.createError(AppErrors.nullValue('company'));
+        throw AppResult.createError(AppErrors.nullValue("company"));
       }
 
       if (command.userId !== foundEntity.userId) {
-        return AppResult.createError(AppErrors.notRelateToYourAccount());
+        throw AppResult.createError(AppErrors.notRelateToYourAccount());
       }
     }
     const generateUniqueCompanyNr = async (): Promise<string> => {
@@ -48,13 +83,17 @@ export class CompaniesUpsertHandler
 
       do {
         companyNr = Math.floor(100000 + Math.random() * 900000).toString();
-        const existingCompany = await this.companiesRepository.getByCompanyNr(companyNr);
+        const existingCompany =
+          await this.companiesRepository.getByCompanyNr(companyNr);
         isUnique = !existingCompany;
       } while (!isUnique);
 
       return companyNr;
     };
-    const companyNr = command.CompanyNr && command.CompanyNr.toString() !== 'null' ? command.CompanyNr.toString() : await generateUniqueCompanyNr();
+    const companyNr =
+      command.CompanyNr && command.CompanyNr.toString() !== "null" ?
+        command.CompanyNr.toString()
+      : await generateUniqueCompanyNr();
 
     let entity = await this.companyFactory.save(
       command.id,
@@ -86,9 +125,9 @@ export class CompaniesUpsertHandler
       command.itemNr || 0,
       command.orderNr || 0,
       command.TenderNr || 0,
-      command.OpportunityNr || 0,
-      
+      command.OpportunityNr || 0
     );
+    // console.log("isInsert", entity);
 
     entity = this.eventPublisher.mergeObjectContext(entity);
     entity.commit();
@@ -123,8 +162,7 @@ export class CompaniesUpsertHandler
       entity.itemNr,
       entity.orderNr,
       entity.TenderNr,
-      entity.OpportunityNr,
-      
+      entity.OpportunityNr
     );
 
     return AppResult.createSuccess<CompaniesGetResult>(null, null, resultData);

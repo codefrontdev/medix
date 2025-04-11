@@ -27,14 +27,14 @@ export class ItemsUpsertHandler
       const foundEntity = await this.itemsRepository.getById(command.id);
 
       if (foundEntity === null) {
-        return AppResult.createError(
+        throw AppResult.createError(
           AppErrors.nullValue("item"),
         );
       }
 
       // Verify the user is authorized to update the item
       if (command.userId !== foundEntity.userId) {
-        return AppResult.createError(
+        throw AppResult.createError(
           AppErrors.notRelateToYourAccount(),
         );
       }

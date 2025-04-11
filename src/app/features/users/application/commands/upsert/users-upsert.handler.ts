@@ -23,7 +23,7 @@ export class UsersUpsertHandler
     const foundEntity = await this.usersRepository.getById(command.id);
 
     if (!foundEntity) {
-      return AppResult.createError(new UsersError('User not found'));
+      throw AppResult.createError(UsersError.userNotFound);
     }
 
     const updatedEntity = await this.userFactory.save(

@@ -15,10 +15,17 @@ export class UsersError extends AppError {
   public static readonly emailTaken = new AppError(
     appMessagesKeys.emailTaken,
     'Email already taken',
+
   );
 
   public static readonly phoneNumberTaken = new AppError(
     appMessagesKeys.phoneNumberTaken,
     'PhoneNumber already taken',
+  );
+
+  public static readonly userNotFound = new AppError(
+    appMessagesKeys.userNotFound,
+    'User not found',
+    404
   );
 }

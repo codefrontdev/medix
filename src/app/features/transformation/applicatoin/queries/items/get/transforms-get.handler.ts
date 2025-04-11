@@ -21,9 +21,7 @@ export class TransformsGetHandler
 
     // Check if the transform exists
     if (entity === null) {
-      return AppResult.createError(
-        AppErrors.nullValue('Transform'),
-      );
+      throw AppResult.createError(AppErrors.nullValue("Transform"));
     }
 
     // Create a result object from the entity

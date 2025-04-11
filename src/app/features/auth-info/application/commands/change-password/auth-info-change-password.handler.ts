@@ -27,7 +27,7 @@ export class AuthInfoChangePasswordHandler
         );
 
     if (foundUser === null) {
-      return AppResult
+      throw AppResult
         .createError(
           AuthInfoError.userNotFound,
         );
@@ -41,7 +41,7 @@ export class AuthInfoChangePasswordHandler
         );
 
     if (!isPasswordMatched) {
-      return AppResult
+      throw AppResult
         .createError(
           AuthInfoError.passwordIncorrect,
         );

@@ -22,7 +22,7 @@ export class TendersUpdateStatusHandler implements ICommandHandler<TendersUpdate
 
       return AppResult.createSuccess(null, 'Tender status updated successfully');
     } catch (error) {
-      return AppResult.createError(error);
+      throw AppResult.createError(error);
     }
   }
 }

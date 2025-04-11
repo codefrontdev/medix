@@ -18,14 +18,12 @@ export class TransformsDeleteHandler
     const entity = await this.TransformsRepository.getById(command.id);
 
     if (entity === null) {
-      return AppResult.createError(
-        AppErrors.nullValue("Transform"),
-      );
+      throw AppResult.createError(AppErrors.nullValue("Transform"));
     }
 
     // Verify that the user performing the deletion is authorized
     /*if (command.userId !== entity.userId) {
-      return AppResult.createError(
+      throw AppResult.createError(
         AppErrors.notRelateToYourAccount(),
       );
     }*/
@@ -34,16 +32,10 @@ export class TransformsDeleteHandler
     const isDeleted = await this.TransformsRepository.deleteById(command.id);
 
     if (!isDeleted) {
-      return AppResult.createError(
-        AppErrors.operationFailed(),
-      );
+      throw AppResult.createError(AppErrors.operationFailed());
     }
 
     // Return success
-    return AppResult.createSuccess<null>(
-      null,
-      null,
-      null,
-    );
+    return AppResult.createSuccess<null>(null, null, null);
   }
 }

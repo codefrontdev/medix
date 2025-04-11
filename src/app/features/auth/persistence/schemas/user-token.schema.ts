@@ -1,3 +1,5 @@
+/** @format */
+
 import { Prop, Schema } from "@nestjs/mongoose";
 import { Types } from "mongoose";
 import { ObjectId } from "mongodb";
@@ -5,46 +7,36 @@ import { schemasNames } from "src/app/@core/shared/persistence/constants/schemas
 import { BaseSchema } from "src/app/@core/shared/persistence/schemas/base.schema";
 import { UserSchema } from "src/app/features/users/persistence/schemas/user.schema";
 
-@Schema(
-  {
-    collection: schemasNames.userTokens,
-    versionKey: false,
-    timestamps: false,
-  },
-)
+@Schema({
+  collection: schemasNames.userTokens,
+  versionKey: false,
+  timestamps: false,
+})
 export class UserTokenSchema extends BaseSchema {
-  @Prop(
-    {
-      required: true,
-      unique: true,
-      index: true,
-    },
-  )
+  @Prop({
+    required: true,
+    unique: true,
+    index: true,
+  })
   public readonly accessToken: string;
 
-  @Prop(
-    {
-      required: true,
-      unique: true,
-      index: true,
-    },
-  )
+  @Prop({
+    required: true,
+    unique: true,
+    index: true,
+  })
   public readonly refreshToken: string;
 
-  @Prop(
-    {
-      required: true,
-      index: true,
-      type: Types.ObjectId,
-      ref: UserSchema.name,
-    },
-  )
+  @Prop({
+    required: true,
+    index: true,
+    type: Types.ObjectId,
+    ref: UserSchema.name,
+  })
   public readonly userId: ObjectId;
 
-  @Prop(
-    {
-      required: true,
-    },
-  )
+  @Prop({
+    required: true,
+  })
   public readonly expirationDate: Date;
 }

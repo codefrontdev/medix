@@ -1,36 +1,30 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
-import { AppConfigsService } from 'src/app/@core/configs/app-configs.service';
-import { UserTokensRepository } from '../../persistence/repositories/user-tokens.repository';
+/** @format */
+
+import { ExtractJwt, Strategy } from "passport-jwt";
+import { PassportStrategy } from "@nestjs/passport";
+import { Injectable } from "@nestjs/common";
+import { AppConfigsService } from "src/app/@core/configs/app-configs.service";
+import { UserTokensRepository } from "../../persistence/repositories/user-tokens.repository";
 
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy) {
   public constructor(
     private readonly userTokensRepository: UserTokensRepository,
-    private readonly appConfigsService: AppConfigsService,
+    private readonly appConfigsService: AppConfigsService
   ) {
-    super(
-      {
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        ignoreExpiration: false,
-        secretOrKey: appConfigsService.jwtConfig.secret,
-      },
-    );
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: appConfigsService.jwtConfig.secret,
+    });
   }
 
-  public async validate(
-    payload: any,
-  ): Promise<any> {
+  public async validate(payload: any): Promise<any> {
+    console.log("payload", payload);
     const { userId, roles } = payload;
+    const userToken = await this.userTokensRepository.getByUserId(userId);
 
-    const userToken =
-      await this
-        .userTokensRepository
-        .getByUserId(
-          userId,
-        );
-
+    console.log("userToken", userToken);
     if (userToken === null) {
       return null;
     }

@@ -63,6 +63,8 @@ export class TenderQuotationsController {
       SKUCode	: product.SKUCode	,
       vat: product.vat,
     }));
+
+
     const command = new TenderQuotationsUpsertCommand(
       tenderQuotationsUpsertRequest.id,
       products,
@@ -77,6 +79,7 @@ export class TenderQuotationsController {
       userId,
       tenderQuotationsUpsertRequest.OpportunityNr
     );
+    console.log(command);
 
     const result =
       await this
@@ -84,6 +87,8 @@ export class TenderQuotationsController {
         .execute<TenderQuotationsUpsertCommand, AppResult<TenderQuotationsGetResult>>(
           command,
         );
+
+        console.log(result);
 
     return AppResponse
       .create<TenderQuotationsGetResponse>(

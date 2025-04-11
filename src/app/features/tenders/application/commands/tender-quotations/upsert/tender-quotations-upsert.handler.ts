@@ -1,3 +1,5 @@
+/** @format */
+
 import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { AppResult } from "src/app/@core/shared/domain/shared/app-result";
 import { TenderQuotationsGetResult } from "../../../results/tender-quotations/tender-quotations-get.result";
@@ -9,104 +11,90 @@ import { CompaniesRepository } from "src/app/features/companies/persistence/repo
 
 @CommandHandler(TenderQuotationsUpsertCommand)
 export class TenderQuotationsUpsertHandler
-  implements ICommandHandler<TenderQuotationsUpsertCommand, AppResult<TenderQuotationsGetResult>> {
+  implements
+    ICommandHandler<
+      TenderQuotationsUpsertCommand,
+      AppResult<TenderQuotationsGetResult>
+    >
+{
   public constructor(
     private readonly tenderQuotationsRepository: TenderQuotationsRepository,
     private readonly tenderQuotationFactory: TenderQuotationFactory,
     private readonly eventPublisher: EventPublisher,
     private readonly companiesRepository: CompaniesRepository
-  ) { }
+  ) {}
 
   public async execute(
-    command: TenderQuotationsUpsertCommand,
+    command: TenderQuotationsUpsertCommand
   ): Promise<AppResult<TenderQuotationsGetResult>> {
-    const isInsert = command.id === null;
-
+    const isInsert = command.id === null || command.id === undefined;
+    
     if (!isInsert) {
-      var foundEntity =
-        await this
-          .tenderQuotationsRepository
-          .getById(
-            command.id,
-          );
+      var foundEntity = await this.tenderQuotationsRepository.getById(
+        command.id
+      );
+      console.log("foundEntity", !isInsert);
 
       if (foundEntity === null) {
-        return AppResult
-          .createError(
-            AppErrors
-              .nullValue(
-                'tenderQuotation',
-              ),
-          );
+        throw AppResult.createError(AppErrors.nullValue("tenderQuotation"));
       }
 
       if (command.userId != foundEntity.userId) {
-        return AppResult
-          .createError(
-            AppErrors.notRelateToYourAccount(),
-          );
+        throw AppResult.createError(AppErrors.notRelateToYourAccount());
       }
-    }else{
-      await this.companiesRepository.updateOpportunityNr(command.companyId, command.OpportunityNr);
+    } else {
+      await this.companiesRepository.updateOpportunityNr(
+        command.companyId,
+        command.OpportunityNr
+      );
     }
 
-    let entity =
-      await this
-        .tenderQuotationFactory
-        .save(
-          command.id,
-          /*
+    let entity = await this.tenderQuotationFactory.save(
+      command.id,
+      /*
           command.value,
           command.description,
           */
-          command.products,
-          command.paymentMethod,
-          command.DeadLineDate,
-          command.DeliveryMethod,
-          command.contactMethod,
-          command.deliverDays,
-          command.status,
-          command.tenderId,
-          command.companyId,
-          command.userId,
-          command.OpportunityNr,
-        );
+      command.products,
+      command.paymentMethod,
+      command.DeadLineDate,
+      command.DeliveryMethod,
+      command.contactMethod,
+      command.deliverDays,
+      command.status,
+      command.tenderId,
+      command.companyId,
+      command.userId,
+      command.OpportunityNr
+    );
 
-    entity = this
-      .eventPublisher
-      .mergeObjectContext(
-        entity,
-      );
+    entity = this.eventPublisher.mergeObjectContext(entity);
 
-    entity
-      .commit();
+    entity.commit();
 
-    const resultData =
-      TenderQuotationsGetResult
-        .create(
-          entity._id,
-          /*
+    const resultData = TenderQuotationsGetResult.create(
+      entity._id,
+      /*
           entity.value,
           entity.description,
           */
-          entity.products,
-          entity.paymentMethod,
-          entity.DeadLineDate,
-          entity.DeliveryMethod,
-          entity.contactMethod,
-          entity.deliverDays,
-          entity.status,
-          entity.tenderId,
-          entity.companyId,
-          entity.userId,
-          entity.OpportunityNr,
-        );
+      entity.products,
+      entity.paymentMethod,
+      entity.DeadLineDate,
+      entity.DeliveryMethod,
+      entity.contactMethod,
+      entity.deliverDays,
+      entity.status,
+      entity.tenderId,
+      entity.companyId,
+      entity.userId,
+      entity.OpportunityNr
+    );
 
-    return AppResult
-      .createSuccess<TenderQuotationsGetResult>(
-        null,
-        null,
-        resultData,
-      );
+    return AppResult.createSuccess<TenderQuotationsGetResult>(
+      null,
+      null,
+      resultData
+    );
   }
 }

@@ -32,7 +32,7 @@ export class MediasUploadHandler
         );
 
     if (medias === null || medias.length == 0) {
-      return AppResult
+      throw AppResult
         .createError(
           AppErrors
             .nullValue(

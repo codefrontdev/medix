@@ -1,3 +1,5 @@
+/** @format */
+
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 
 import { UsersDeleteCommand } from "./users-delete.command";
@@ -5,36 +7,19 @@ import { AppResult } from "src/app/@core/shared/domain/shared/app-result";
 import { AppErrors } from "src/app/@core/shared/domain/errors/app-errors";
 import { UsersRepository } from "../../../persistence/repositories/users.repository";
 
-
 @CommandHandler(UsersDeleteCommand)
 export class UsersDeleteHandler
-  implements ICommandHandler<UsersDeleteCommand, AppResult<null>> {
-  public constructor(
-    private readonly usersRepository: UsersRepository,
-  ) { }
+  implements ICommandHandler<UsersDeleteCommand, AppResult<null>>
+{
+  public constructor(private readonly usersRepository: UsersRepository) {}
 
-  public async execute(
-    command: UsersDeleteCommand,
-  ): Promise<AppResult<null>> {
-    const isDeleted =
-      await this
-        .usersRepository
-        .deleteById(
-          command.id,
-        );
+  public async execute(command: UsersDeleteCommand): Promise<AppResult<null>> {
+    const isDeleted = await this.usersRepository.deleteById(command.id);
 
     if (!isDeleted) {
-      return AppResult
-        .createError(
-          AppErrors.operationFailed(),
-        );
+      throw AppResult.createError(AppErrors.operationFailed());
     }
 
-    return AppResult
-      .createSuccess<null>(
-        null,
-        null,
-        null,
-      );
+    return AppResult.createSuccess<null>(null, null, null);
   }
 }

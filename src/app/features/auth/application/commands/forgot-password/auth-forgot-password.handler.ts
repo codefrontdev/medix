@@ -1,3 +1,5 @@
+/** @format */
+
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { UsersRepository } from "src/app/features/users/persistence/repositories/users.repository";
 import { AppResult } from "src/app/@core/shared/domain/shared/app-result";
@@ -13,88 +15,59 @@ import appUrls from "src/app/@core/values/app-urls";
 import emailTemplates from "src/app/@core/values/email-templates";
 import { AppConfigsService } from "src/app/@core/configs/app-configs.service";
 
-
 @CommandHandler(AuthForgotPasswordCommand)
 export class AuthForgotPasswordHandler
-  implements ICommandHandler<AuthForgotPasswordCommand, AppResult<AuthSentCodeResult>> {
+  implements
+    ICommandHandler<AuthForgotPasswordCommand, AppResult<AuthSentCodeResult>>
+{
   public constructor(
     private readonly usersRepository: UsersRepository,
     private readonly userCodeFactory: UserCodeFactory,
     private readonly sentCodeProviderService: SentCodeProviderService,
     private readonly appMailService: AppMailService,
-    private readonly appConfigsService: AppConfigsService,
-  ) { }
+    private readonly appConfigsService: AppConfigsService
+  ) {}
 
   public async execute(
-    command: AuthForgotPasswordCommand,
+    command: AuthForgotPasswordCommand
   ): Promise<AppResult<AuthSentCodeResult>> {
-    const foundUser =
-      await this
-        .usersRepository
-        .getByEmail(
-          command.email
-        );
+    const foundUser = await this.usersRepository.getByEmail(command.email);
 
     if (foundUser === null) {
-      return AppResult
-        .createError(
-          AuthError
-            .emailOrPhoneNotExist(
-              true,
-            ),
-        );
+      throw AppResult.createError(AuthError.emailOrPhoneNotExist(true));
     }
 
-    const resetPasswordCode =
-      await this
-        .userCodeFactory
-        .save(
-          SentCodeEnum.resetPassword,
-          foundUser.email,
-          foundUser._id,
-        );
+    const resetPasswordCode = await this.userCodeFactory.save(
+      SentCodeEnum.resetPassword,
+      foundUser.email,
+      foundUser._id
+    );
 
-    const isEmailSent =
-      await this
-        .appMailService
-        .send(
-          foundUser.email,
-          SentCodeEnum.resetPassword.title,
-          emailTemplates.resetPassword,
-          {
-            name: foundUser.nickName,
-            code: resetPasswordCode.code,
-            url: appUrls.auth.resetPassword + resetPasswordCode.code,
-          },
-        );
+    const isEmailSent = await this.appMailService.send(
+      foundUser.email,
+      SentCodeEnum.resetPassword.title,
+      emailTemplates.resetPassword,
+      {
+        name: foundUser.nickName,
+        code: resetPasswordCode.code,
+        url: appUrls.auth.resetPassword + resetPasswordCode.code,
+      }
+    );
 
     if (!isEmailSent) {
-      return AppResult
-        .createError(
-          AuthError.errorWhileSendingEmail,
-        );
+      throw AppResult.createError(AuthError.errorWhileSendingEmail);
     }
 
-    const obfuscatedSentTo =
-      this
-        .sentCodeProviderService
-        .obfuscateSentTo(
-          foundUser.email,
-        );
+    const obfuscatedSentTo = this.sentCodeProviderService.obfuscateSentTo(
+      foundUser.email
+    );
 
-    const resultData =
-      AuthSentCodeResult
-        .create(
-          this.appConfigsService.isProduction ? null : resetPasswordCode.code,
-          obfuscatedSentTo,
-          resetPasswordCode.expirationDate.getTime(),
-        );
+    const resultData = AuthSentCodeResult.create(
+      this.appConfigsService.isProduction ? null : resetPasswordCode.code,
+      obfuscatedSentTo,
+      resetPasswordCode.expirationDate.getTime()
+    );
 
-    return AppResult
-      .createSuccess<AuthSentCodeResult>(
-        null,
-        null,
-        resultData,
-      );
+    return AppResult.createSuccess<AuthSentCodeResult>(null, null, resultData);
   }
 }

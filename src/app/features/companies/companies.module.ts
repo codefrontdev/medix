@@ -15,11 +15,15 @@ import { UserCompaniesSchema } from './persistence/schemas/user-company.schema';
 import { UserCompaniesRepository } from './persistence/repositories/user-companies.repository';
 import { CompaniesService } from './application/services/companies.service';
 import { UserCompaniesService } from './application/services/user-companies.service';
+import { CategoriesModule } from '../categories/categories.module';
+import { UsersModule } from '../users/users.module';
 
 @Module(
   {
     imports: [
       CqrsModule,
+      CategoriesModule,
+      UsersModule,
       MongooseModule.forFeature(
         [
           {
