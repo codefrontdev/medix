@@ -18,7 +18,7 @@ export class CompaniesGetHandler
     const entity = await this.companiesRepository.getById(query.id);
 
     if (entity === null) {
-      throw AppResult.createError(AppErrors.nullValue('object'));
+      return AppResult.createError(AppErrors.nullValue('object'));
     }
 
     const resultData = CompaniesGetResult.create(
