@@ -80,21 +80,25 @@ export class CompaniesUpsertHandler
     const generateUniqueCompanyNr = async (): Promise<string> => {
       let companyNr: string;
       let isUnique = false;
-
+      
       do {
         companyNr = Math.floor(100000 + Math.random() * 900000).toString();
         const existingCompany =
-          await this.companiesRepository.getByCompanyNr(companyNr);
+        await this.companiesRepository.getByCompanyNr(companyNr);
         isUnique = !existingCompany;
       } while (!isUnique);
 
+      console.log(companyNr);
       return companyNr;
     };
+    
+    
     const companyNr =
-      command.CompanyNr && command.CompanyNr.toString() !== "null" ?
-        command.CompanyNr.toString()
-      : await generateUniqueCompanyNr();
-
+    command.CompanyNr && command.CompanyNr.toString() !== "null" ?
+    command.CompanyNr.toString()
+    : await generateUniqueCompanyNr();
+    
+    console.log(command)
     let entity = await this.companyFactory.save(
       command.id,
       command.nameAr,

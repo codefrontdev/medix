@@ -8280,7 +8280,7 @@ let CompaniesRepository = class CompaniesRepository extends base_repository_1.Ba
         return entity;
     }
     async getByCompanyNr(companyNr) {
-        return this.getByCompanyNr(companyNr);
+        return this.get({ CompanyNr: companyNr });
     }
     async getCompanyByUserId(userId) {
         const entity = await this
@@ -8694,11 +8694,13 @@ let CompaniesUpsertHandler = class CompaniesUpsertHandler {
                 const existingCompany = await this.companiesRepository.getByCompanyNr(companyNr);
                 isUnique = !existingCompany;
             } while (!isUnique);
+            console.log(companyNr);
             return companyNr;
         };
         const companyNr = command.CompanyNr && command.CompanyNr.toString() !== "null" ?
             command.CompanyNr.toString()
             : await generateUniqueCompanyNr();
+        console.log(command);
         let entity = await this.companyFactory.save(command.id, command.nameAr, command.nameEn, command.website, command.address, command.region, command.city, command.registrationNumber, command.ownerType, command.stampedAuthorizationFormUrl, command.registrationExpirationDate, command.creationDate, command.placeOfIssue, command.turnover, command.type, command.activities, command.categoriesIds, command.logoMedia, command.authorizationFileUrl, command.registeringFileUrl, command.contactInfo, command.userId, command.taxInformation, command.deliveryAddress, command.employeesNumber, companyNr, command.itemNr || 0, command.orderNr || 0, command.TenderNr || 0, command.OpportunityNr || 0);
         entity = this.eventPublisher.mergeObjectContext(entity);
         entity.commit();

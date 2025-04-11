@@ -66,7 +66,7 @@ export class CompaniesRepository
     return entity;
   }
   public async getByCompanyNr(companyNr: string): Promise<Company | null> {
-    return this.getByCompanyNr(companyNr);
+    return this.get({ CompanyNr: companyNr });
   }
   public async getCompanyByUserId(
     userId: string
