@@ -28,6 +28,7 @@ export class AppGlobalExceptionFilter implements ExceptionFilter {
 
     const problemDetails = this.getProblemDetails(exception);
     // console.log("problemDetails", exception);
+    console.log("problemDetails", problemDetails);
 
     let statusCode = problemDetails.status || HttpStatus.INTERNAL_SERVER_ERROR;
     let result = null;

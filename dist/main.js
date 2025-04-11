@@ -19964,6 +19964,7 @@ let AppGlobalExceptionFilter = class AppGlobalExceptionFilter {
         const response = context.getResponse();
         const request = context.getRequest();
         const problemDetails = this.getProblemDetails(exception);
+        console.log("problemDetails", problemDetails);
         let statusCode = problemDetails.status || common_1.HttpStatus.INTERNAL_SERVER_ERROR;
         let result = null;
         if (exception instanceof app_result_1.AppResult) {
