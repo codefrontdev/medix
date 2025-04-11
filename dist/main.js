@@ -35,23 +35,23 @@ const categories_module_1 = __webpack_require__(185);
 const database_module_1 = __webpack_require__(206);
 const utils_module_1 = __webpack_require__(138);
 const companies_module_1 = __webpack_require__(207);
-const serve_static_1 = __webpack_require__(243);
+const serve_static_1 = __webpack_require__(244);
 const medias_constants_1 = __webpack_require__(147);
 const miedas_functions_1 = __webpack_require__(148);
-const protected_files_middleware_1 = __webpack_require__(244);
+const protected_files_middleware_1 = __webpack_require__(245);
 const app_logger_module_1 = __webpack_require__(140);
-const requests_logger_middleware_1 = __webpack_require__(245);
+const requests_logger_middleware_1 = __webpack_require__(246);
 const mailer_1 = __webpack_require__(61);
-const handlebars_adapter_1 = __webpack_require__(246);
-const tenders_module_1 = __webpack_require__(247);
-const orders_module_1 = __webpack_require__(311);
-const items_module_1 = __webpack_require__(353);
-const help_module_1 = __webpack_require__(379);
-const notification_module_1 = __webpack_require__(347);
-const transforms_module_1 = __webpack_require__(382);
-const payment_module_1 = __webpack_require__(414);
+const handlebars_adapter_1 = __webpack_require__(247);
+const tenders_module_1 = __webpack_require__(248);
+const orders_module_1 = __webpack_require__(312);
+const items_module_1 = __webpack_require__(354);
+const help_module_1 = __webpack_require__(380);
+const notification_module_1 = __webpack_require__(348);
+const transforms_module_1 = __webpack_require__(383);
+const payment_module_1 = __webpack_require__(415);
 const config_1 = __webpack_require__(8);
-const app_controller_1 = __webpack_require__(418);
+const app_controller_1 = __webpack_require__(419);
 let AppModule = class AppModule {
     configure(consumer) {
     }
@@ -8084,7 +8084,7 @@ const company_schema_factory_1 = __webpack_require__(214);
 const companies_repository_1 = __webpack_require__(210);
 const company_schema_1 = __webpack_require__(211);
 const companies_controller_1 = __webpack_require__(226);
-const companies_getMy_handler_1 = __webpack_require__(242);
+const companies_getMy_handler_1 = __webpack_require__(243);
 const user_company_schema_1 = __webpack_require__(234);
 const user_companies_repository_1 = __webpack_require__(233);
 const companies_service_1 = __webpack_require__(232);
@@ -9117,7 +9117,7 @@ const platform_express_1 = __webpack_require__(174);
 const multer_config_1 = __webpack_require__(237);
 const s3_upload_service_1 = __webpack_require__(239);
 const mongo_functions_1 = __webpack_require__(29);
-const admin_companies_upsert_request_1 = __webpack_require__(423);
+const admin_companies_upsert_request_1 = __webpack_require__(242);
 let CompaniesController = class CompaniesController {
     constructor(companiesService, userCompaniesService, queryBus, commandBus) {
         this.companiesService = companiesService;
@@ -9936,6 +9936,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AdminCompaniesUpsertRequest = void 0;
+const class_validator_1 = __webpack_require__(55);
+const companies_upsert_request_1 = __webpack_require__(227);
+class AdminCompaniesUpsertRequest extends companies_upsert_request_1.CompaniesUpsertRequest {
+}
+exports.AdminCompaniesUpsertRequest = AdminCompaniesUpsertRequest;
+__decorate([
+    (0, class_validator_1.IsMongoId)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], AdminCompaniesUpsertRequest.prototype, "userId", void 0);
+
+
+/***/ }),
+/* 243 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CompaniesGetMyHandler = void 0;
@@ -9966,13 +9994,13 @@ exports.CompaniesGetMyHandler = CompaniesGetMyHandler = __decorate([
 
 
 /***/ }),
-/* 243 */
+/* 244 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/serve-static");
 
 /***/ }),
-/* 244 */
+/* 245 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10024,7 +10052,7 @@ exports.ProtectedFilesMiddleware = ProtectedFilesMiddleware = __decorate([
 
 
 /***/ }),
-/* 245 */
+/* 246 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10061,13 +10089,13 @@ exports.RequestsLoggerMiddleware = RequestsLoggerMiddleware = __decorate([
 
 
 /***/ }),
-/* 246 */
+/* 247 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs-modules/mailer/dist/adapters/handlebars.adapter");
 
 /***/ }),
-/* 247 */
+/* 248 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10082,32 +10110,32 @@ exports.TendersModule = void 0;
 const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
-const tender_factory_1 = __webpack_require__(248);
-const tenders_repository_1 = __webpack_require__(253);
-const tender_schema_1 = __webpack_require__(254);
-const tender_schema_factory_1 = __webpack_require__(256);
-const tenders_controller_1 = __webpack_require__(257);
-const tenders_upsert_handler_1 = __webpack_require__(279);
-const tenders_delete_handler_1 = __webpack_require__(281);
-const tender_quotations_controller_1 = __webpack_require__(282);
-const tender_quotation_schema_1 = __webpack_require__(273);
-const tenders_get_handler_1 = __webpack_require__(295);
-const tenders_get_all_handler_1 = __webpack_require__(296);
-const tender_quotations_delete_handler_1 = __webpack_require__(298);
-const tender_quotations_upsert_handler_1 = __webpack_require__(299);
-const tender_quotation_factory_1 = __webpack_require__(301);
-const tender_quotations_get_handler_1 = __webpack_require__(302);
-const tender_quotations_get_all_handler_1 = __webpack_require__(303);
-const tender_quotation_schema_factory_1 = __webpack_require__(277);
-const tender_quotations_repository_1 = __webpack_require__(272);
-const tenders_change_status_handler_1 = __webpack_require__(306);
-const tender_update_status_handler_1 = __webpack_require__(308);
-const tender_quotations_update_status_handler_1 = __webpack_require__(309);
-const getCompanyById_1 = __webpack_require__(269);
+const tender_factory_1 = __webpack_require__(249);
+const tenders_repository_1 = __webpack_require__(254);
+const tender_schema_1 = __webpack_require__(255);
+const tender_schema_factory_1 = __webpack_require__(257);
+const tenders_controller_1 = __webpack_require__(258);
+const tenders_upsert_handler_1 = __webpack_require__(280);
+const tenders_delete_handler_1 = __webpack_require__(282);
+const tender_quotations_controller_1 = __webpack_require__(283);
+const tender_quotation_schema_1 = __webpack_require__(274);
+const tenders_get_handler_1 = __webpack_require__(296);
+const tenders_get_all_handler_1 = __webpack_require__(297);
+const tender_quotations_delete_handler_1 = __webpack_require__(299);
+const tender_quotations_upsert_handler_1 = __webpack_require__(300);
+const tender_quotation_factory_1 = __webpack_require__(302);
+const tender_quotations_get_handler_1 = __webpack_require__(303);
+const tender_quotations_get_all_handler_1 = __webpack_require__(304);
+const tender_quotation_schema_factory_1 = __webpack_require__(278);
+const tender_quotations_repository_1 = __webpack_require__(273);
+const tenders_change_status_handler_1 = __webpack_require__(307);
+const tender_update_status_handler_1 = __webpack_require__(309);
+const tender_quotations_update_status_handler_1 = __webpack_require__(310);
+const getCompanyById_1 = __webpack_require__(270);
 const companies_module_1 = __webpack_require__(207);
-const tenders_cron_service_1 = __webpack_require__(270);
-const schedule_1 = __webpack_require__(271);
-const tender_quotations_get_allj2_handler_1 = __webpack_require__(310);
+const tenders_cron_service_1 = __webpack_require__(271);
+const schedule_1 = __webpack_require__(272);
+const tender_quotations_get_allj2_handler_1 = __webpack_require__(311);
 let TendersModule = class TendersModule {
 };
 exports.TendersModule = TendersModule;
@@ -10164,7 +10192,7 @@ exports.TendersModule = TendersModule = __decorate([
 
 
 /***/ }),
-/* 248 */
+/* 249 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10181,8 +10209,8 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderFactory = void 0;
 const common_1 = __webpack_require__(3);
-const tender_1 = __webpack_require__(249);
-const tenders_repository_1 = __webpack_require__(253);
+const tender_1 = __webpack_require__(250);
+const tenders_repository_1 = __webpack_require__(254);
 const mongo_functions_1 = __webpack_require__(29);
 let TenderFactory = class TenderFactory {
     constructor(tendersRepository) {
@@ -10236,7 +10264,7 @@ exports.TenderFactory = TenderFactory = __decorate([
 
 
 /***/ }),
-/* 249 */
+/* 250 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -10244,9 +10272,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Tender = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const receive_documents_type_enum_1 = __webpack_require__(250);
-const tender_status_enum_1 = __webpack_require__(251);
-const Paylater_type_enum_1 = __webpack_require__(252);
+const receive_documents_type_enum_1 = __webpack_require__(251);
+const tender_status_enum_1 = __webpack_require__(252);
+const Paylater_type_enum_1 = __webpack_require__(253);
 class Tender extends cqrs_1.AggregateRoot {
     constructor(_id, title, minValue, value, endDate, deliverDate, type, status = tender_status_enum_1.TenderStatusEnum.PLANING, categoriesIds = [], categories = [], region, city, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired = false, attachmentDeliverDays, receiveDocumentsType = receive_documents_type_enum_1.ReceiveDocumentsTypeEnum.BOTH, Paylater = Paylater_type_enum_1.PaylaterTypeEnum.NO, contactInfo, companyId = '', userId = '', products = [], TenderNr = 1000, displayOrder = 0, isVisible = true, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -10294,7 +10322,7 @@ exports.Tender = Tender;
 
 
 /***/ }),
-/* 250 */
+/* 251 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10308,7 +10336,7 @@ var ReceiveDocumentsTypeEnum;
 
 
 /***/ }),
-/* 251 */
+/* 252 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10331,7 +10359,7 @@ var TenderStatusEnum;
 
 
 /***/ }),
-/* 252 */
+/* 253 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10345,7 +10373,7 @@ var PaylaterTypeEnum;
 
 
 /***/ }),
-/* 253 */
+/* 254 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10368,8 +10396,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const tender_schema_1 = __webpack_require__(254);
-const tender_schema_factory_1 = __webpack_require__(256);
+const tender_schema_1 = __webpack_require__(255);
+const tender_schema_factory_1 = __webpack_require__(257);
 let TendersRepository = class TendersRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -10392,7 +10420,7 @@ exports.TendersRepository = TendersRepository = __decorate([
 
 
 /***/ }),
-/* 254 */
+/* 255 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10415,12 +10443,12 @@ const base_with_Info_schema_1 = __webpack_require__(37);
 const schemas_names_1 = __webpack_require__(34);
 const media_schema_1 = __webpack_require__(170);
 const category_schema_1 = __webpack_require__(186);
-const tender_type_enum_1 = __webpack_require__(255);
-const tender_status_enum_1 = __webpack_require__(251);
-const receive_documents_type_enum_1 = __webpack_require__(250);
+const tender_type_enum_1 = __webpack_require__(256);
+const tender_status_enum_1 = __webpack_require__(252);
+const receive_documents_type_enum_1 = __webpack_require__(251);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
-const Paylater_type_enum_1 = __webpack_require__(252);
+const Paylater_type_enum_1 = __webpack_require__(253);
 let TenderSchema = class TenderSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.TenderSchema = TenderSchema;
@@ -10616,7 +10644,7 @@ exports.CreatedTenderSchema
 
 
 /***/ }),
-/* 255 */
+/* 256 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -10630,7 +10658,7 @@ var TenderTypeEnum;
 
 
 /***/ }),
-/* 256 */
+/* 257 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10643,7 +10671,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const tender_1 = __webpack_require__(249);
+const tender_1 = __webpack_require__(250);
 const mongo_functions_1 = __webpack_require__(29);
 let TenderSchemaFactory = class TenderSchemaFactory {
     create(entity) {
@@ -10696,7 +10724,7 @@ exports.TenderSchemaFactory = TenderSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 257 */
+/* 258 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -10719,21 +10747,21 @@ const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const roles_guard_1 = __webpack_require__(85);
 const cqrs_1 = __webpack_require__(41);
-const tenders_get_all_response_1 = __webpack_require__(258);
-const tenders_upsert_request_1 = __webpack_require__(259);
-const tenders_get_request_1 = __webpack_require__(260);
-const tenders_get_all_request_1 = __webpack_require__(261);
-const tenders_delete_request_1 = __webpack_require__(262);
-const tenders_get_query_1 = __webpack_require__(263);
-const tenders_get_all_query_1 = __webpack_require__(264);
-const tenders_upsert_command_1 = __webpack_require__(265);
-const tenders_delete_command_1 = __webpack_require__(266);
-const tenders_change_status_command_1 = __webpack_require__(267);
-const tenders_change_status_request_1 = __webpack_require__(268);
+const tenders_get_all_response_1 = __webpack_require__(259);
+const tenders_upsert_request_1 = __webpack_require__(260);
+const tenders_get_request_1 = __webpack_require__(261);
+const tenders_get_all_request_1 = __webpack_require__(262);
+const tenders_delete_request_1 = __webpack_require__(263);
+const tenders_get_query_1 = __webpack_require__(264);
+const tenders_get_all_query_1 = __webpack_require__(265);
+const tenders_upsert_command_1 = __webpack_require__(266);
+const tenders_delete_command_1 = __webpack_require__(267);
+const tenders_change_status_command_1 = __webpack_require__(268);
+const tenders_change_status_request_1 = __webpack_require__(269);
 const app_response_1 = __webpack_require__(87);
-const tender_status_enum_1 = __webpack_require__(251);
-const getCompanyById_1 = __webpack_require__(269);
-const tenders_cron_service_1 = __webpack_require__(270);
+const tender_status_enum_1 = __webpack_require__(252);
+const getCompanyById_1 = __webpack_require__(270);
+const tenders_cron_service_1 = __webpack_require__(271);
 let TendersController = class TendersController {
     constructor(queryBus, commandBus, companyService, tendersCronService) {
         this.queryBus = queryBus;
@@ -10967,14 +10995,14 @@ exports.TendersController = TendersController = __decorate([
 
 
 /***/ }),
-/* 258 */
+/* 259 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersGetAllResponse = void 0;
-const Paylater_type_enum_1 = __webpack_require__(252);
-const receive_documents_type_enum_1 = __webpack_require__(250);
+const Paylater_type_enum_1 = __webpack_require__(253);
+const receive_documents_type_enum_1 = __webpack_require__(251);
 class TendersGetAllResponse {
     constructor(id, title, minValue, value, endDate, deliverDate, type, status, categoriesIds = [], categories = [], region, city, attachmentRequired = false, receiveDocumentsType = receive_documents_type_enum_1.ReceiveDocumentsTypeEnum.BOTH, Paylater = Paylater_type_enum_1.PaylaterTypeEnum.NO, companyId = '', userId = '', TenderNr, company) {
         this.id = id;
@@ -11005,7 +11033,7 @@ exports.TendersGetAllResponse = TendersGetAllResponse;
 
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11023,10 +11051,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersUpsertRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
 const class_transformer_1 = __webpack_require__(72);
-const tender_type_enum_1 = __webpack_require__(255);
-const tender_status_enum_1 = __webpack_require__(251);
-const receive_documents_type_enum_1 = __webpack_require__(250);
-const Paylater_type_enum_1 = __webpack_require__(252);
+const tender_type_enum_1 = __webpack_require__(256);
+const tender_status_enum_1 = __webpack_require__(252);
+const receive_documents_type_enum_1 = __webpack_require__(251);
+const Paylater_type_enum_1 = __webpack_require__(253);
 class Product {
 }
 __decorate([
@@ -11175,7 +11203,7 @@ __decorate([
 
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11201,7 +11229,7 @@ __decorate([
 
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11221,8 +11249,8 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const tender_status_enum_1 = __webpack_require__(251);
-const tender_type_enum_1 = __webpack_require__(255);
+const tender_status_enum_1 = __webpack_require__(252);
+const tender_type_enum_1 = __webpack_require__(256);
 class TendersGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -11268,7 +11296,7 @@ __decorate([
 
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11294,7 +11322,7 @@ __decorate([
 
 
 /***/ }),
-/* 263 */
+/* 264 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11309,7 +11337,7 @@ exports.TendersGetQuery = TendersGetQuery;
 
 
 /***/ }),
-/* 264 */
+/* 265 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11332,7 +11360,7 @@ exports.TendersGetAllQuery = TendersGetAllQuery;
 
 
 /***/ }),
-/* 265 */
+/* 266 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11372,7 +11400,7 @@ exports.TendersUpsertCommand = TendersUpsertCommand;
 
 
 /***/ }),
-/* 266 */
+/* 267 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11388,7 +11416,7 @@ exports.TendersDeleteCommand = TendersDeleteCommand;
 
 
 /***/ }),
-/* 267 */
+/* 268 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11406,7 +11434,7 @@ exports.TendersChangeStatusCommand = TendersChangeStatusCommand;
 
 
 /***/ }),
-/* 268 */
+/* 269 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11423,7 +11451,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const tender_status_enum_1 = __webpack_require__(251);
+const tender_status_enum_1 = __webpack_require__(252);
 class TendersChangeStatusRequest {
 }
 exports.TendersChangeStatusRequest = TendersChangeStatusRequest;
@@ -11445,7 +11473,7 @@ __decorate([
 
 
 /***/ }),
-/* 269 */
+/* 270 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11479,7 +11507,7 @@ exports.CompanyService = CompanyService = __decorate([
 
 
 /***/ }),
-/* 270 */
+/* 271 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11497,10 +11525,10 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersCronService = void 0;
 const common_1 = __webpack_require__(3);
-const schedule_1 = __webpack_require__(271);
-const tenders_repository_1 = __webpack_require__(253);
-const tender_status_enum_1 = __webpack_require__(251);
-const tender_quotations_repository_1 = __webpack_require__(272);
+const schedule_1 = __webpack_require__(272);
+const tenders_repository_1 = __webpack_require__(254);
+const tender_status_enum_1 = __webpack_require__(252);
+const tender_quotations_repository_1 = __webpack_require__(273);
 const mongo_functions_1 = __webpack_require__(29);
 let TendersCronService = TendersCronService_1 = class TendersCronService {
     constructor(tendersRepository, tenderQuotationsRepository) {
@@ -11555,13 +11583,13 @@ exports.TendersCronService = TendersCronService = TendersCronService_1 = __decor
 
 
 /***/ }),
-/* 271 */
+/* 272 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/schedule");
 
 /***/ }),
-/* 272 */
+/* 273 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11584,8 +11612,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const tender_quotation_schema_1 = __webpack_require__(273);
-const tender_quotation_schema_factory_1 = __webpack_require__(277);
+const tender_quotation_schema_1 = __webpack_require__(274);
+const tender_quotation_schema_factory_1 = __webpack_require__(278);
 let TenderQuotationsRepository = class TenderQuotationsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -11602,7 +11630,7 @@ exports.TenderQuotationsRepository = TenderQuotationsRepository = __decorate([
 
 
 /***/ }),
-/* 273 */
+/* 274 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11625,9 +11653,9 @@ const base_with_Info_schema_1 = __webpack_require__(37);
 const schemas_names_1 = __webpack_require__(34);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
-const tender_quotation_status_enum_1 = __webpack_require__(274);
-const tender_schema_1 = __webpack_require__(254);
-const item_schema_1 = __webpack_require__(275);
+const tender_quotation_status_enum_1 = __webpack_require__(275);
+const tender_schema_1 = __webpack_require__(255);
+const item_schema_1 = __webpack_require__(276);
 let TenderQuotationSchema = class TenderQuotationSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.TenderQuotationSchema = TenderQuotationSchema;
@@ -11733,7 +11761,7 @@ exports.CreatedTenderQuotationSchema
 
 
 /***/ }),
-/* 274 */
+/* 275 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11748,7 +11776,7 @@ var TenderQuotationStatusEnum;
 
 
 /***/ }),
-/* 275 */
+/* 276 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11768,7 +11796,7 @@ const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const mongodb_1 = __webpack_require__(30);
 const schemas_names_1 = __webpack_require__(34);
-const item_status_enum_1 = __webpack_require__(276);
+const item_status_enum_1 = __webpack_require__(277);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
 const base_with_Info_schema_1 = __webpack_require__(37);
@@ -11927,7 +11955,7 @@ exports.CreatedItemSchema.set("toObject", { virtuals: true });
 
 
 /***/ }),
-/* 276 */
+/* 277 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11942,7 +11970,7 @@ var ItemStatusEnum;
 
 
 /***/ }),
-/* 277 */
+/* 278 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -11956,7 +11984,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
 const mongo_functions_1 = __webpack_require__(29);
-const tender_quotation_1 = __webpack_require__(278);
+const tender_quotation_1 = __webpack_require__(279);
 let TenderQuotationSchemaFactory = class TenderQuotationSchemaFactory {
     create(entity) {
         return {
@@ -11994,7 +12022,7 @@ exports.TenderQuotationSchemaFactory = TenderQuotationSchemaFactory = __decorate
 
 
 /***/ }),
-/* 278 */
+/* 279 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -12002,7 +12030,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotation = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const tender_quotation_status_enum_1 = __webpack_require__(274);
+const tender_quotation_status_enum_1 = __webpack_require__(275);
 class TenderQuotation extends cqrs_1.AggregateRoot {
     constructor(_id, products = [], paymentMethod, DeadLineDate, DeliveryMethod, contactMethod, deliverDays, status = tender_quotation_status_enum_1.TenderQuotationStatusEnum.PENDING, tenderId = '', companyId = '', company, userId = '', OpportunityNr = 0, displayOrder = 0, isVisible = true, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -12036,7 +12064,7 @@ exports.TenderQuotation = TenderQuotation;
 
 
 /***/ }),
-/* 279 */
+/* 280 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12053,12 +12081,12 @@ var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const tenders_upsert_command_1 = __webpack_require__(265);
+const tenders_upsert_command_1 = __webpack_require__(266);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tenders_repository_1 = __webpack_require__(253);
-const tender_factory_1 = __webpack_require__(248);
-const tenders_get_result_1 = __webpack_require__(280);
+const tenders_repository_1 = __webpack_require__(254);
+const tender_factory_1 = __webpack_require__(249);
+const tenders_get_result_1 = __webpack_require__(281);
 const companies_repository_1 = __webpack_require__(210);
 let TendersUpsertHandler = class TendersUpsertHandler {
     constructor(tendersRepository, tenderFactory, eventPublisher, companiesRepository) {
@@ -12112,14 +12140,14 @@ exports.TendersUpsertHandler = TendersUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 280 */
+/* 281 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersGetResult = void 0;
-const Paylater_type_enum_1 = __webpack_require__(252);
-const receive_documents_type_enum_1 = __webpack_require__(250);
+const Paylater_type_enum_1 = __webpack_require__(253);
+const receive_documents_type_enum_1 = __webpack_require__(251);
 class TendersGetResult {
     constructor(id, title, minValue, value, endDate, deliverDate, type, status, categoriesIds = [], categories = [], region, city, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired = false, attachmentDeliverDays, receiveDocumentsType = receive_documents_type_enum_1.ReceiveDocumentsTypeEnum.BOTH, Paylater = Paylater_type_enum_1.PaylaterTypeEnum.NO, contactInfo, companyId = '', userId = '', products = [], TenderNr = 0) {
         this.id = id;
@@ -12158,7 +12186,7 @@ exports.TendersGetResult = TendersGetResult;
 
 
 /***/ }),
-/* 281 */
+/* 282 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12175,10 +12203,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const tenders_delete_command_1 = __webpack_require__(266);
+const tenders_delete_command_1 = __webpack_require__(267);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tenders_repository_1 = __webpack_require__(253);
+const tenders_repository_1 = __webpack_require__(254);
 let TendersDeleteHandler = class TendersDeleteHandler {
     constructor(tendersRepository) {
         this.tendersRepository = tendersRepository;
@@ -12215,7 +12243,7 @@ exports.TendersDeleteHandler = TendersDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 282 */
+/* 283 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12238,23 +12266,23 @@ const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const roles_guard_1 = __webpack_require__(85);
 const cqrs_1 = __webpack_require__(41);
-const tender_quotations_delete_request_1 = __webpack_require__(283);
-const tender_quotations_get_request_1 = __webpack_require__(284);
-const tender_quotations_get_all_response_1 = __webpack_require__(285);
-const tender_quotations_get_all_query_1 = __webpack_require__(286);
-const tender_quotations_get_all_request_1 = __webpack_require__(287);
-const tender_quotations_get_query_1 = __webpack_require__(288);
-const tender_quotations_delete_command_1 = __webpack_require__(289);
-const tender_quotations_upsert_command_1 = __webpack_require__(290);
-const tender_quotations_upsert_request_1 = __webpack_require__(291);
+const tender_quotations_delete_request_1 = __webpack_require__(284);
+const tender_quotations_get_request_1 = __webpack_require__(285);
+const tender_quotations_get_all_response_1 = __webpack_require__(286);
+const tender_quotations_get_all_query_1 = __webpack_require__(287);
+const tender_quotations_get_all_request_1 = __webpack_require__(288);
+const tender_quotations_get_query_1 = __webpack_require__(289);
+const tender_quotations_delete_command_1 = __webpack_require__(290);
+const tender_quotations_upsert_command_1 = __webpack_require__(291);
+const tender_quotations_upsert_request_1 = __webpack_require__(292);
 const app_response_1 = __webpack_require__(87);
-const tenders_get_all_query_1 = __webpack_require__(264);
-const tender_status_enum_1 = __webpack_require__(251);
-const tenders_get_query_1 = __webpack_require__(263);
-const tenders_update_status_query_1 = __webpack_require__(292);
-const tenders_quatation_update_status_query_1 = __webpack_require__(293);
+const tenders_get_all_query_1 = __webpack_require__(265);
+const tender_status_enum_1 = __webpack_require__(252);
+const tenders_get_query_1 = __webpack_require__(264);
+const tenders_update_status_query_1 = __webpack_require__(293);
+const tenders_quatation_update_status_query_1 = __webpack_require__(294);
 const companies_repository_1 = __webpack_require__(210);
-const tender_quotations_get_all_J2_query_1 = __webpack_require__(294);
+const tender_quotations_get_all_J2_query_1 = __webpack_require__(295);
 let TenderQuotationsController = class TenderQuotationsController {
     constructor(queryBus, commandBus, companiesRepository) {
         this.queryBus = queryBus;
@@ -12789,7 +12817,7 @@ exports.TenderQuotationsController = TenderQuotationsController = __decorate([
 
 
 /***/ }),
-/* 283 */
+/* 284 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12815,7 +12843,7 @@ __decorate([
 
 
 /***/ }),
-/* 284 */
+/* 285 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12841,7 +12869,7 @@ __decorate([
 
 
 /***/ }),
-/* 285 */
+/* 286 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12871,7 +12899,7 @@ exports.TenderQuotationsGetAllResponse = TenderQuotationsGetAllResponse;
 
 
 /***/ }),
-/* 286 */
+/* 287 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12891,7 +12919,7 @@ exports.TenderQuotationsGetAllQuery = TenderQuotationsGetAllQuery;
 
 
 /***/ }),
-/* 287 */
+/* 288 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -12911,7 +12939,7 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const tender_quotation_status_enum_1 = __webpack_require__(274);
+const tender_quotation_status_enum_1 = __webpack_require__(275);
 class TenderQuotationsGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -12936,7 +12964,7 @@ __decorate([
 
 
 /***/ }),
-/* 288 */
+/* 289 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12951,7 +12979,7 @@ exports.TenderQuotationsGetQuery = TenderQuotationsGetQuery;
 
 
 /***/ }),
-/* 289 */
+/* 290 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12967,7 +12995,7 @@ exports.TenderQuotationsDeleteCommand = TenderQuotationsDeleteCommand;
 
 
 /***/ }),
-/* 290 */
+/* 291 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12993,7 +13021,7 @@ exports.TenderQuotationsUpsertCommand = TenderQuotationsUpsertCommand;
 
 
 /***/ }),
-/* 291 */
+/* 292 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13011,7 +13039,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsUpsertRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
 const class_transformer_1 = __webpack_require__(72);
-const tender_quotation_status_enum_1 = __webpack_require__(274);
+const tender_quotation_status_enum_1 = __webpack_require__(275);
 class Product {
 }
 __decorate([
@@ -13107,7 +13135,7 @@ __decorate([
 
 
 /***/ }),
-/* 292 */
+/* 293 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13124,7 +13152,7 @@ exports.TendersUpdateStatusCommand = TendersUpdateStatusCommand;
 
 
 /***/ }),
-/* 293 */
+/* 294 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13141,7 +13169,7 @@ exports.TenderQuotationsUpdateStatusCommand = TenderQuotationsUpdateStatusComman
 
 
 /***/ }),
-/* 294 */
+/* 295 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13162,7 +13190,7 @@ exports.TenderQuotationsGetAllQueryj2 = TenderQuotationsGetAllQueryj2;
 
 
 /***/ }),
-/* 295 */
+/* 296 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13181,9 +13209,9 @@ exports.TendersGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tenders_get_query_1 = __webpack_require__(263);
-const tenders_get_result_1 = __webpack_require__(280);
-const tenders_repository_1 = __webpack_require__(253);
+const tenders_get_query_1 = __webpack_require__(264);
+const tenders_get_result_1 = __webpack_require__(281);
+const tenders_repository_1 = __webpack_require__(254);
 let TendersGetHandler = class TendersGetHandler {
     constructor(tendersRepository) {
         this.tendersRepository = tendersRepository;
@@ -13217,7 +13245,7 @@ exports.TendersGetHandler = TendersGetHandler = __decorate([
 
 
 /***/ }),
-/* 296 */
+/* 297 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13235,11 +13263,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tenders_get_all_query_1 = __webpack_require__(264);
+const tenders_get_all_query_1 = __webpack_require__(265);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const tenders_get_all_result_1 = __webpack_require__(297);
-const tenders_repository_1 = __webpack_require__(253);
+const tenders_get_all_result_1 = __webpack_require__(298);
+const tenders_repository_1 = __webpack_require__(254);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
 let TendersGetAllHandler = class TendersGetAllHandler {
@@ -13303,14 +13331,14 @@ exports.TendersGetAllHandler = TendersGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 297 */
+/* 298 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersGetAllResult = void 0;
-const Paylater_type_enum_1 = __webpack_require__(252);
-const receive_documents_type_enum_1 = __webpack_require__(250);
+const Paylater_type_enum_1 = __webpack_require__(253);
+const receive_documents_type_enum_1 = __webpack_require__(251);
 class TendersGetAllResult {
     constructor(id, title, minValue, value, endDate, deliverDate, type, status, categoriesIds = [], categories = [], region, city, attachmentRequired = false, receiveDocumentsType = receive_documents_type_enum_1.ReceiveDocumentsTypeEnum.BOTH, Paylater = Paylater_type_enum_1.PaylaterTypeEnum.NO, companyId = '', userId = '', TenderNr) {
         this.id = id;
@@ -13340,7 +13368,7 @@ exports.TendersGetAllResult = TendersGetAllResult;
 
 
 /***/ }),
-/* 298 */
+/* 299 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13359,8 +13387,8 @@ exports.TenderQuotationsDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tender_quotations_repository_1 = __webpack_require__(272);
-const tender_quotations_delete_command_1 = __webpack_require__(289);
+const tender_quotations_repository_1 = __webpack_require__(273);
+const tender_quotations_delete_command_1 = __webpack_require__(290);
 let TenderQuotationsDeleteHandler = class TenderQuotationsDeleteHandler {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13397,7 +13425,7 @@ exports.TenderQuotationsDeleteHandler = TenderQuotationsDeleteHandler = __decora
 
 
 /***/ }),
-/* 299 */
+/* 300 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13415,10 +13443,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tender_quotations_get_result_1 = __webpack_require__(300);
-const tender_quotations_upsert_command_1 = __webpack_require__(290);
-const tender_quotations_repository_1 = __webpack_require__(272);
-const tender_quotation_factory_1 = __webpack_require__(301);
+const tender_quotations_get_result_1 = __webpack_require__(301);
+const tender_quotations_upsert_command_1 = __webpack_require__(291);
+const tender_quotations_repository_1 = __webpack_require__(273);
+const tender_quotation_factory_1 = __webpack_require__(302);
 const app_errors_1 = __webpack_require__(102);
 const companies_repository_1 = __webpack_require__(210);
 let TenderQuotationsUpsertHandler = class TenderQuotationsUpsertHandler {
@@ -13458,7 +13486,7 @@ exports.TenderQuotationsUpsertHandler = TenderQuotationsUpsertHandler = __decora
 
 
 /***/ }),
-/* 300 */
+/* 301 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13487,7 +13515,7 @@ exports.TenderQuotationsGetResult = TenderQuotationsGetResult;
 
 
 /***/ }),
-/* 301 */
+/* 302 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13505,9 +13533,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationFactory = void 0;
 const common_1 = __webpack_require__(3);
 const mongo_functions_1 = __webpack_require__(29);
-const tender_quotation_1 = __webpack_require__(278);
-const tender_quotations_repository_1 = __webpack_require__(272);
-const tender_quotation_status_enum_1 = __webpack_require__(274);
+const tender_quotation_1 = __webpack_require__(279);
+const tender_quotations_repository_1 = __webpack_require__(273);
+const tender_quotation_status_enum_1 = __webpack_require__(275);
 let TenderQuotationFactory = class TenderQuotationFactory {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13553,7 +13581,7 @@ exports.TenderQuotationFactory = TenderQuotationFactory = __decorate([
 
 
 /***/ }),
-/* 302 */
+/* 303 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13571,10 +13599,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tender_quotations_get_query_1 = __webpack_require__(288);
+const tender_quotations_get_query_1 = __webpack_require__(289);
 const app_errors_1 = __webpack_require__(102);
-const tender_quotations_repository_1 = __webpack_require__(272);
-const tender_quotations_get_result_1 = __webpack_require__(300);
+const tender_quotations_repository_1 = __webpack_require__(273);
+const tender_quotations_get_result_1 = __webpack_require__(301);
 let TenderQuotationsGetHandler = class TenderQuotationsGetHandler {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13601,7 +13629,7 @@ exports.TenderQuotationsGetHandler = TenderQuotationsGetHandler = __decorate([
 
 
 /***/ }),
-/* 303 */
+/* 304 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13619,13 +13647,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tender_quotations_get_all_query_1 = __webpack_require__(286);
+const tender_quotations_get_all_query_1 = __webpack_require__(287);
 const mongo_functions_1 = __webpack_require__(29);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
-const tender_quotations_repository_1 = __webpack_require__(272);
-const tender_quotations_get_all_result_1 = __webpack_require__(304);
-const companies_result_1 = __webpack_require__(305);
+const tender_quotations_repository_1 = __webpack_require__(273);
+const tender_quotations_get_all_result_1 = __webpack_require__(305);
+const companies_result_1 = __webpack_require__(306);
 let TenderQuotationsGetAllHandler = class TenderQuotationsGetAllHandler {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13677,7 +13705,7 @@ exports.TenderQuotationsGetAllHandler = TenderQuotationsGetAllHandler = __decora
 
 
 /***/ }),
-/* 304 */
+/* 305 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13707,7 +13735,7 @@ exports.TenderQuotationsGetAllResult = TenderQuotationsGetAllResult;
 
 
 /***/ }),
-/* 305 */
+/* 306 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13731,7 +13759,7 @@ exports.CompaniesResult = CompaniesResult;
 
 
 /***/ }),
-/* 306 */
+/* 307 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13748,17 +13776,17 @@ var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const tenders_change_status_command_1 = __webpack_require__(267);
+const tenders_change_status_command_1 = __webpack_require__(268);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const tenders_repository_1 = __webpack_require__(253);
-const tender_factory_1 = __webpack_require__(248);
-const tenders_get_result_1 = __webpack_require__(280);
-const tender_quotations_repository_1 = __webpack_require__(272);
-const tender_quotation_factory_1 = __webpack_require__(301);
-const tender_status_enum_1 = __webpack_require__(251);
-const tender_quotation_status_enum_1 = __webpack_require__(274);
-const tenders_error_1 = __webpack_require__(307);
+const tenders_repository_1 = __webpack_require__(254);
+const tender_factory_1 = __webpack_require__(249);
+const tenders_get_result_1 = __webpack_require__(281);
+const tender_quotations_repository_1 = __webpack_require__(273);
+const tender_quotation_factory_1 = __webpack_require__(302);
+const tender_status_enum_1 = __webpack_require__(252);
+const tender_quotation_status_enum_1 = __webpack_require__(275);
+const tenders_error_1 = __webpack_require__(308);
 let TendersChangeStatusHandler = class TendersChangeStatusHandler {
     constructor(tendersRepository, tenderQuotationsRepository, tenderFactory, tenderQuotationFactory, eventPublisher) {
         this.tendersRepository = tendersRepository;
@@ -13826,7 +13854,7 @@ exports.TendersChangeStatusHandler = TendersChangeStatusHandler = __decorate([
 
 
 /***/ }),
-/* 307 */
+/* 308 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -13848,7 +13876,7 @@ exports.TendersError = TendersError;
 
 
 /***/ }),
-/* 308 */
+/* 309 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13866,8 +13894,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TendersUpdateStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tenders_update_status_query_1 = __webpack_require__(292);
-const tenders_repository_1 = __webpack_require__(253);
+const tenders_update_status_query_1 = __webpack_require__(293);
+const tenders_repository_1 = __webpack_require__(254);
 let TendersUpdateStatusHandler = class TendersUpdateStatusHandler {
     constructor(tenderRepository) {
         this.tenderRepository = tenderRepository;
@@ -13893,7 +13921,7 @@ exports.TendersUpdateStatusHandler = TendersUpdateStatusHandler = __decorate([
 
 
 /***/ }),
-/* 309 */
+/* 310 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13911,8 +13939,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TenderQuotationsUpdateStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const tenders_quatation_update_status_query_1 = __webpack_require__(293);
-const tender_quotations_repository_1 = __webpack_require__(272);
+const tenders_quatation_update_status_query_1 = __webpack_require__(294);
+const tender_quotations_repository_1 = __webpack_require__(273);
 let TenderQuotationsUpdateStatusHandler = class TenderQuotationsUpdateStatusHandler {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -13938,7 +13966,7 @@ exports.TenderQuotationsUpdateStatusHandler = TenderQuotationsUpdateStatusHandle
 
 
 /***/ }),
-/* 310 */
+/* 311 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -13959,10 +13987,10 @@ const app_result_1 = __webpack_require__(27);
 const mongo_functions_1 = __webpack_require__(29);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
-const tender_quotations_repository_1 = __webpack_require__(272);
-const tender_quotations_get_all_result_1 = __webpack_require__(304);
-const companies_result_1 = __webpack_require__(305);
-const tender_quotations_get_all_J2_query_1 = __webpack_require__(294);
+const tender_quotations_repository_1 = __webpack_require__(273);
+const tender_quotations_get_all_result_1 = __webpack_require__(305);
+const companies_result_1 = __webpack_require__(306);
+const tender_quotations_get_all_J2_query_1 = __webpack_require__(295);
 let TenderQuotationsGetAllHandlerj2 = class TenderQuotationsGetAllHandlerj2 {
     constructor(tenderQuotationsRepository) {
         this.tenderQuotationsRepository = tenderQuotationsRepository;
@@ -14014,7 +14042,7 @@ exports.TenderQuotationsGetAllHandlerj2 = TenderQuotationsGetAllHandlerj2 = __de
 
 
 /***/ }),
-/* 311 */
+/* 312 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14029,20 +14057,20 @@ exports.OrdersModule = void 0;
 const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
-const order_factory_1 = __webpack_require__(312);
-const orders_repository_1 = __webpack_require__(315);
-const order_schema_1 = __webpack_require__(316);
-const order_schema_factory_1 = __webpack_require__(318);
-const orders_controller_1 = __webpack_require__(319);
-const tenders_upsert_handler_1 = __webpack_require__(339);
-const orders_delete_handler_1 = __webpack_require__(341);
-const orders_get_handler_1 = __webpack_require__(342);
-const orders_get_all_handler_1 = __webpack_require__(343);
-const orders_change_status_handler_1 = __webpack_require__(345);
-const tenders_module_1 = __webpack_require__(247);
+const order_factory_1 = __webpack_require__(313);
+const orders_repository_1 = __webpack_require__(316);
+const order_schema_1 = __webpack_require__(317);
+const order_schema_factory_1 = __webpack_require__(319);
+const orders_controller_1 = __webpack_require__(320);
+const tenders_upsert_handler_1 = __webpack_require__(340);
+const orders_delete_handler_1 = __webpack_require__(342);
+const orders_get_handler_1 = __webpack_require__(343);
+const orders_get_all_handler_1 = __webpack_require__(344);
+const orders_change_status_handler_1 = __webpack_require__(346);
+const tenders_module_1 = __webpack_require__(248);
 const companies_module_1 = __webpack_require__(207);
-const notification_module_1 = __webpack_require__(347);
-const getCompanyById_1 = __webpack_require__(269);
+const notification_module_1 = __webpack_require__(348);
+const getCompanyById_1 = __webpack_require__(270);
 let OrdersModule = class OrdersModule {
 };
 exports.OrdersModule = OrdersModule;
@@ -14077,7 +14105,7 @@ exports.OrdersModule = OrdersModule = __decorate([
 
 
 /***/ }),
-/* 312 */
+/* 313 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14094,8 +14122,8 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrderFactory = void 0;
 const common_1 = __webpack_require__(3);
-const order_1 = __webpack_require__(313);
-const orders_repository_1 = __webpack_require__(315);
+const order_1 = __webpack_require__(314);
+const orders_repository_1 = __webpack_require__(316);
 const mongo_functions_1 = __webpack_require__(29);
 let OrderFactory = class OrderFactory {
     constructor(tendersRepository) {
@@ -14151,7 +14179,7 @@ exports.OrderFactory = OrderFactory = __decorate([
 
 
 /***/ }),
-/* 313 */
+/* 314 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -14159,7 +14187,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Order = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const order_status_enum_1 = __webpack_require__(314);
+const order_status_enum_1 = __webpack_require__(315);
 class Order extends cqrs_1.AggregateRoot {
     constructor(_id, title, endDate, deliverDate, type, status = order_status_enum_1.OrderStatusEnum.PLANING, region, city, address, fileName, fileDescription, fileId, attachmentName, attachmentDescription, attachmentId, attachmentRequired = false, attachmentDeliverDays, contactInfo, tenderId = '', companyId = '', userId = '', products = [], Sendedproducts = [], OrderNr = 0, DeliveryMethod = '', paymentMethod = '', invoices = [], displayOrder = 0, isVisible = true, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -14207,7 +14235,7 @@ exports.Order = Order;
 
 
 /***/ }),
-/* 314 */
+/* 315 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -14231,7 +14259,7 @@ var OrderStatusEnum;
 
 
 /***/ }),
-/* 315 */
+/* 316 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14254,8 +14282,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const order_schema_1 = __webpack_require__(316);
-const order_schema_factory_1 = __webpack_require__(318);
+const order_schema_1 = __webpack_require__(317);
+const order_schema_factory_1 = __webpack_require__(319);
 let OrdersRepository = class OrdersRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -14278,7 +14306,7 @@ exports.OrdersRepository = OrdersRepository = __decorate([
 
 
 /***/ }),
-/* 316 */
+/* 317 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14300,11 +14328,11 @@ const mongodb_1 = __webpack_require__(30);
 const base_with_Info_schema_1 = __webpack_require__(37);
 const schemas_names_1 = __webpack_require__(34);
 const media_schema_1 = __webpack_require__(170);
-const order_status_enum_1 = __webpack_require__(314);
+const order_status_enum_1 = __webpack_require__(315);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
-const order_type_enum_1 = __webpack_require__(317);
-const tender_schema_1 = __webpack_require__(254);
+const order_type_enum_1 = __webpack_require__(318);
+const tender_schema_1 = __webpack_require__(255);
 let OrderSchema = class OrderSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.OrderSchema = OrderSchema;
@@ -14512,7 +14540,7 @@ exports.CreatedOrderSchema
 
 
 /***/ }),
-/* 317 */
+/* 318 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -14526,7 +14554,7 @@ var OrderTypeEnum;
 
 
 /***/ }),
-/* 318 */
+/* 319 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14539,7 +14567,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrderSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const order_1 = __webpack_require__(313);
+const order_1 = __webpack_require__(314);
 const mongo_functions_1 = __webpack_require__(29);
 let OrderSchemaFactory = class OrderSchemaFactory {
     create(entity) {
@@ -14592,7 +14620,7 @@ exports.OrderSchemaFactory = OrderSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 319 */
+/* 320 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -14614,30 +14642,30 @@ exports.OrdersController = void 0;
 const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const cqrs_1 = __webpack_require__(41);
-const orders_get_all_response_1 = __webpack_require__(320);
-const orders_upsert_request_1 = __webpack_require__(321);
-const orders_get_request_1 = __webpack_require__(323);
-const orders_get_all_request_1 = __webpack_require__(324);
-const orders_delete_request_1 = __webpack_require__(325);
-const orders_get_query_1 = __webpack_require__(326);
-const orders_get_all_query_1 = __webpack_require__(327);
-const orders_upsert_command_1 = __webpack_require__(328);
-const orders_delete_command_1 = __webpack_require__(329);
-const orders_change_status_command_1 = __webpack_require__(330);
-const orders_change_status_request_1 = __webpack_require__(331);
+const orders_get_all_response_1 = __webpack_require__(321);
+const orders_upsert_request_1 = __webpack_require__(322);
+const orders_get_request_1 = __webpack_require__(324);
+const orders_get_all_request_1 = __webpack_require__(325);
+const orders_delete_request_1 = __webpack_require__(326);
+const orders_get_query_1 = __webpack_require__(327);
+const orders_get_all_query_1 = __webpack_require__(328);
+const orders_upsert_command_1 = __webpack_require__(329);
+const orders_delete_command_1 = __webpack_require__(330);
+const orders_change_status_command_1 = __webpack_require__(331);
+const orders_change_status_request_1 = __webpack_require__(332);
 const app_response_1 = __webpack_require__(87);
-const order_status_enum_1 = __webpack_require__(314);
-const tenders_get_all_query_1 = __webpack_require__(264);
+const order_status_enum_1 = __webpack_require__(315);
+const tenders_get_all_query_1 = __webpack_require__(265);
 const companies_get_query_1 = __webpack_require__(222);
-const orders_buyer_all_response_1 = __webpack_require__(332);
-const tenders_get_query_1 = __webpack_require__(263);
-const notifications_repository_1 = __webpack_require__(333);
-const notification_factory_1 = __webpack_require__(337);
+const orders_buyer_all_response_1 = __webpack_require__(333);
+const tenders_get_query_1 = __webpack_require__(264);
+const notifications_repository_1 = __webpack_require__(334);
+const notification_factory_1 = __webpack_require__(338);
 const user_companies_service_1 = __webpack_require__(235);
-const order_type_enum_1 = __webpack_require__(317);
-const puppeteer_1 = __webpack_require__(338);
+const order_type_enum_1 = __webpack_require__(318);
+const puppeteer_1 = __webpack_require__(339);
 const fs = __webpack_require__(144);
-const getCompanyById_1 = __webpack_require__(269);
+const getCompanyById_1 = __webpack_require__(270);
 const s3_upload_service_1 = __webpack_require__(239);
 let OrdersController = class OrdersController {
     constructor(queryBus, commandBus, notificationsRepository, userCompaniesService, companyService) {
@@ -15066,7 +15094,7 @@ exports.OrdersController = OrdersController = __decorate([
 
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15103,7 +15131,7 @@ exports.OrdersGetAllResponse = OrdersGetAllResponse;
 
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15121,9 +15149,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersUpsertRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
 const class_transformer_1 = __webpack_require__(72);
-const order_type_enum_1 = __webpack_require__(317);
-const order_status_enum_1 = __webpack_require__(314);
-const invoice_1 = __webpack_require__(322);
+const order_type_enum_1 = __webpack_require__(318);
+const order_status_enum_1 = __webpack_require__(315);
+const invoice_1 = __webpack_require__(323);
 class Product {
 }
 __decorate([
@@ -15323,7 +15351,7 @@ __decorate([
 
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15343,7 +15371,7 @@ exports.Invoice = Invoice;
 
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15369,7 +15397,7 @@ __decorate([
 
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15389,8 +15417,8 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const order_status_enum_1 = __webpack_require__(314);
-const order_type_enum_1 = __webpack_require__(317);
+const order_status_enum_1 = __webpack_require__(315);
+const order_type_enum_1 = __webpack_require__(318);
 class OrdersGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -15436,7 +15464,7 @@ __decorate([
 
 
 /***/ }),
-/* 325 */
+/* 326 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15462,7 +15490,7 @@ __decorate([
 
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15477,7 +15505,7 @@ exports.OrdersGetQuery = OrdersGetQuery;
 
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15501,7 +15529,7 @@ exports.OrdersGetAllQuery = OrdersGetAllQuery;
 
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15542,7 +15570,7 @@ exports.OrdersUpsertCommand = OrdersUpsertCommand;
 
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15558,7 +15586,7 @@ exports.OrdersDeleteCommand = OrdersDeleteCommand;
 
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15577,7 +15605,7 @@ exports.OrdersChangeStatusCommand = OrdersChangeStatusCommand;
 
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15594,7 +15622,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const order_status_enum_1 = __webpack_require__(314);
+const order_status_enum_1 = __webpack_require__(315);
 class OrdersChangeStatusRequest {
 }
 exports.OrdersChangeStatusRequest = OrdersChangeStatusRequest;
@@ -15621,7 +15649,7 @@ __decorate([
 
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -15659,7 +15687,7 @@ exports.OrdersGetAllBResponse = OrdersGetAllBResponse;
 
 
 /***/ }),
-/* 333 */
+/* 334 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15682,8 +15710,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const notification_schema_1 = __webpack_require__(334);
-const category_schema_factory_1 = __webpack_require__(335);
+const notification_schema_1 = __webpack_require__(335);
+const category_schema_factory_1 = __webpack_require__(336);
 const mongodb_1 = __webpack_require__(30);
 let NotificationsRepository = class NotificationsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
@@ -15725,7 +15753,7 @@ exports.NotificationsRepository = NotificationsRepository = __decorate([
 
 
 /***/ }),
-/* 334 */
+/* 335 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15781,7 +15809,7 @@ exports.CreatedNotificationSchema = mongoose_1.SchemaFactory.createForClass(Noti
 
 
 /***/ }),
-/* 335 */
+/* 336 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15795,7 +15823,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(25);
-const notification_1 = __webpack_require__(336);
+const notification_1 = __webpack_require__(337);
 let NotificationSchemaFactory = class NotificationSchemaFactory {
     create(entity) {
         return {
@@ -15819,7 +15847,7 @@ exports.NotificationSchemaFactory = NotificationSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 336 */
+/* 337 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -15855,7 +15883,7 @@ exports.Notification = Notification;
 
 
 /***/ }),
-/* 337 */
+/* 338 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15873,9 +15901,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationFactory = void 0;
 const common_1 = __webpack_require__(3);
 const mongodb_1 = __webpack_require__(30);
-const notification_1 = __webpack_require__(336);
+const notification_1 = __webpack_require__(337);
 const mongo_functions_1 = __webpack_require__(29);
-const notifications_repository_1 = __webpack_require__(333);
+const notifications_repository_1 = __webpack_require__(334);
 let NotificationFactory = class NotificationFactory {
     constructor(notificationsRepository) {
         this.notificationsRepository = notificationsRepository;
@@ -15904,13 +15932,13 @@ exports.NotificationFactory = NotificationFactory = __decorate([
 
 
 /***/ }),
-/* 338 */
+/* 339 */
 /***/ ((module) => {
 
 module.exports = require("puppeteer");
 
 /***/ }),
-/* 339 */
+/* 340 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -15927,15 +15955,15 @@ var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const orders_upsert_command_1 = __webpack_require__(328);
+const orders_upsert_command_1 = __webpack_require__(329);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const orders_repository_1 = __webpack_require__(315);
-const order_factory_1 = __webpack_require__(312);
-const orders_get_result_1 = __webpack_require__(340);
+const orders_repository_1 = __webpack_require__(316);
+const order_factory_1 = __webpack_require__(313);
+const orders_get_result_1 = __webpack_require__(341);
 const companies_repository_1 = __webpack_require__(210);
-const tenders_quatation_update_status_query_1 = __webpack_require__(293);
-const tender_status_enum_1 = __webpack_require__(251);
+const tenders_quatation_update_status_query_1 = __webpack_require__(294);
+const tender_status_enum_1 = __webpack_require__(252);
 let OrdersUpsertHandler = class OrdersUpsertHandler {
     constructor(ordersRepository, orderFactory, eventPublisher, companiesRepository, commandBus) {
         this.ordersRepository = ordersRepository;
@@ -15990,7 +16018,7 @@ exports.OrdersUpsertHandler = OrdersUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 340 */
+/* 341 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -16037,7 +16065,7 @@ exports.OrdersGetResult = OrdersGetResult;
 
 
 /***/ }),
-/* 341 */
+/* 342 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16054,10 +16082,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const orders_delete_command_1 = __webpack_require__(329);
+const orders_delete_command_1 = __webpack_require__(330);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const orders_repository_1 = __webpack_require__(315);
+const orders_repository_1 = __webpack_require__(316);
 let OrdersDeleteHandler = class OrdersDeleteHandler {
     constructor(ordersRepository) {
         this.ordersRepository = ordersRepository;
@@ -16094,7 +16122,7 @@ exports.OrdersDeleteHandler = OrdersDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 342 */
+/* 343 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16113,9 +16141,9 @@ exports.OrdersGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const orders_get_query_1 = __webpack_require__(326);
-const orders_get_result_1 = __webpack_require__(340);
-const orders_repository_1 = __webpack_require__(315);
+const orders_get_query_1 = __webpack_require__(327);
+const orders_get_result_1 = __webpack_require__(341);
+const orders_repository_1 = __webpack_require__(316);
 let OrdersGetHandler = class OrdersGetHandler {
     constructor(ordersRepository) {
         this.ordersRepository = ordersRepository;
@@ -16142,7 +16170,7 @@ exports.OrdersGetHandler = OrdersGetHandler = __decorate([
 
 
 /***/ }),
-/* 343 */
+/* 344 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16160,14 +16188,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const orders_get_all_query_1 = __webpack_require__(327);
+const orders_get_all_query_1 = __webpack_require__(328);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const orders_get_all_result_1 = __webpack_require__(344);
-const orders_repository_1 = __webpack_require__(315);
+const orders_get_all_result_1 = __webpack_require__(345);
+const orders_repository_1 = __webpack_require__(316);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
-const tenders_repository_1 = __webpack_require__(253);
+const tenders_repository_1 = __webpack_require__(254);
 let OrdersGetAllHandler = class OrdersGetAllHandler {
     constructor(ordersRepository, tendersRepository) {
         this.ordersRepository = ordersRepository;
@@ -16230,7 +16258,7 @@ exports.OrdersGetAllHandler = OrdersGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 344 */
+/* 345 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -16267,7 +16295,7 @@ exports.OrdersGetAllResult = OrdersGetAllResult;
 
 
 /***/ }),
-/* 345 */
+/* 346 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16284,14 +16312,14 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const orders_change_status_command_1 = __webpack_require__(330);
+const orders_change_status_command_1 = __webpack_require__(331);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const orders_repository_1 = __webpack_require__(315);
-const order_factory_1 = __webpack_require__(312);
-const orders_get_result_1 = __webpack_require__(340);
-const order_status_enum_1 = __webpack_require__(314);
-const orders_error_1 = __webpack_require__(346);
+const orders_repository_1 = __webpack_require__(316);
+const order_factory_1 = __webpack_require__(313);
+const orders_get_result_1 = __webpack_require__(341);
+const order_status_enum_1 = __webpack_require__(315);
+const orders_error_1 = __webpack_require__(347);
 let OrdersChangeStatusHandler = class OrdersChangeStatusHandler {
     constructor(ordersRepository, orderFactory, eventPublisher) {
         this.ordersRepository = ordersRepository;
@@ -16337,7 +16365,7 @@ exports.OrdersChangeStatusHandler = OrdersChangeStatusHandler = __decorate([
 
 
 /***/ }),
-/* 346 */
+/* 347 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -16359,7 +16387,7 @@ exports.OrdersError = OrdersError;
 
 
 /***/ }),
-/* 347 */
+/* 348 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16373,13 +16401,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationModule = void 0;
 const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
-const notification_gateway_1 = __webpack_require__(348);
-const notifications_repository_1 = __webpack_require__(333);
-const notification_schema_1 = __webpack_require__(334);
-const category_schema_factory_1 = __webpack_require__(335);
-const notification_factory_1 = __webpack_require__(337);
-const notifications_controller_1 = __webpack_require__(351);
-const notification_service_1 = __webpack_require__(352);
+const notification_gateway_1 = __webpack_require__(349);
+const notifications_repository_1 = __webpack_require__(334);
+const notification_schema_1 = __webpack_require__(335);
+const category_schema_factory_1 = __webpack_require__(336);
+const notification_factory_1 = __webpack_require__(338);
+const notifications_controller_1 = __webpack_require__(352);
+const notification_service_1 = __webpack_require__(353);
 let NotificationModule = class NotificationModule {
 };
 exports.NotificationModule = NotificationModule;
@@ -16407,7 +16435,7 @@ exports.NotificationModule = NotificationModule = __decorate([
 
 
 /***/ }),
-/* 348 */
+/* 349 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16423,8 +16451,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationGateway = void 0;
-const websockets_1 = __webpack_require__(349);
-const socket_io_1 = __webpack_require__(350);
+const websockets_1 = __webpack_require__(350);
+const socket_io_1 = __webpack_require__(351);
 let NotificationGateway = class NotificationGateway {
     handleConnection(client) {
         console.log(`Client connected: ${client.id}`);
@@ -16447,19 +16475,19 @@ exports.NotificationGateway = NotificationGateway = __decorate([
 
 
 /***/ }),
-/* 349 */
+/* 350 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/websockets");
 
 /***/ }),
-/* 350 */
+/* 351 */
 /***/ ((module) => {
 
 module.exports = require("socket.io");
 
 /***/ }),
-/* 351 */
+/* 352 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16480,7 +16508,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationsController = void 0;
 const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
-const notification_service_1 = __webpack_require__(352);
+const notification_service_1 = __webpack_require__(353);
 let NotificationsController = class NotificationsController {
     constructor(notificationService) {
         this.notificationService = notificationService;
@@ -16543,7 +16571,7 @@ exports.NotificationsController = NotificationsController = __decorate([
 
 
 /***/ }),
-/* 352 */
+/* 353 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16560,9 +16588,9 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationService = void 0;
 const common_1 = __webpack_require__(3);
-const notifications_repository_1 = __webpack_require__(333);
-const notification_1 = __webpack_require__(336);
-const notification_gateway_1 = __webpack_require__(348);
+const notifications_repository_1 = __webpack_require__(334);
+const notification_1 = __webpack_require__(337);
+const notification_gateway_1 = __webpack_require__(349);
 const mongodb_1 = __webpack_require__(30);
 let NotificationService = class NotificationService {
     constructor(notificationsRepository, notificationGateway) {
@@ -16599,7 +16627,7 @@ exports.NotificationService = NotificationService = __decorate([
 
 
 /***/ }),
-/* 353 */
+/* 354 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16614,16 +16642,16 @@ exports.ItemsModule = void 0;
 const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
-const items_repository_1 = __webpack_require__(354);
-const item_schema_1 = __webpack_require__(275);
-const item_schema_factory_1 = __webpack_require__(355);
-const item_factory_1 = __webpack_require__(358);
-const items_upsert_handler_1 = __webpack_require__(359);
-const items_change_status_handler_1 = __webpack_require__(362);
-const items_delete_handler_1 = __webpack_require__(365);
-const items_get_handler_1 = __webpack_require__(367);
-const items_get_all_handler_1 = __webpack_require__(369);
-const items_controller_1 = __webpack_require__(372);
+const items_repository_1 = __webpack_require__(355);
+const item_schema_1 = __webpack_require__(276);
+const item_schema_factory_1 = __webpack_require__(356);
+const item_factory_1 = __webpack_require__(359);
+const items_upsert_handler_1 = __webpack_require__(360);
+const items_change_status_handler_1 = __webpack_require__(363);
+const items_delete_handler_1 = __webpack_require__(366);
+const items_get_handler_1 = __webpack_require__(368);
+const items_get_all_handler_1 = __webpack_require__(370);
+const items_controller_1 = __webpack_require__(373);
 const companies_module_1 = __webpack_require__(207);
 let ItemsModule = class ItemsModule {
 };
@@ -16657,7 +16685,7 @@ exports.ItemsModule = ItemsModule = __decorate([
 
 
 /***/ }),
-/* 354 */
+/* 355 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16680,8 +16708,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const item_schema_1 = __webpack_require__(275);
-const item_schema_factory_1 = __webpack_require__(355);
+const item_schema_1 = __webpack_require__(276);
+const item_schema_factory_1 = __webpack_require__(356);
 let ItemsRepository = class ItemsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -16698,7 +16726,7 @@ exports.ItemsRepository = ItemsRepository = __decorate([
 
 
 /***/ }),
-/* 355 */
+/* 356 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16711,9 +16739,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const item_1 = __webpack_require__(356);
+const item_1 = __webpack_require__(357);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(357);
+const attachment_1 = __webpack_require__(358);
 let ItemSchemaFactory = class ItemSchemaFactory {
     create(entity) {
         return {
@@ -16763,7 +16791,7 @@ exports.ItemSchemaFactory = ItemSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 356 */
+/* 357 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -16771,7 +16799,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Item = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const item_status_enum_1 = __webpack_require__(276);
+const item_status_enum_1 = __webpack_require__(277);
 class Item extends cqrs_1.AggregateRoot {
     constructor(_id, name, SKUCode, manufacturer, brand, model, unit, categories, description, price, vat, stock = 0, tags = [], image = '', attachments = [], status = item_status_enum_1.ItemStatusEnum.ACTIVE, type, companyId, userId, ItemNR = 0, displayOrder = 0, isVisible = true, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -16812,7 +16840,7 @@ exports.Item = Item;
 
 
 /***/ }),
-/* 357 */
+/* 358 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -16830,7 +16858,7 @@ exports.Attachment = Attachment;
 
 
 /***/ }),
-/* 358 */
+/* 359 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16847,10 +16875,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemFactory = void 0;
 const common_1 = __webpack_require__(3);
-const item_1 = __webpack_require__(356);
-const items_repository_1 = __webpack_require__(354);
+const item_1 = __webpack_require__(357);
+const items_repository_1 = __webpack_require__(355);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(357);
+const attachment_1 = __webpack_require__(358);
 const class_validator_1 = __webpack_require__(55);
 let ItemFactory = class ItemFactory {
     constructor(itemsRepository) {
@@ -16900,7 +16928,7 @@ exports.ItemFactory = ItemFactory = __decorate([
 
 
 /***/ }),
-/* 359 */
+/* 360 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -16917,12 +16945,12 @@ var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_upsert_command_1 = __webpack_require__(360);
+const items_upsert_command_1 = __webpack_require__(361);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(354);
-const item_factory_1 = __webpack_require__(358);
-const items_get_result_1 = __webpack_require__(361);
+const items_repository_1 = __webpack_require__(355);
+const item_factory_1 = __webpack_require__(359);
+const items_get_result_1 = __webpack_require__(362);
 const companies_repository_1 = __webpack_require__(210);
 let ItemsUpsertHandler = class ItemsUpsertHandler {
     constructor(itemsRepository, itemFactory, eventPublisher, companiesRepository) {
@@ -16960,7 +16988,7 @@ exports.ItemsUpsertHandler = ItemsUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 360 */
+/* 361 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -16994,7 +17022,7 @@ exports.ItemsUpsertCommand = ItemsUpsertCommand;
 
 
 /***/ }),
-/* 361 */
+/* 362 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17039,7 +17067,7 @@ exports.ItemsGetResult = ItemsGetResult;
 
 
 /***/ }),
-/* 362 */
+/* 363 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17056,14 +17084,14 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_change_status_command_1 = __webpack_require__(363);
+const items_change_status_command_1 = __webpack_require__(364);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(354);
-const item_factory_1 = __webpack_require__(358);
-const items_get_result_1 = __webpack_require__(361);
-const item_status_enum_1 = __webpack_require__(276);
-const items_error_1 = __webpack_require__(364);
+const items_repository_1 = __webpack_require__(355);
+const item_factory_1 = __webpack_require__(359);
+const items_get_result_1 = __webpack_require__(362);
+const item_status_enum_1 = __webpack_require__(277);
+const items_error_1 = __webpack_require__(365);
 let ItemsChangeStatusHandler = class ItemsChangeStatusHandler {
     constructor(itemsRepository, itemFactory, eventPublisher) {
         this.itemsRepository = itemsRepository;
@@ -17105,7 +17133,7 @@ exports.ItemsChangeStatusHandler = ItemsChangeStatusHandler = __decorate([
 
 
 /***/ }),
-/* 363 */
+/* 364 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17122,7 +17150,7 @@ exports.ItemsChangeStatusCommand = ItemsChangeStatusCommand;
 
 
 /***/ }),
-/* 364 */
+/* 365 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -17159,7 +17187,7 @@ exports.ItemsError = ItemsError;
 
 
 /***/ }),
-/* 365 */
+/* 366 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17176,10 +17204,10 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const items_delete_command_1 = __webpack_require__(366);
+const items_delete_command_1 = __webpack_require__(367);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_repository_1 = __webpack_require__(354);
+const items_repository_1 = __webpack_require__(355);
 let ItemsDeleteHandler = class ItemsDeleteHandler {
     constructor(itemsRepository) {
         this.itemsRepository = itemsRepository;
@@ -17204,7 +17232,7 @@ exports.ItemsDeleteHandler = ItemsDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 366 */
+/* 367 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17219,7 +17247,7 @@ exports.ItemsDeleteCommand = ItemsDeleteCommand;
 
 
 /***/ }),
-/* 367 */
+/* 368 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17238,9 +17266,9 @@ exports.ItemsGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const items_get_query_1 = __webpack_require__(368);
-const items_get_result_1 = __webpack_require__(361);
-const items_repository_1 = __webpack_require__(354);
+const items_get_query_1 = __webpack_require__(369);
+const items_get_result_1 = __webpack_require__(362);
+const items_repository_1 = __webpack_require__(355);
 let ItemsGetHandler = class ItemsGetHandler {
     constructor(itemsRepository) {
         this.itemsRepository = itemsRepository;
@@ -17262,7 +17290,7 @@ exports.ItemsGetHandler = ItemsGetHandler = __decorate([
 
 
 /***/ }),
-/* 368 */
+/* 369 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17277,7 +17305,7 @@ exports.ItemsGetQuery = ItemsGetQuery;
 
 
 /***/ }),
-/* 369 */
+/* 370 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17295,11 +17323,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsGetAllHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
-const items_get_all_query_1 = __webpack_require__(370);
+const items_get_all_query_1 = __webpack_require__(371);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const items_get_all_result_1 = __webpack_require__(371);
-const items_repository_1 = __webpack_require__(354);
+const items_get_all_result_1 = __webpack_require__(372);
+const items_repository_1 = __webpack_require__(355);
 const order_by_enum_1 = __webpack_require__(100);
 const order_direction_enum_1 = __webpack_require__(32);
 let ItemsGetAllHandler = class ItemsGetAllHandler {
@@ -17352,7 +17380,7 @@ exports.ItemsGetAllHandler = ItemsGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 370 */
+/* 371 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17374,7 +17402,7 @@ exports.ItemsGetAllQuery = ItemsGetAllQuery;
 
 
 /***/ }),
-/* 371 */
+/* 372 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17410,7 +17438,7 @@ exports.ItemsGetAllResult = ItemsGetAllResult;
 
 
 /***/ }),
-/* 372 */
+/* 373 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17432,23 +17460,23 @@ exports.ItemsController = void 0;
 const common_1 = __webpack_require__(3);
 const jwt_auth_guard_1 = __webpack_require__(69);
 const cqrs_1 = __webpack_require__(41);
-const items_get_all_response_1 = __webpack_require__(373);
-const items_get_request_1 = __webpack_require__(374);
-const items_get_all_request_1 = __webpack_require__(375);
-const items_delete_request_1 = __webpack_require__(377);
-const items_change_status_request_1 = __webpack_require__(378);
+const items_get_all_response_1 = __webpack_require__(374);
+const items_get_request_1 = __webpack_require__(375);
+const items_get_all_request_1 = __webpack_require__(376);
+const items_delete_request_1 = __webpack_require__(378);
+const items_change_status_request_1 = __webpack_require__(379);
 const app_response_1 = __webpack_require__(87);
-const items_upsert_command_1 = __webpack_require__(360);
-const items_change_status_command_1 = __webpack_require__(363);
-const items_delete_command_1 = __webpack_require__(366);
-const items_get_query_1 = __webpack_require__(368);
-const items_get_all_query_1 = __webpack_require__(370);
+const items_upsert_command_1 = __webpack_require__(361);
+const items_change_status_command_1 = __webpack_require__(364);
+const items_delete_command_1 = __webpack_require__(367);
+const items_get_query_1 = __webpack_require__(369);
+const items_get_all_query_1 = __webpack_require__(371);
 const platform_express_1 = __webpack_require__(174);
 const multer_config_1 = __webpack_require__(237);
 const s3_upload_service_1 = __webpack_require__(239);
 const s3_config_1 = __webpack_require__(241);
 const client_s3_1 = __webpack_require__(240);
-const items_repository_1 = __webpack_require__(354);
+const items_repository_1 = __webpack_require__(355);
 const class_validator_1 = __webpack_require__(55);
 let ItemsController = class ItemsController {
     constructor(queryBus, commandBus, itemsRepository) {
@@ -17589,7 +17617,7 @@ exports.ItemsController = ItemsController = __decorate([
 
 
 /***/ }),
-/* 373 */
+/* 374 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17625,7 +17653,7 @@ exports.ItemsGetAllResponse = ItemsGetAllResponse;
 
 
 /***/ }),
-/* 374 */
+/* 375 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17651,7 +17679,7 @@ __decorate([
 
 
 /***/ }),
-/* 375 */
+/* 376 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17671,8 +17699,8 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const item_status_enum_1 = __webpack_require__(276);
-const item_type_enum_1 = __webpack_require__(376);
+const item_status_enum_1 = __webpack_require__(277);
+const item_type_enum_1 = __webpack_require__(377);
 class ItemsGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -17717,7 +17745,7 @@ __decorate([
 
 
 /***/ }),
-/* 376 */
+/* 377 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -17732,7 +17760,7 @@ var ItemTypeEnum;
 
 
 /***/ }),
-/* 377 */
+/* 378 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17758,7 +17786,7 @@ __decorate([
 
 
 /***/ }),
-/* 378 */
+/* 379 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17775,7 +17803,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ItemsChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const item_status_enum_1 = __webpack_require__(276);
+const item_status_enum_1 = __webpack_require__(277);
 class ItemsChangeStatusRequest {
 }
 exports.ItemsChangeStatusRequest = ItemsChangeStatusRequest;
@@ -17797,7 +17825,7 @@ __decorate([
 
 
 /***/ }),
-/* 379 */
+/* 380 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17810,8 +17838,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HelpModule = void 0;
 const common_1 = __webpack_require__(3);
-const help_controller_1 = __webpack_require__(380);
-const help_service_1 = __webpack_require__(381);
+const help_controller_1 = __webpack_require__(381);
+const help_service_1 = __webpack_require__(382);
 const users_module_1 = __webpack_require__(67);
 let HelpModule = class HelpModule {
 };
@@ -17827,7 +17855,7 @@ exports.HelpModule = HelpModule = __decorate([
 
 
 /***/ }),
-/* 380 */
+/* 381 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17848,7 +17876,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HelpController = void 0;
 const common_1 = __webpack_require__(3);
 const platform_express_1 = __webpack_require__(174);
-const help_service_1 = __webpack_require__(381);
+const help_service_1 = __webpack_require__(382);
 const express_1 = __webpack_require__(180);
 const jwt_auth_guard_1 = __webpack_require__(69);
 let HelpController = class HelpController {
@@ -17879,7 +17907,7 @@ exports.HelpController = HelpController = __decorate([
 
 
 /***/ }),
-/* 381 */
+/* 382 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17931,7 +17959,7 @@ exports.HelpService = HelpService = __decorate([
 
 
 /***/ }),
-/* 382 */
+/* 383 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17947,19 +17975,19 @@ const common_1 = __webpack_require__(3);
 const cqrs_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(24);
 const companies_module_1 = __webpack_require__(207);
-const transforms_upsert_handler_1 = __webpack_require__(383);
-const transforms_change_status_handler_1 = __webpack_require__(394);
-const transforms_delete_handler_1 = __webpack_require__(397);
-const transforms_get_handler_1 = __webpack_require__(399);
-const notification_module_1 = __webpack_require__(347);
-const orders_module_1 = __webpack_require__(311);
-const transforms_get_all_handler_1 = __webpack_require__(401);
-const transform_controller_1 = __webpack_require__(404);
-const stransforms_repository_1 = __webpack_require__(390);
-const stransform_schema_1 = __webpack_require__(392);
-const transform_factory_1 = __webpack_require__(386);
-const transform_schema_factory_1 = __webpack_require__(391);
-const transforms_get_all_admin_handler_1 = __webpack_require__(412);
+const transforms_upsert_handler_1 = __webpack_require__(384);
+const transforms_change_status_handler_1 = __webpack_require__(395);
+const transforms_delete_handler_1 = __webpack_require__(398);
+const transforms_get_handler_1 = __webpack_require__(400);
+const notification_module_1 = __webpack_require__(348);
+const orders_module_1 = __webpack_require__(312);
+const transforms_get_all_handler_1 = __webpack_require__(402);
+const transform_controller_1 = __webpack_require__(405);
+const stransforms_repository_1 = __webpack_require__(391);
+const stransform_schema_1 = __webpack_require__(393);
+const transform_factory_1 = __webpack_require__(387);
+const transform_schema_factory_1 = __webpack_require__(392);
+const transforms_get_all_admin_handler_1 = __webpack_require__(413);
 let TransformsModule = class TransformsModule {
 };
 exports.TransformsModule = TransformsModule;
@@ -17998,7 +18026,7 @@ exports.TransformsModule = TransformsModule = __decorate([
 
 
 /***/ }),
-/* 383 */
+/* 384 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18017,10 +18045,10 @@ exports.TransformsUpsertHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_upsert_command_1 = __webpack_require__(384);
-const transforms_get_result_1 = __webpack_require__(385);
-const transform_factory_1 = __webpack_require__(386);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_upsert_command_1 = __webpack_require__(385);
+const transforms_get_result_1 = __webpack_require__(386);
+const transform_factory_1 = __webpack_require__(387);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsUpsertHandler = class TransformsUpsertHandler {
     constructor(transformsRepository, transformFactory, eventPublisher) {
         this.transformsRepository = transformsRepository;
@@ -18051,7 +18079,7 @@ exports.TransformsUpsertHandler = TransformsUpsertHandler = __decorate([
 
 
 /***/ }),
-/* 384 */
+/* 385 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18079,7 +18107,7 @@ exports.TransformsUpsertCommand = TransformsUpsertCommand;
 
 
 /***/ }),
-/* 385 */
+/* 386 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18111,7 +18139,7 @@ exports.TransformsGetResult = TransformsGetResult;
 
 
 /***/ }),
-/* 386 */
+/* 387 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18128,11 +18156,11 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformFactory = void 0;
 const common_1 = __webpack_require__(3);
-const transform_1 = __webpack_require__(387);
+const transform_1 = __webpack_require__(388);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(357);
-const bank_1 = __webpack_require__(389);
-const stransforms_repository_1 = __webpack_require__(390);
+const attachment_1 = __webpack_require__(358);
+const bank_1 = __webpack_require__(390);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformFactory = class TransformFactory {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -18176,7 +18204,7 @@ exports.TransformFactory = TransformFactory = __decorate([
 
 
 /***/ }),
-/* 387 */
+/* 388 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -18184,7 +18212,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Transform = void 0;
 const cqrs_1 = __webpack_require__(41);
 const mongo_functions_1 = __webpack_require__(29);
-const transform_status_enum_1 = __webpack_require__(388);
+const transform_status_enum_1 = __webpack_require__(389);
 class Transform extends cqrs_1.AggregateRoot {
     constructor(_id, title, status = transform_status_enum_1.TransformStatusEnum.PENDING, buyerId, sellerId, userId, orderId, type, products = [], totalPrice, transformRequest = false, transformDoc = [], withdrawRequest = false, bankAccount = [], createdAt, updatedAt, displayOrder, isVisible, deletedAt, createdBy, updatedBy, deletedBy) {
         super();
@@ -18219,7 +18247,7 @@ exports.Transform = Transform;
 
 
 /***/ }),
-/* 388 */
+/* 389 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18234,7 +18262,7 @@ var TransformStatusEnum;
 
 
 /***/ }),
-/* 389 */
+/* 390 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18252,7 +18280,7 @@ exports.Bank = Bank;
 
 
 /***/ }),
-/* 390 */
+/* 391 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18275,8 +18303,8 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const base_repository_1 = __webpack_require__(26);
-const transform_schema_factory_1 = __webpack_require__(391);
-const stransform_schema_1 = __webpack_require__(392);
+const transform_schema_factory_1 = __webpack_require__(392);
+const stransform_schema_1 = __webpack_require__(393);
 let TransformsRepository = class TransformsRepository extends base_repository_1.BaseRepository {
     constructor(model, schemaFactory) {
         super(model, schemaFactory);
@@ -18293,7 +18321,7 @@ exports.TransformsRepository = TransformsRepository = __decorate([
 
 
 /***/ }),
-/* 391 */
+/* 392 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18309,10 +18337,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformSchemaFactory = void 0;
 const common_1 = __webpack_require__(3);
-const transform_1 = __webpack_require__(387);
+const transform_1 = __webpack_require__(388);
 const mongo_functions_1 = __webpack_require__(29);
-const attachment_1 = __webpack_require__(357);
-const bank_1 = __webpack_require__(389);
+const attachment_1 = __webpack_require__(358);
+const bank_1 = __webpack_require__(390);
 let TransformSchemaFactory = class TransformSchemaFactory {
     constructor() {
         console.log('TransformSchemaFactory is initialized');
@@ -18389,7 +18417,7 @@ exports.TransformSchemaFactory = TransformSchemaFactory = __decorate([
 
 
 /***/ }),
-/* 392 */
+/* 393 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18412,9 +18440,9 @@ const schemas_names_1 = __webpack_require__(34);
 const company_schema_1 = __webpack_require__(211);
 const user_schema_1 = __webpack_require__(36);
 const base_with_Info_schema_1 = __webpack_require__(37);
-const transform_status_enum_1 = __webpack_require__(388);
-const order_schema_1 = __webpack_require__(316);
-const transform_type_enum_1 = __webpack_require__(393);
+const transform_status_enum_1 = __webpack_require__(389);
+const order_schema_1 = __webpack_require__(317);
+const transform_type_enum_1 = __webpack_require__(394);
 let TransformSchema = class TransformSchema extends base_with_Info_schema_1.BaseWithInfoSchema {
 };
 exports.TransformSchema = TransformSchema;
@@ -18546,7 +18574,7 @@ exports.CreatedTransformSchema.set("toObject", { virtuals: true });
 
 
 /***/ }),
-/* 393 */
+/* 394 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18561,7 +18589,7 @@ var TransformTypeEnum;
 
 
 /***/ }),
-/* 394 */
+/* 395 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18580,12 +18608,12 @@ exports.TransformsChangeStatusHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_change_status_command_1 = __webpack_require__(395);
-const transforms_get_result_1 = __webpack_require__(385);
-const transform_status_enum_1 = __webpack_require__(388);
-const transforms_error_1 = __webpack_require__(396);
-const transform_factory_1 = __webpack_require__(386);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_change_status_command_1 = __webpack_require__(396);
+const transforms_get_result_1 = __webpack_require__(386);
+const transform_status_enum_1 = __webpack_require__(389);
+const transforms_error_1 = __webpack_require__(397);
+const transform_factory_1 = __webpack_require__(387);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsChangeStatusHandler = class TransformsChangeStatusHandler {
     constructor(transformsRepository, transformFactory, eventPublisher) {
         this.transformsRepository = transformsRepository;
@@ -18617,7 +18645,7 @@ exports.TransformsChangeStatusHandler = TransformsChangeStatusHandler = __decora
 
 
 /***/ }),
-/* 395 */
+/* 396 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18635,7 +18663,7 @@ exports.TransformsChangeStatusCommand = TransformsChangeStatusCommand;
 
 
 /***/ }),
-/* 396 */
+/* 397 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -18675,7 +18703,7 @@ exports.TransformsError = TransformsError;
 
 
 /***/ }),
-/* 397 */
+/* 398 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18694,8 +18722,8 @@ exports.TransformsDeleteHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_delete_command_1 = __webpack_require__(398);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_delete_command_1 = __webpack_require__(399);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsDeleteHandler = class TransformsDeleteHandler {
     constructor(TransformsRepository) {
         this.TransformsRepository = TransformsRepository;
@@ -18720,7 +18748,7 @@ exports.TransformsDeleteHandler = TransformsDeleteHandler = __decorate([
 
 
 /***/ }),
-/* 398 */
+/* 399 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18735,7 +18763,7 @@ exports.TransformsDeleteCommand = TransformsDeleteCommand;
 
 
 /***/ }),
-/* 399 */
+/* 400 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18754,9 +18782,9 @@ exports.TransformsGetHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const app_errors_1 = __webpack_require__(102);
-const transforms_get_query_1 = __webpack_require__(400);
-const transforms_get_result_1 = __webpack_require__(385);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_get_query_1 = __webpack_require__(401);
+const transforms_get_result_1 = __webpack_require__(386);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsGetHandler = class TransformsGetHandler {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -18778,7 +18806,7 @@ exports.TransformsGetHandler = TransformsGetHandler = __decorate([
 
 
 /***/ }),
-/* 400 */
+/* 401 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18793,7 +18821,7 @@ exports.TransfromsGetQuery = TransfromsGetQuery;
 
 
 /***/ }),
-/* 401 */
+/* 402 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18813,9 +18841,9 @@ const cqrs_1 = __webpack_require__(41);
 const app_result_1 = __webpack_require__(27);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
-const transforms_get_all_result_1 = __webpack_require__(402);
-const stransforms_get_all_query_1 = __webpack_require__(403);
-const stransforms_repository_1 = __webpack_require__(390);
+const transforms_get_all_result_1 = __webpack_require__(403);
+const stransforms_get_all_query_1 = __webpack_require__(404);
+const stransforms_repository_1 = __webpack_require__(391);
 let TransformsGetAllHandler = class TransformsGetAllHandler {
     constructor(transformsRepository) {
         this.transformsRepository = transformsRepository;
@@ -18853,7 +18881,7 @@ exports.TransformsGetAllHandler = TransformsGetAllHandler = __decorate([
 
 
 /***/ }),
-/* 402 */
+/* 403 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18886,7 +18914,7 @@ exports.TransformsGetAllResult = TransformsGetAllResult;
 
 
 /***/ }),
-/* 403 */
+/* 404 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -18910,7 +18938,7 @@ exports.TransformsGetAllQuery = TransformsGetAllQuery;
 
 
 /***/ }),
-/* 404 */
+/* 405 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -18936,23 +18964,23 @@ const app_response_1 = __webpack_require__(87);
 const platform_express_1 = __webpack_require__(174);
 const multer_config_1 = __webpack_require__(237);
 const s3_upload_service_1 = __webpack_require__(239);
-const transforms_upsert_command_1 = __webpack_require__(384);
-const transforms_change_status_command_1 = __webpack_require__(395);
-const transforms_delete_command_1 = __webpack_require__(398);
-const transforms_get_query_1 = __webpack_require__(400);
-const stransforms_get_all_query_1 = __webpack_require__(403);
-const stransforms_repository_1 = __webpack_require__(390);
-const transforms_get_all_response_1 = __webpack_require__(405);
-const transforms_get_all_request_1 = __webpack_require__(406);
-const transforms_change_status_request_1 = __webpack_require__(407);
-const transforms_delete_request_1 = __webpack_require__(408);
-const transforms_get_request_1 = __webpack_require__(409);
-const transform_type_enum_1 = __webpack_require__(393);
+const transforms_upsert_command_1 = __webpack_require__(385);
+const transforms_change_status_command_1 = __webpack_require__(396);
+const transforms_delete_command_1 = __webpack_require__(399);
+const transforms_get_query_1 = __webpack_require__(401);
+const stransforms_get_all_query_1 = __webpack_require__(404);
+const stransforms_repository_1 = __webpack_require__(391);
+const transforms_get_all_response_1 = __webpack_require__(406);
+const transforms_get_all_request_1 = __webpack_require__(407);
+const transforms_change_status_request_1 = __webpack_require__(408);
+const transforms_delete_request_1 = __webpack_require__(409);
+const transforms_get_request_1 = __webpack_require__(410);
+const transform_type_enum_1 = __webpack_require__(394);
 const roles_decorator_1 = __webpack_require__(86);
 const roles_guard_1 = __webpack_require__(85);
-const transforms_get_admin_all_response_1 = __webpack_require__(410);
-const stransforms_get_all_admin_query_1 = __webpack_require__(411);
-const attachment_1 = __webpack_require__(357);
+const transforms_get_admin_all_response_1 = __webpack_require__(411);
+const stransforms_get_all_admin_query_1 = __webpack_require__(412);
+const attachment_1 = __webpack_require__(358);
 let TransformsController = class TransformsController {
     constructor(queryBus, commandBus, transformsRepository) {
         this.queryBus = queryBus;
@@ -19112,7 +19140,7 @@ exports.TransformsController = TransformsController = __decorate([
 
 
 /***/ }),
-/* 405 */
+/* 406 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19145,7 +19173,7 @@ exports.TransformsGetAllResponse = TransformsGetAllResponse;
 
 
 /***/ }),
-/* 406 */
+/* 407 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19165,7 +19193,7 @@ const class_transformer_1 = __webpack_require__(72);
 const class_validator_1 = __webpack_require__(55);
 const app_paging_request_1 = __webpack_require__(79);
 const app_transforms_1 = __webpack_require__(80);
-const transform_status_enum_1 = __webpack_require__(388);
+const transform_status_enum_1 = __webpack_require__(389);
 class TransformsGetAllRequest extends app_paging_request_1.AppPagingRequest {
     constructor() {
         super(...arguments);
@@ -19214,7 +19242,7 @@ __decorate([
 
 
 /***/ }),
-/* 407 */
+/* 408 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19231,7 +19259,7 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformsChangeStatusRequest = void 0;
 const class_validator_1 = __webpack_require__(55);
-const transform_status_enum_1 = __webpack_require__(388);
+const transform_status_enum_1 = __webpack_require__(389);
 class TransformsChangeStatusRequest {
 }
 exports.TransformsChangeStatusRequest = TransformsChangeStatusRequest;
@@ -19266,7 +19294,7 @@ __decorate([
 
 
 /***/ }),
-/* 408 */
+/* 409 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19292,7 +19320,7 @@ __decorate([
 
 
 /***/ }),
-/* 409 */
+/* 410 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19318,7 +19346,7 @@ __decorate([
 
 
 /***/ }),
-/* 410 */
+/* 411 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19353,7 +19381,7 @@ exports.TransformsGetAllAdminResponse = TransformsGetAllAdminResponse;
 
 
 /***/ }),
-/* 411 */
+/* 412 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19377,7 +19405,7 @@ exports.TransformsGetAllAdminQuery = TransformsGetAllAdminQuery;
 
 
 /***/ }),
-/* 412 */
+/* 413 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19394,10 +19422,10 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformsGetAllAdminHandler = void 0;
 const cqrs_1 = __webpack_require__(41);
-const transforms_get_all_admin_result_1 = __webpack_require__(413);
+const transforms_get_all_admin_result_1 = __webpack_require__(414);
 const companies_repository_1 = __webpack_require__(210);
-const stransforms_get_all_admin_query_1 = __webpack_require__(411);
-const stransforms_repository_1 = __webpack_require__(390);
+const stransforms_get_all_admin_query_1 = __webpack_require__(412);
+const stransforms_repository_1 = __webpack_require__(391);
 const reg_ex_functions_1 = __webpack_require__(99);
 const mongo_functions_1 = __webpack_require__(29);
 const app_result_1 = __webpack_require__(27);
@@ -19440,7 +19468,7 @@ exports.TransformsGetAllAdminHandler = TransformsGetAllAdminHandler = __decorate
 
 
 /***/ }),
-/* 413 */
+/* 414 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19475,7 +19503,7 @@ exports.TransformsGetAllAdminResult = TransformsGetAllAdminResult;
 
 
 /***/ }),
-/* 414 */
+/* 415 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19488,10 +19516,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentModule = void 0;
 const common_1 = __webpack_require__(3);
-const payment_controller_1 = __webpack_require__(415);
-const payment_service_1 = __webpack_require__(416);
+const payment_controller_1 = __webpack_require__(416);
+const payment_service_1 = __webpack_require__(417);
 const users_module_1 = __webpack_require__(67);
-const paylat_request_schema_1 = __webpack_require__(417);
+const paylat_request_schema_1 = __webpack_require__(418);
 const mongoose_1 = __webpack_require__(24);
 let PaymentModule = class PaymentModule {
 };
@@ -19513,7 +19541,7 @@ exports.PaymentModule = PaymentModule = __decorate([
 
 
 /***/ }),
-/* 415 */
+/* 416 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19533,7 +19561,7 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentController = void 0;
 const common_1 = __webpack_require__(3);
-const payment_service_1 = __webpack_require__(416);
+const payment_service_1 = __webpack_require__(417);
 const express_1 = __webpack_require__(180);
 const jwt_auth_guard_1 = __webpack_require__(69);
 let PaymentController = class PaymentController {
@@ -19615,7 +19643,7 @@ exports.PaymentController = PaymentController = __decorate([
 
 
 /***/ }),
-/* 416 */
+/* 417 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19638,7 +19666,7 @@ const common_1 = __webpack_require__(3);
 const mongoose_1 = __webpack_require__(24);
 const mongoose_2 = __webpack_require__(25);
 const mailer_1 = __webpack_require__(61);
-const paylat_request_schema_1 = __webpack_require__(417);
+const paylat_request_schema_1 = __webpack_require__(418);
 let PaymentService = class PaymentService {
     constructor(mailerService, paylatRequestModel) {
         this.mailerService = mailerService;
@@ -19726,7 +19754,7 @@ exports.PaymentService = PaymentService = __decorate([
 
 
 /***/ }),
-/* 417 */
+/* 418 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19777,7 +19805,7 @@ exports.PaylatRequestSchema = mongoose_1.SchemaFactory.createForClass(PaylatRequ
 
 
 /***/ }),
-/* 418 */
+/* 419 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19811,7 +19839,7 @@ exports.AppController = AppController = __decorate([
 
 
 /***/ }),
-/* 419 */
+/* 420 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19867,7 +19895,7 @@ exports.AppValidationPipe = AppValidationPipe = __decorate([
 
 
 /***/ }),
-/* 420 */
+/* 421 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -19906,7 +19934,7 @@ exports.appCorsOptions = {
 
 
 /***/ }),
-/* 421 */
+/* 422 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -19992,38 +20020,10 @@ class ProblemDetails {
 
 
 /***/ }),
-/* 422 */
+/* 423 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/platform-socket.io");
-
-/***/ }),
-/* 423 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AdminCompaniesUpsertRequest = void 0;
-const class_validator_1 = __webpack_require__(55);
-const companies_upsert_request_1 = __webpack_require__(227);
-class AdminCompaniesUpsertRequest extends companies_upsert_request_1.CompaniesUpsertRequest {
-}
-exports.AdminCompaniesUpsertRequest = AdminCompaniesUpsertRequest;
-__decorate([
-    (0, class_validator_1.IsMongoId)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], AdminCompaniesUpsertRequest.prototype, "userId", void 0);
-
 
 /***/ })
 /******/ 	]);
@@ -20062,18 +20062,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(1);
 const app_module_1 = __webpack_require__(2);
 const app_logger_service_1 = __webpack_require__(4);
-const app_validation_pipe_1 = __webpack_require__(419);
+const app_validation_pipe_1 = __webpack_require__(420);
 const app_configs_service_1 = __webpack_require__(7);
-const app_cors_options_1 = __webpack_require__(420);
-const app_global_exception_filter_1 = __webpack_require__(421);
+const app_cors_options_1 = __webpack_require__(421);
+const app_global_exception_filter_1 = __webpack_require__(422);
 const common_1 = __webpack_require__(3);
-const protected_files_middleware_1 = __webpack_require__(244);
-const requests_logger_middleware_1 = __webpack_require__(245);
+const protected_files_middleware_1 = __webpack_require__(245);
+const requests_logger_middleware_1 = __webpack_require__(246);
 const miedas_functions_1 = __webpack_require__(148);
 const medias_constants_1 = __webpack_require__(147);
 const jwt_provider_service_1 = __webpack_require__(43);
 const mongoose_1 = __webpack_require__(25);
-const platform_socket_io_1 = __webpack_require__(422);
+const platform_socket_io_1 = __webpack_require__(423);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, {
         bufferLogs: true,

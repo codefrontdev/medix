@@ -19,7 +19,7 @@ export class CompaniesGetMyHandler
 
 
     if (entity === null) {
-      return AppResult.createError(AppErrors.nullValue('object'));
+      throw AppResult.createError(AppErrors.nullValue('object'));
     }
 
     const resultData = CompaniesGetResult.create(
